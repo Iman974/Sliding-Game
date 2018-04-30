@@ -20,15 +20,11 @@ public class GameManager : MonoBehaviour {
     private event System.Action<int> _ValidationEvent;
     private event System.Action<SlideDirection> _NextEvent;
 
-    public enum SlideDirection {
-        Left,
-        Right,
-        Up,
-        Down
-    }
-
     public static GameManager Instance { get; private set; }
 
+    /// <summary>
+    /// Event triggered when the player sliding input is validated or not.
+    /// </summary>
     public static event System.Action<int> ValidationEvent {
         add {
             Instance._ValidationEvent += value;
@@ -37,6 +33,10 @@ public class GameManager : MonoBehaviour {
             Instance._ValidationEvent -= value;
         }
     }
+
+    /// <summary>
+    /// Event triggered when the next direction is chosen.
+    /// </summary>
     public static event System.Action<SlideDirection> NextEvent {
         add {
             Instance._NextEvent += value;
@@ -101,6 +101,12 @@ public class GameManager : MonoBehaviour {
         isReady = true;
     }
 
+    /// <summary>
+    /// Validates the movement.
+    /// </summary>
+    /// <param name="inputDirection">
+    /// The direction the player slided to.
+    /// </param>
     private void ValidateMovement(SlideDirection inputDirection) {
         if (inputDirection == currentDirection) {
             Debug.Log("Win: " + inputDirection);
@@ -121,6 +127,9 @@ public class GameManager : MonoBehaviour {
         return Mathf.RoundToInt(baseScoreValue * timeElapsed);
     }
 
+    /// <summary>
+    /// Continues the game by changing the current direction.
+    /// </summary>
     private void Next() {
         currentDirection = (SlideDirection)Random.Range(0, 4);
 
@@ -128,4 +137,11 @@ public class GameManager : MonoBehaviour {
             _NextEvent(currentDirection);
         }
     }
+}
+
+public enum SlideDirection {
+    Left,
+    Right,
+    Up,
+    Down
 }

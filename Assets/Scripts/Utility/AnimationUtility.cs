@@ -36,7 +36,6 @@ public static class AnimationUtility {
     /// </param>
     public static IEnumerator MoveToPosition(Transform toMove, Vector2 destination, AnimationCurve movement, float speed = 1f) {
         Vector3 startPosition = toMove.position;
-        //Vector3 nextPosition = new Vector3(); // to avoid GC
 
         for (float time = 0f; time < 1f; time += speed * Time.deltaTime) {
             Vector2 result = Vector2.LerpUnclamped(startPosition, destination, movement.Evaluate(time));
@@ -45,5 +44,30 @@ public static class AnimationUtility {
             yield return null;
         }
         toMove.position = new Vector3(destination.x, destination.y, startPosition.z);
+    }
+
+    /// <summary>
+    /// Creates a coroutine that moves the given rectTransform's anchored position to a position using lerp with the given curve.
+    /// </summary>
+    /// <param name="toMove">
+    /// The object's rectTransform to move.
+    /// </param>
+    /// <param name="destination">
+    /// The position to move the transform to.
+    /// </param>
+    /// <param name="movement">
+    /// The curve that describes the movement.
+    /// </param>
+    /// <param name="speed">
+    /// How fast the movement will be.
+    /// </param>
+    public static IEnumerator MoveToPosition(RectTransform toMove, Vector2 destination, AnimationCurve movement, float speed = 1f) {
+        Vector2 startPosition = toMove.anchoredPosition;
+
+        for (float time = 0f; time < 1f; time += speed * Time.deltaTime) {
+            toMove.anchoredPosition = Vector2.LerpUnclamped(startPosition, destination, movement.Evaluate(time));
+            yield return null;
+        }
+        toMove.anchoredPosition = destination;
     }
 }

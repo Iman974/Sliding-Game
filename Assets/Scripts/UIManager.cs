@@ -11,10 +11,13 @@ public class UIManager : MonoBehaviour {
     [Header("Animations")]
     [SerializeField] private AnimationCurve slidingAnimation = AnimationCurve.Linear(0f, 0f, 1f, 1f);
     [SerializeField] private float slideSpeed = 1f;
-    [SerializeField] private float slideDistance = 5f;
-    [SerializeField] [Range(0.01f, 1f)] private float fadeOutSpeed = 0.96f;
-    [SerializeField] [Min(1.01f)] private float fadeInSpeed = 1.04f;
-    [SerializeField] [Range(0f, 1f)] private float fadeInStart = 0.02f;
+    [SerializeField] private float slideDistance = 100f;
+    [SerializeField] [Range(0.01f, 1f)] private float fadeOutSpeed = 0.2f;
+    [SerializeField] [Min(1.01f)] private float fadeInSpeed = 1.39f;
+    [SerializeField] [Range(0f, 1f)] private float fadeInStart = 0.4f;
+    [SerializeField] [Range(0.01f, 1f)] private float scaleDownSpeed = 0.2f;
+
+    private Vector3 initialArrowScale;
 
     public void OnMovementValidation(bool isValidated, int scoreValue) {
         scoreText.text = "Score: " + scoreValue;
@@ -24,6 +27,7 @@ public class UIManager : MonoBehaviour {
         if (!isValidated) {
             directionImg.color = Color.red;
         } else {
+            StartCoroutine(ScaleDownArrow());
             directionImg.color = Color.green;
         }
     }
@@ -44,6 +48,7 @@ public class UIManager : MonoBehaviour {
         directionImg.transform.rotation = Quaternion.Euler(0f, 0f, 90f - rotation);
         directionImg.rectTransform.anchoredPosition = Vector2.zero;
         directionImg.color = new Color(1f, 1f, 1f, fadeInStart);
+        directionImg.transform.localScale = initialArrowScale;
         StartCoroutine(FadeArrow(false));
     }
 
@@ -68,8 +73,20 @@ public class UIManager : MonoBehaviour {
         }
     }
 
+    private IEnumerator ScaleDownArrow() {
+        Vector3 scale = directionImg.transform.localScale;
+
+        while (scale.x > 0f && scale.y > 0f) {
+            scale.Set(scale.x * scaleDownSpeed, scale.y * scaleDownSpeed, 1f);
+            directionImg.transform.localScale = scale;
+            yield return null;
+        }
+    }
+
     private void Awake() {
         fadeOutSpeed = 1f - fadeOutSpeed;
+        scaleDownSpeed = 1f - scaleDownSpeed;
+        initialArrowScale = directionImg.transform.localScale;
     }
 
     private void Start() {

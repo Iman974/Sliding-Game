@@ -476,6 +476,9 @@ MonoBehaviour:
     m_RotationOrder: 0
   slideSpeed: 1
   slideDistance: 100
+  fadeOutSpeed: 0.2
+  fadeInSpeed: 1.39
+  fadeInStart: 0.4
 --- !u!1 &1284931419
 GameObject:
   m_ObjectHideFlags: 0
@@ -505,8 +508,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skipDelay: 1.5
   nextDelay: 0.4
-  baseScoreValue: 10
-  sensibility: 0.1
+  baseScoreValue: 50
+  sensibility: 50
 --- !u!4 &1284931421
 Transform:
   m_ObjectHideFlags: 0

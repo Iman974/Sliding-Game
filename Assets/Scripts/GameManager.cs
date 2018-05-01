@@ -127,7 +127,6 @@ public class GameManager : MonoBehaviour {
                 Debug.Log("Slide: " + touch.deltaPosition);
                 isReady = false;
 
-                Debug.Log("Input: " + CurrentDirection + ", " + touch.deltaPosition);
                 ValidateMovement(VectorToDirection(touch.deltaPosition));
                 countdown = skipDelay;
                 StartCoroutine(TriggerNextDelayed());
@@ -151,11 +150,10 @@ public class GameManager : MonoBehaviour {
         bool isValidated;
 
         if (inputDirection == CurrentDirection) {
-            Debug.Log("Win: " + inputDirection);
             totalScore += CalculateScore();
             isValidated = true;
         } else {
-            Debug.Log("Lose: " + inputDirection);
+            Debug.Log("Lose, input was:" + inputDirection);
             totalScore -= baseScoreValue;
             isValidated = false;
         }
@@ -169,9 +167,7 @@ public class GameManager : MonoBehaviour {
     /// Calculates the score proportionally to the elapsed time.
     /// </summary>
     private int CalculateScore() {
-        float factor = countdown * inverseSkipDelay;
-        Debug.Log("+" + Mathf.RoundToInt(baseScoreValue * factor));
-        return Mathf.RoundToInt(baseScoreValue * factor);
+        return Mathf.RoundToInt(baseScoreValue * countdown * inverseSkipDelay);
     }
 
     /// <summary>

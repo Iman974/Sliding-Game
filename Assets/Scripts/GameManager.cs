@@ -13,19 +13,19 @@ public class GameManager : MonoBehaviour {
 
     private float countdown;
     private float inverseSkipDelay; // Used to remap values to 0 to 1
-    private SlideDirection currentDirection = SlideDirection.Right;
     private int totalScore;
     private bool isReady = true;
 
-    private event System.Action<int> _ValidationEvent;
-    private event System.Action<SlideDirection> _NextEvent;
+    private event System.Action<bool, int> _ValidationEvent;
+    private event System.Action _NextEvent;
 
     public static GameManager Instance { get; private set; }
+    public static SlideDirection CurrentDirection { get; private set; }
 
     /// <summary>
     /// Event triggered when the player sliding input is validated or not.
     /// </summary>
-    public static event System.Action<int> ValidationEvent {
+    public static event System.Action<bool, int> ValidationEvent {
         add {
             Instance._ValidationEvent += value;
         }
@@ -37,13 +37,59 @@ public class GameManager : MonoBehaviour {
     /// <summary>
     /// Event triggered when the next direction is chosen.
     /// </summary>
-    public static event System.Action<SlideDirection> NextEvent {
+    public static event System.Action NextEvent {
         add {
             Instance._NextEvent += value;
         }
         remove {
             Instance._NextEvent -= value;
         }
+    }
+
+    /// <summary>
+    /// Converts the given direction to a vector.
+    /// </summary>
+    /// <param name="direction">
+    /// The direction to convert from.
+    /// </param>
+    /// <returns>
+    /// Returns the converted direction as a vector.
+    /// </returns>
+    public static Vector2 DirectionToVector(SlideDirection direction) {
+        Vector2 convertedDirection;
+
+        if (direction == SlideDirection.Up) {
+            convertedDirection = Vector2.up;
+        } else if (direction == SlideDirection.Right) {
+            convertedDirection = Vector2.right;
+        } else if (direction == SlideDirection.Down) {
+            convertedDirection = -Vector2.up;
+        } else {
+            convertedDirection = -Vector2.right;
+        }
+
+        return convertedDirection;
+    }
+
+    /// <summary>
+    /// Converts the given vector to a direction.
+    /// </summary>
+    /// <param name="direction">
+    /// The vector to convert from.
+    /// </param>
+    /// <returns>
+    /// Returns the converted vector as a direction.
+    /// </returns>
+    public static SlideDirection VectorToDirection(Vector2 direction) {
+        SlideDirection convertedVector;
+
+        if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y)) {
+            convertedVector = Mathf.Sign(direction.x) == 1f ? SlideDirection.Right : SlideDirection.Left;
+        } else {
+            convertedVector = Mathf.Sign(direction.y) == 1f ? SlideDirection.Up : SlideDirection.Down;
+        }
+
+        return convertedVector;
     }
 
     private void Awake() {
@@ -58,6 +104,7 @@ public class GameManager : MonoBehaviour {
 
         countdown = skipDelay;
         inverseSkipDelay = 1f / skipDelay;
+        CurrentDirection = SlideDirection.Right;
     }
 
     private void Update() {
@@ -78,18 +125,11 @@ public class GameManager : MonoBehaviour {
 
             if (touch.phase == TouchPhase.Moved && touch.deltaPosition.sqrMagnitude > sensibility) {
                 Debug.Log("Slide: " + touch.deltaPosition);
-                countdown = skipDelay;
                 isReady = false;
-                SlideDirection inputDirection;
 
-                if (Mathf.Abs(touch.deltaPosition.x) > Mathf.Abs(touch.deltaPosition.y)) {
-                    inputDirection = Mathf.Sign(touch.deltaPosition.x) == 1f ? SlideDirection.Right : SlideDirection.Left;
-                } else {
-                    inputDirection = Mathf.Sign(touch.deltaPosition.y) == 1f ? SlideDirection.Up : SlideDirection.Down;
-                }
-
-                Debug.Log("Input: " + currentDirection + ", " + touch.deltaPosition);
-                ValidateMovement(inputDirection);
+                Debug.Log("Input: " + CurrentDirection + ", " + touch.deltaPosition);
+                ValidateMovement(VectorToDirection(touch.deltaPosition));
+                countdown = skipDelay;
                 StartCoroutine(TriggerNextDelayed());
             }
         }
@@ -108,34 +148,46 @@ public class GameManager : MonoBehaviour {
     /// The direction the player slided to.
     /// </param>
     private void ValidateMovement(SlideDirection inputDirection) {
-        if (inputDirection == currentDirection) {
+        bool isValidated;
+
+        if (inputDirection == CurrentDirection) {
             Debug.Log("Win: " + inputDirection);
             totalScore += CalculateScore();
+            isValidated = true;
         } else {
             Debug.Log("Lose: " + inputDirection);
             totalScore -= baseScoreValue;
+            isValidated = false;
         }
 
         if (_ValidationEvent != null) {
-            _ValidationEvent(totalScore);
+            _ValidationEvent(isValidated, totalScore);
         }
     }
 
+    /// <summary>
+    /// Calculates the score proportionally to the elapsed time.
+    /// </summary>
     private int CalculateScore() {
-        float timeElapsed = countdown * inverseSkipDelay;
-
-        return Mathf.RoundToInt(baseScoreValue * timeElapsed);
+        float factor = countdown * inverseSkipDelay;
+        Debug.Log("+" + Mathf.RoundToInt(baseScoreValue * factor));
+        return Mathf.RoundToInt(baseScoreValue * factor);
     }
 
     /// <summary>
     /// Continues the game by changing the current direction.
     /// </summary>
     private void Next() {
-        currentDirection = (SlideDirection)Random.Range(0, 4);
+        CurrentDirection = (SlideDirection)Random.Range(0, 4);
 
         if (_NextEvent != null) {
-            _NextEvent(currentDirection);
+            _NextEvent();
         }
+    }
+
+    private void OnDrawGizmosSelected() {
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(Vector3.zero, Mathf.Sqrt(sensibility));
     }
 }
 

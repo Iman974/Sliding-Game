@@ -479,6 +479,7 @@ MonoBehaviour:
   fadeOutSpeed: 0.2
   fadeInSpeed: 1.39
   fadeInStart: 0.4
+  scaleDownSpeed: 0.1
 --- !u!1 &1284931419
 GameObject:
   m_ObjectHideFlags: 0

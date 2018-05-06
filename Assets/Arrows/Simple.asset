@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1018f1c9a4e10143b1ecb0b83a8ccf3, type: 3}
+  m_Name: Simple
+  m_EditorClassIdentifier: 
+  fadeOutSpeed: 0.3
+  fadeInSpeed: 0.7
+  sprite: {fileID: 21300000, guid: 56b90126c51627d49888917c41da1ce0, type: 3}
+  stayDuration: 1.5
+  nextDelay: 0.4
+  color: {r: 1, g: 1, b: 1, a: 1}
+  scoreValue: 50

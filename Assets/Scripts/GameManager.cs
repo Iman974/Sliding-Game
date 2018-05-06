@@ -3,24 +3,26 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
 
-    [Header("Delays")]
-    [SerializeField] private float skipDelay = 1.5f;
-    [SerializeField] private float nextDelay = 0.5f;
-    [Header("")]
-    [SerializeField] private int baseScoreValue = 10;
+    //[SerializeField] private int baseScoreValue = 10;
     [Tooltip("The threshold that need to be reached in order to consider the sliding. This is a value squared.")]
     [SerializeField] private float sensibility = 0.07f;
 
+    [Header("")]
+    [SerializeField] private ArrowType[] arrowDatas;
+
+    private float skipDelay = 1.5f;
+    private float nextDelay = 0.4f;
     private float countdown;
-    private float inverseSkipDelay; // Used to remap values to 0 to 1
     private int totalScore;
     private bool isReady = true;
 
     private event System.Action<bool, int> _ValidationEvent;
     private event System.Action _NextEvent;
+    private event System.Action _SkipEvent;
 
     public static GameManager Instance { get; private set; }
     public static SlideDirection CurrentDirection { get; private set; }
+    public static ArrowType CurrentArrow { get; private set; }
 
     /// <summary>
     /// Event triggered when the player sliding input is validated or not.
@@ -46,50 +48,13 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    /// <summary>
-    /// Converts the given direction to a vector.
-    /// </summary>
-    /// <param name="direction">
-    /// The direction to convert from.
-    /// </param>
-    /// <returns>
-    /// Returns the converted direction as a vector.
-    /// </returns>
-    public static Vector2 DirectionToVector(SlideDirection direction) {
-        Vector2 convertedDirection;
-
-        if (direction == SlideDirection.Up) {
-            convertedDirection = Vector2.up;
-        } else if (direction == SlideDirection.Right) {
-            convertedDirection = Vector2.right;
-        } else if (direction == SlideDirection.Down) {
-            convertedDirection = -Vector2.up;
-        } else {
-            convertedDirection = -Vector2.right;
+    public static event System.Action SkipEvent {
+        add {
+            Instance._SkipEvent += value;
         }
-
-        return convertedDirection;
-    }
-
-    /// <summary>
-    /// Converts the given vector to a direction.
-    /// </summary>
-    /// <param name="direction">
-    /// The vector to convert from.
-    /// </param>
-    /// <returns>
-    /// Returns the converted vector as a direction.
-    /// </returns>
-    public static SlideDirection VectorToDirection(Vector2 direction) {
-        SlideDirection convertedVector;
-
-        if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y)) {
-            convertedVector = Mathf.Sign(direction.x) == 1f ? SlideDirection.Right : SlideDirection.Left;
-        } else {
-            convertedVector = Mathf.Sign(direction.y) == 1f ? SlideDirection.Up : SlideDirection.Down;
+        remove {
+            Instance._SkipEvent -= value;
         }
-
-        return convertedVector;
     }
 
     private void Awake() {
@@ -103,8 +68,11 @@ public class GameManager : MonoBehaviour {
         #endregion
 
         countdown = skipDelay;
-        inverseSkipDelay = 1f / skipDelay;
         CurrentDirection = SlideDirection.Right;
+    }
+
+    private void Start() {
+        //UIManager.AnimationEnd += OnAnimationEnd;
     }
 
     private void Update() {
@@ -115,11 +83,11 @@ public class GameManager : MonoBehaviour {
         countdown -= Time.deltaTime;
 
         if (countdown <= 0f) {
-            countdown = skipDelay;
+            isReady = false;
             // -1 life
             Debug.Log("Missed !");
 
-            Next();
+            Skip();
         } else if (Input.touchCount > 0 && isReady) {
             Touch touch = Input.GetTouch(0);
 
@@ -127,10 +95,37 @@ public class GameManager : MonoBehaviour {
                 Debug.Log("Slide: " + touch.deltaPosition);
                 isReady = false;
 
-                ValidateMovement(VectorToDirection(touch.deltaPosition));
-                countdown = skipDelay;
+                ValidateMovement(DirectionUtility.VectorToDirection(touch.deltaPosition));
                 StartCoroutine(TriggerNextDelayed());
             }
+        }
+    }
+
+    /// <summary>
+    /// Continues the game by changing the current direction.
+    /// </summary>
+    private void Next() {
+        CurrentDirection = (SlideDirection)Random.Range(0, 4);
+        CurrentArrow = arrowDatas[Random.Range(0, arrowDatas.Length)];
+
+        RecalculateDelays();
+        countdown = skipDelay;
+
+        if (_NextEvent != null) {
+            _NextEvent();
+        }
+    }
+
+    private void RecalculateDelays() {
+        skipDelay = CurrentArrow.StayDuration;
+        nextDelay = CurrentArrow.NextDelay;
+    }
+
+    private void Skip() {
+        StartCoroutine(TriggerNextDelayed());
+
+        if (_SkipEvent != null) {
+            _SkipEvent();
         }
     }
 
@@ -138,6 +133,7 @@ public class GameManager : MonoBehaviour {
         yield return new WaitForSeconds(nextDelay);
         Next();
         isReady = true;
+        Debug.Log("Ready !");
     }
 
     /// <summary>
@@ -154,7 +150,7 @@ public class GameManager : MonoBehaviour {
             isValidated = true;
         } else {
             Debug.Log("Lose, input was:" + inputDirection);
-            totalScore -= baseScoreValue;
+            totalScore -= CurrentArrow.ScoreValue;
             isValidated = false;
         }
 
@@ -167,29 +163,14 @@ public class GameManager : MonoBehaviour {
     /// Calculates the score proportionally to the elapsed time.
     /// </summary>
     private int CalculateScore() {
-        return Mathf.RoundToInt(baseScoreValue * countdown * inverseSkipDelay);
+        return Mathf.RoundToInt(CurrentArrow.ScoreValue * countdown * (1f / skipDelay));
     }
 
-    /// <summary>
-    /// Continues the game by changing the current direction.
-    /// </summary>
-    private void Next() {
-        CurrentDirection = (SlideDirection)Random.Range(0, 4);
-
-        if (_NextEvent != null) {
-            _NextEvent();
-        }
+    private void OnAnimationEnd() {
+        //isReady = true;
     }
 
-    private void OnDrawGizmosSelected() {
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(Vector3.zero, Mathf.Sqrt(sensibility));
+    private void OnDestroy() {
+        //UIManager.AnimationEnd -= OnAnimationEnd;
     }
-}
-
-public enum SlideDirection {
-    Left,
-    Right,
-    Up,
-    Down
 }

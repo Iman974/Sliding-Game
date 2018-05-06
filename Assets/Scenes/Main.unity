@@ -215,7 +215,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 989476195}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &746110144
 MonoBehaviour:
@@ -280,7 +280,7 @@ RectTransform:
   - {fileID: 207040873}
   - {fileID: 909244592}
   m_Father: {fileID: 989476195}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -354,8 +354,9 @@ GameObject:
   - component: {fileID: 909244592}
   - component: {fileID: 909244594}
   - component: {fileID: 909244593}
+  - component: {fileID: 909244595}
   m_Layer: 5
-  m_Name: DirectionImg
+  m_Name: ArrowImg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -412,6 +413,23 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 909244591}
+--- !u!95 &909244595
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 909244591}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 38d1bd21b3ea3c14ba0308623b0d17ac, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &989476194
 GameObject:
   m_ObjectHideFlags: 0
@@ -438,8 +456,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 746110143}
   - {fileID: 788034476}
+  - {fileID: 746110143}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -455,7 +473,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreText: {fileID: 207040874}
-  directionImg: {fileID: 909244593}
+  arrowImg: {fileID: 909244593}
   slidingAnimation:
     serializedVersion: 2
     m_Curve:
@@ -511,6 +529,8 @@ MonoBehaviour:
   nextDelay: 0.4
   baseScoreValue: 50
   sensibility: 50
+  arrowDatas:
+  - {fileID: 11400000, guid: c2be69a95fb9e1e429064057da737e6c, type: 2}
 --- !u!4 &1284931421
 Transform:
   m_ObjectHideFlags: 0

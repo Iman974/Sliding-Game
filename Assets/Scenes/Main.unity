@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 8
+  serializedVersion: 9
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -39,6 +39,7 @@ RenderSettings:
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
   m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -54,11 +55,10 @@ LightmapSettings:
     m_EnableBakedLightmaps: 0
     m_EnableRealtimeLightmaps: 0
   m_LightmapEditorSettings:
-    serializedVersion: 9
+    serializedVersion: 10
     m_Resolution: 2
     m_BakeResolution: 40
-    m_TextureWidth: 1024
-    m_TextureHeight: 1024
+    m_AtlasSize: 1024
     m_AO: 0
     m_AOMaxDistance: 1
     m_CompAOExponent: 1
@@ -430,6 +430,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &989476194
 GameObject:
   m_ObjectHideFlags: 0
@@ -477,26 +478,29 @@ MonoBehaviour:
   slidingAnimation:
     serializedVersion: 2
     m_Curve:
-    - serializedVersion: 2
+    - serializedVersion: 3
       time: 0
       value: 0
       inSlope: 2.757938
       outSlope: 2.757938
       tangentMode: 0
-    - serializedVersion: 2
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
       time: 1
       value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
   slideSpeed: 1
   slideDistance: 100
-  fadeOutSpeed: 0.2
-  fadeInSpeed: 1.39
-  fadeInStart: 0.4
   scaleDownSpeed: 0.1
 --- !u!1 &1284931419
 GameObject:
@@ -525,12 +529,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6b506cf1ed8c2b419fba03282d45a2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skipDelay: 1.5
-  nextDelay: 0.4
-  baseScoreValue: 50
   sensibility: 50
-  arrowDatas:
-  - {fileID: 11400000, guid: c2be69a95fb9e1e429064057da737e6c, type: 2}
+  arrowDatas: []
 --- !u!4 &1284931421
 Transform:
   m_ObjectHideFlags: 0

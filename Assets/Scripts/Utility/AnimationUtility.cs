@@ -4,11 +4,6 @@ using UnityEngine.UI;
 
 public static class AnimationUtility {
 
-    public enum FadeType {
-        In,
-        Out
-    }
-
     /// <summary>
     /// Creates a coroutine that plays an animation.
     /// </summary>
@@ -26,7 +21,7 @@ public static class AnimationUtility {
     //}
 
     /// <summary>
-    /// Creates a coroutine that moves the given transform to a position using lerp with the given curve.
+    /// Creates a coroutine that moves a transform to a position.
     /// </summary>
     /// <param name="toMove">
     /// The object's transform to move.
@@ -38,22 +33,47 @@ public static class AnimationUtility {
     /// The curve that describes the movement.
     /// </param>
     /// <param name="speed">
-    /// How fast the movement will be.
+    /// How fast the movement is.
     /// </param>
-    public static IEnumerator MoveToPosition(Transform toMove, Vector2 destination, AnimationCurve movement, float speed = 1f) {
-        Vector3 startPosition = toMove.position;
+    public static IEnumerator MoveToPosition(Transform toMove, Vector2 destination, AnimationCurve curve, float speed) {
+        Vector2 startPosition = toMove.position;
 
         for (float time = 0f; time < 1f; time += speed * Time.deltaTime) {
-            Vector2 result = Vector2.LerpUnclamped(startPosition, destination, movement.Evaluate(time));
-            toMove.position = new Vector3(result.x, result.y, startPosition.z);
+            toMove.position = Vector2.LerpUnclamped(startPosition, destination, curve.Evaluate(time));
 
             yield return null;
         }
-        toMove.position = new Vector3(destination.x, destination.y, startPosition.z);
+        toMove.position = destination;
     }
 
     /// <summary>
-    /// Creates a coroutine that moves the given rectTransform's anchored position to a position using lerp with the given curve.
+    /// Creates a coroutine that moves a transform to a position.
+    /// </summary>
+    /// <param name="toMove">
+    /// The object's transform to move.
+    /// </param>
+    /// <param name="destination">
+    /// The position to move the transform to.
+    /// </param>
+    /// <param name="movement">
+    /// The curve that describes the movement.
+    /// </param>
+    /// <param name="speed">
+    /// How fast the movement is.
+    /// </param>
+    public static IEnumerator MoveToPosition(Transform toMove, Vector3 destination, AnimationCurve curve, float speed) {
+        Vector3 startPosition = toMove.position;
+
+        for (float time = 0f; time < 1f; time += speed * Time.deltaTime) {
+            toMove.position = Vector3.LerpUnclamped(startPosition, destination, curve.Evaluate(time));
+
+            yield return null;
+        }
+        toMove.position = destination;
+    }
+
+    /// <summary>
+    /// Creates a coroutine that moves a rect transform to a position with its anchored position.
     /// </summary>
     /// <param name="toMove">
     /// The object's rectTransform to move.
@@ -65,25 +85,85 @@ public static class AnimationUtility {
     /// The curve that describes the movement.
     /// </param>
     /// <param name="speed">
-    /// How fast the movement will be.
+    /// How fast the movement is.
     /// </param>
-    public static IEnumerator MoveToPosition(RectTransform toMove, Vector2 destination, AnimationCurve movement, float speed = 1f) {
+    public static IEnumerator MoveToPosition(RectTransform toMove, Vector2 destination, AnimationCurve curve, float speed) {
         Vector2 startPosition = toMove.anchoredPosition;
 
         for (float time = 0f; time < 1f; time += speed * Time.deltaTime) {
-            toMove.anchoredPosition = Vector2.LerpUnclamped(startPosition, destination, movement.Evaluate(time));
+            toMove.anchoredPosition = Vector2.LerpUnclamped(startPosition, destination, curve.Evaluate(time));
             yield return null;
         }
         toMove.anchoredPosition = destination;
     }
 
-    public static IEnumerator FadeImage(Image image, FadeType fadeType, float speed, float startModifier = 0f) {
-        float alphaEnd = fadeType == FadeType.In ? 1f : 0f;
-        image.color = new Color(image.color.r, image.color.g, image.color.b, 1f - alphaEnd + startModifier);
+    /// <summary>
+    /// Creates a coroutine that fades in or out an image.
+    /// </summary>
+    /// <param name="image">
+    /// The image to fade.
+    /// </param>
+    /// <param name="curve">
+    /// The curve that describes the fading.
+    /// </param>
+    /// <param name="speed">
+    /// How fast the fading is.
+    /// </param>
+    public static IEnumerator FadeImage(Image image, AnimationCurve curve, float speed) {
+        Color color = image.color;
 
-        while (!Mathf.Approximately(image.color.a, alphaEnd)) {
-            Color clr = image.color;
-            image.color = new Color(clr.r, clr.g, clr.b, Mathf.Lerp(clr.a, alphaEnd, speed));
+        for (float time = 0f; time < 1f; time += speed * Time.deltaTime) {
+            image.color = new Color(color.r, color.g, color.b, curve.Evaluate(time));
+
+            yield return null;
+        }
+    }
+
+    /// <summary>
+    /// Creates a coroutine that interpolates an image's color towards a target color.
+    /// </summary>
+    /// <param name="graphic">
+    /// The image that holds the color to interpolate.
+    /// </param>
+    /// <param name="targetColor">
+    /// The color to interpolate to.
+    /// </param>
+    /// <param name="curve">
+    /// The curve that describes the color interpolation.
+    /// </param>
+    /// <param name="speed">
+    /// How fast the interpolation is.
+    /// </param>
+    public static IEnumerator LerpColor(Graphic graphic, Color targetColor, AnimationCurve curve, float speed) {
+        Color startColor = graphic.color;
+
+        for (float time = 0f; time < 1f; time += speed * Time.deltaTime) {
+            graphic.color = Color.Lerp(startColor, targetColor, curve.Evaluate(time));
+
+            yield return null;
+        }
+    }
+
+    /// <summary>
+    /// Creates a coroutine that interpolates a transform's scale towards a target scale.
+    /// </summary>
+    /// <param name="transform">
+    /// The transform to scale.
+    /// </param>
+    /// <param name="targetScale">
+    /// The scale to interpolate to.
+    /// </param>
+    /// <param name="curve">
+    /// The curve that describes the scaling.
+    /// </param>
+    /// <param name="speed">
+    /// How fast the interpolation is.
+    /// </param>
+    public static IEnumerator ScaleTransform(Transform transform, Vector3 targetScale, AnimationCurve curve, float speed) {
+        Vector3 startScale = transform.localScale;
+
+        for (float time = 0f; time < 1f; time += speed * Time.deltaTime) {
+            transform.localScale = Vector3.Lerp(startScale, targetScale, curve.Evaluate(time));
 
             yield return null;
         }

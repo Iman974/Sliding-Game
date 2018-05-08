@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 
 public static class DirectionUtility {
 
@@ -49,6 +50,7 @@ public static class DirectionUtility {
     }
 }
 
+[Serializable]
 public enum SlideDirection {
     Left,
     Right,

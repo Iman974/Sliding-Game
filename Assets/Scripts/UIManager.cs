@@ -49,11 +49,12 @@ public class UIManager : MonoBehaviour {
         StartCoroutine(SlideArrow());
         //StartCoroutine(FadeArrow(true));
 
-        if (!isValidated) {
-            arrowImg.color = Color.red;
-        } else {
-            StartCoroutine(ScaleDownArrow());
-            arrowImg.color = Color.green;
+        foreach (CustomAnimation animation in GameManager.CurrentArrow.GetValidationAnimations(isValidated)) {
+            StartCoroutine(animation.GetAnimation(arrowImg.GetComponent(animation.AnimatedComponent)));
+        }
+
+        foreach (CustomAnimation animation in GameManager.CurrentArrow.AppearAnimations) {
+            StartCoroutine(animation.GetAnimation(arrowImg.GetComponent(animation.AnimatedComponent)));
         }
     }
 
@@ -76,9 +77,12 @@ public class UIManager : MonoBehaviour {
         arrowImg.transform.localScale = initialArrowScale;
         //StartCoroutine(FadeArrow(false));
 
-        arrowImg.color = GameManager.CurrentArrow.Color;
+        arrowImg.color = GameManager.CurrentArrow.BaseColor;
         arrowImg.sprite = GameManager.CurrentArrow.Sprite;
-        StartCoroutine(GameManager.CurrentArrow.Show(arrowImg));
+
+        foreach (CustomAnimation animation in GameManager.CurrentArrow.AppearAnimations) {
+            StartCoroutine(animation.GetAnimation(arrowImg.GetComponent(animation.AnimatedComponent)));
+        }
     }
 
     private void OnSkip() {
@@ -86,7 +90,9 @@ public class UIManager : MonoBehaviour {
             return;
         }
 
-        StartCoroutine(GameManager.CurrentArrow.Hide(arrowImg));
+        foreach (CustomAnimation animation in GameManager.CurrentArrow.SkipAnimations) {
+            StartCoroutine(animation.GetAnimation(arrowImg.GetComponent(animation.AnimatedComponent)));
+        }
     }
 
     private IEnumerator SlideArrow() {
@@ -94,7 +100,7 @@ public class UIManager : MonoBehaviour {
         Vector2 startPosition = arrowImg.rectTransform.anchoredPosition;
 
         for (float time = 0f; time < 1f; time += slideSpeed * Time.deltaTime) {
-            arrowImg.rectTransform.anchoredPosition += Vector2.Lerp(startPosition, slideDirection, slidingAnimation.Evaluate(time));
+            arrowImg.rectTransform.anchoredPosition = Vector2.Lerp(startPosition, slideDirection, slidingAnimation.Evaluate(time));
             yield return null;
         }
     }

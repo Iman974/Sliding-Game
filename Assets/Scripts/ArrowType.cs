@@ -34,6 +34,11 @@ public class ArrowType : ScriptableObject {
         get { return successColor; }
     }
 
+    [SerializeField] private Color skipColor = Color.red;
+    public Color SkipColor {
+        get { return skipColor; }
+    }
+
     [SerializeField] private int scoreValue = 50;
     public int ScoreValue {
         get { return scoreValue; }

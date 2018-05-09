@@ -14,10 +14,18 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 56b90126c51627d49888917c41da1ce0, type: 3}
   stayDuration: 1.25
   nextDelay: 0.5
-  color: {r: 1, g: 1, b: 1, a: 1}
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  failColor: {r: 1, g: 0, b: 0, a: 1}
+  successColor: {r: 0, g: 1, b: 0, a: 1}
+  skipColor: {r: 1, g: 0, b: 0, a: 1}
   scoreValue: 50
-  appearAnimation:
-  - {fileID: 0}
-  successAnimations: []
-  failAnimations: []
-  skipAnimations: []
+  appearAnimation: []
+  successAnimations:
+  - {fileID: 11400000, guid: 1da3ada8b3015e4438ae69ce408cca8f, type: 2}
+  - {fileID: 11400000, guid: 03a86fde06dde5147b377d7b3d2dcafd, type: 2}
+  - {fileID: 11400000, guid: 9f06137214443934eb0b8a5e400eba0a, type: 2}
+  failAnimations:
+  - {fileID: 11400000, guid: 9f06137214443934eb0b8a5e400eba0a, type: 2}
+  - {fileID: 11400000, guid: 1da3ada8b3015e4438ae69ce408cca8f, type: 2}
+  skipAnimations:
+  - {fileID: 11400000, guid: 1da3ada8b3015e4438ae69ce408cca8f, type: 2}

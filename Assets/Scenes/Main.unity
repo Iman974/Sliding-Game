@@ -530,7 +530,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sensibility: 50
-  arrowDatas: []
+  arrowDatas:
+  - {fileID: 11400000, guid: 1923d410daa5157488588440c8a889cd, type: 2}
 --- !u!4 &1284931421
 Transform:
   m_ObjectHideFlags: 0

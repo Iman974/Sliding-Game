@@ -90,6 +90,7 @@ public class UIManager : MonoBehaviour {
             return;
         }
 
+        arrowImg.color = GameManager.CurrentArrow.SkipColor;
         foreach (CustomAnimation animation in GameManager.CurrentArrow.SkipAnimations) {
             StartCoroutine(animation.GetAnimation(arrowImg.GetComponent(animation.AnimatedComponent)));
         }

@@ -46,14 +46,16 @@ public class UIManager : MonoBehaviour {
 
     private void OnMovementValidation(bool isValidated, int scoreValue) {
         scoreText.text = "Score: " + scoreValue;
-        StartCoroutine(SlideArrow());
+        //StartCoroutine(SlideArrow());
         //StartCoroutine(FadeArrow(true));
 
-        foreach (CustomAnimation animation in GameManager.CurrentArrow.GetValidationAnimations(isValidated)) {
-            StartCoroutine(animation.GetAnimation(arrowImg.GetComponent(animation.AnimatedComponent)));
+        if (isValidated) {
+            arrowImg.color = GameManager.CurrentArrow.SuccessColor;
+        } else {
+            arrowImg.color = GameManager.CurrentArrow.FailColor;
         }
 
-        foreach (CustomAnimation animation in GameManager.CurrentArrow.AppearAnimations) {
+        foreach (CustomAnimation animation in GameManager.CurrentArrow.GetValidationAnimations(isValidated)) {
             StartCoroutine(animation.GetAnimation(arrowImg.GetComponent(animation.AnimatedComponent)));
         }
     }

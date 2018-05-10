@@ -9,13 +9,13 @@ public class PositionAnimation : CustomAnimation {
 
     public override Type AnimatedComponent {
         get {
-            return typeof(Transform);
+            return typeof(RectTransform);
         }
     }
 
     public override IEnumerator GetAnimation(Component transform) {
         Vector2 slideDirection = DirectionUtility.DirectionToVector(GameManager.CurrentDirection) * moveDistance;
 
-        return AnimationUtility.MoveToPosition((Transform)transform, slideDirection, animationCurve, animationSpeed);
+        return AnimationUtility.MoveToPosition((RectTransform)transform, slideDirection, animationCurve, animationSpeed);
     }
 }

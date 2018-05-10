@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d73bf415c1f763f4c88bcb57a971ef6b, type: 3}
-  m_Name: FadeIn
+  m_Name: FadeOutSlow
   m_EditorClassIdentifier: 
   animationCurve:
     serializedVersion: 2
@@ -17,8 +17,8 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 2
-      outSlope: 2
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
@@ -26,8 +26,8 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 0
-      outSlope: 0
+      inSlope: 2
+      outSlope: 2
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
@@ -35,8 +35,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  animationSpeed: 4
-  targetColor: {r: 1, g: 1, b: 1, a: 1}
+  animationSpeed: 5
+  targetColor: {r: 1, g: 1, b: 1, a: 0}
   leaveUnchanged:
     x: 1
     y: 1

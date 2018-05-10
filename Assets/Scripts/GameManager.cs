@@ -85,14 +85,14 @@ public class GameManager : MonoBehaviour {
         if (countdown <= 0f) {
             isReady = false;
             // -1 life
-            Debug.Log("Missed !");
+            //Debug.Log("Missed !");
 
             Skip();
         } else if (Input.touchCount > 0 && isReady) {
             Touch touch = Input.GetTouch(0);
 
             if (touch.phase == TouchPhase.Moved && touch.deltaPosition.sqrMagnitude > sensibility) {
-                Debug.Log("Slide: " + touch.deltaPosition);
+                //Debug.Log("Slide: " + touch.deltaPosition);
                 isReady = false;
 
                 ValidateMovement(DirectionUtility.VectorToDirection(touch.deltaPosition));
@@ -133,7 +133,7 @@ public class GameManager : MonoBehaviour {
         yield return new WaitForSeconds(nextDelay);
         Next();
         isReady = true;
-        Debug.Log("Ready !");
+        //Debug.Log("Ready !");
     }
 
     /// <summary>

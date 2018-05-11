@@ -58,7 +58,22 @@ public class ArrowType : ScriptableObject {
         get { return skipAnimations; }
     }
 
+    [SerializeField] private float[] successAnimationsDelays = new float[0];
+    [SerializeField] private float[] failAnimationsDelays = new float[0];
+
     public CustomAnimation[] GetValidationAnimations(bool isValidated) {
         return isValidated ? successAnimations : failAnimations;
+    }
+
+    public float[] GetValidationAnimationsDelays(bool isValidated) {
+        return isValidated ? successAnimationsDelays : failAnimationsDelays;
+    }
+
+    private void OnEnable() {
+        int delaysArraySize = successAnimationsDelays.Length;
+
+        if (delaysArraySize > 0 && delaysArraySize != successAnimations.Length) {
+            throw new System.IndexOutOfRangeException("Delays array size is inconsistent on " + name);
+        }
     }
 }

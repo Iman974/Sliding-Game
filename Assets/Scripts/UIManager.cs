@@ -46,17 +46,35 @@ public class UIManager : MonoBehaviour {
 
     private void OnMovementValidation(bool isValidated, int scoreValue) {
         scoreText.text = "Score: " + scoreValue;
-        //StartCoroutine(SlideArrow());
-        //StartCoroutine(FadeArrow(true));
+
+        ArrowType currentArrow = GameManager.CurrentArrow;
 
         if (isValidated) {
-            arrowImg.color = GameManager.CurrentArrow.SuccessColor;
+            arrowImg.color = currentArrow.SuccessColor;
         } else {
-            arrowImg.color = GameManager.CurrentArrow.FailColor;
+            arrowImg.color = currentArrow.FailColor;
         }
 
-        foreach (CustomAnimation animation in GameManager.CurrentArrow.GetValidationAnimations(isValidated)) {
-            StartCoroutine(animation.GetAnimation(arrowImg.GetComponent(animation.AnimatedComponent)));
+        StartCoroutine(PlayAnimations(isValidated));
+    }
+
+    private IEnumerator PlayAnimations(bool isValidated) {
+        ArrowType currentArrow = GameManager.CurrentArrow;
+
+        float[] animationDelays = currentArrow.GetValidationAnimationsDelays(isValidated);
+
+        if (animationDelays.Length > 0) {
+
+        }
+
+        int animationIndex = 0;
+        foreach (CustomAnimation animation in currentArrow.GetValidationAnimations(isValidated)) {
+            if (animationDelays[animationIndex] > 0f) {
+                yield return new WaitForSeconds(animationDelays[animationIndex]);
+            }
+
+            StartCoroutine(animation.GetAnimation(arrowImg.GetComponent(animation.AnimatedComponent))); // we can yield this
+            animationIndex++;
         }
     }
 

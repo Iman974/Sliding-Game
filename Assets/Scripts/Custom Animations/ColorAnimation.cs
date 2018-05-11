@@ -50,7 +50,7 @@ public class ColorAnimation : CustomAnimation {
 
     [SerializeField] private Color targetColor = Color.white;
     [SerializeField] private Vector4Bool leaveUnchanged;
-    //[SerializeField] private float cycleOffset;
+    [SerializeField] private float cycleOffset;
 
     private Color unchangedColor;
 
@@ -71,6 +71,6 @@ public class ColorAnimation : CustomAnimation {
             }
         }
 
-        return AnimationUtility.LerpColor((Graphic)graphic, unchangedColor, animationCurve, animationSpeed);
+        return AnimationUtility.LerpColor((Graphic)graphic, unchangedColor, animationCurve, animationSpeed, cycleOffset);
     }
 }

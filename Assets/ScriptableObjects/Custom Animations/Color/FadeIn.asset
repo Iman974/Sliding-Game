@@ -35,7 +35,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  animationSpeed: 4
+  animationSpeed: 1
   targetColor: {r: 1, g: 1, b: 1, a: 1}
   leaveUnchanged:
     x: 1

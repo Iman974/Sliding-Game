@@ -134,10 +134,10 @@ public static class AnimationUtility {
     /// <param name="speed">
     /// How fast the interpolation is.
     /// </param>
-    public static IEnumerator LerpColor(Graphic graphic, Color targetColor, AnimationCurve curve, float speed) {
+    public static IEnumerator LerpColor(Graphic graphic, Color targetColor, AnimationCurve curve, float speed, float cycleOffset = 0f) {
         Color startColor = graphic.color;
 
-        for (float time = 0f; time < 1f; time += speed * Time.deltaTime) {
+        for (float time = cycleOffset; time < 1f; time += speed * Time.deltaTime) {
             graphic.color = Color.Lerp(startColor, targetColor, curve.Evaluate(time));
 
             yield return null;

@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f32e888200e060343864768553dca91f, type: 3}
+  m_Name: Reversed
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 21300000, guid: 56b90126c51627d49888917c41da1ce0, type: 3}
+  stayDuration: 1
+  nextDelay: 0.75
+  baseColor: {r: 1, g: 0.944, b: 0, a: 1}
+  failColor: {r: 1, g: 0, b: 0, a: 1}
+  successColor: {r: 0, g: 1, b: 0, a: 1}
+  skipColor: {r: 1, g: 0, b: 0, a: 1}
+  scoreValue: 100
+  appearAnimation:
+  - {fileID: 11400000, guid: 0928e1f2b3c436f4d87a2ee19a0ef1a1, type: 2}
+  successAnimations:
+    animations:
+    - {fileID: 11400000, guid: 3a6eb4f087e6d984d9ccb019f2b7bf5a, type: 2}
+    - {fileID: 11400000, guid: 9f06137214443934eb0b8a5e400eba0a, type: 2}
+    - {fileID: 11400000, guid: 1da3ada8b3015e4438ae69ce408cca8f, type: 2}
+    delays:
+    - 0
+    - 0.3
+    - 0
+  failAnimations:
+    animations:
+    - {fileID: 11400000, guid: 423d6e761c1de7b4e9f6aab9cb37b540, type: 2}
+    delays: []
+  skipAnimations:
+  - {fileID: 11400000, guid: 1da3ada8b3015e4438ae69ce408cca8f, type: 2}

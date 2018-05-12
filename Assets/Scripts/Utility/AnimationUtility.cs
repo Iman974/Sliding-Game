@@ -168,4 +168,14 @@ public static class AnimationUtility {
             yield return null;
         }
     }
+
+    public static IEnumerator RotateTransform(Transform transform, Quaternion targetRotation, AnimationCurve curve, float speed) {
+        Quaternion startRotation = transform.localRotation;
+
+        for (float time = 0f; time < 1f; time += speed * Time.deltaTime) {
+            transform.localRotation = Quaternion.Lerp(startRotation, targetRotation, curve.Evaluate(time));
+
+            yield return null;
+        }
+    }
 }

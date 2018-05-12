@@ -1,7 +1,28 @@
 ﻿using UnityEngine;
+using System;
+using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "New arrow", menuName = "Game/Arrow")]
 public class ArrowType : ScriptableObject {
+
+    [Serializable]
+    public class AnimationsHolder {
+
+        [SerializeField] private CustomAnimation[] animations;
+
+        public CustomAnimation[] Animations {
+            get { return animations; }
+        }
+        public int Length {
+            get { return animations.Length; }
+        }
+
+        [SerializeField] private List<float> delays;
+        public List<float> Delays {
+            get { return delays; }
+        }
+
+    }
 
     [SerializeField] private Sprite sprite;
     public Sprite Sprite {
@@ -50,30 +71,54 @@ public class ArrowType : ScriptableObject {
         get { return appearAnimation; }
     }
 
-    [SerializeField] private CustomAnimation[] successAnimations;
-    [SerializeField] private CustomAnimation[] failAnimations;
+    [SerializeField] private AnimationsHolder successAnimations;
+    [SerializeField] private AnimationsHolder failAnimations;
 
     [SerializeField] private CustomAnimation[] skipAnimations;
     public CustomAnimation[] SkipAnimations {
         get { return skipAnimations; }
     }
 
-    [SerializeField] private float[] successAnimationsDelays = new float[0];
-    [SerializeField] private float[] failAnimationsDelays = new float[0];
-
-    public CustomAnimation[] GetValidationAnimations(bool isValidated) {
+    public AnimationsHolder GetValidationAnimations(bool isValidated) {
         return isValidated ? successAnimations : failAnimations;
     }
 
-    public float[] GetValidationAnimationsDelays(bool isValidated) {
-        return isValidated ? successAnimationsDelays : failAnimationsDelays;
-    }
+    //public float[] GetValidationAnimationsDelays(bool isValidated) {
+    //    return isValidated ? successAnimationsDelays : failAnimationsDelays;
+    //}
 
     private void OnEnable() {
-        int delaysArraySize = successAnimationsDelays.Length;
+        int animationsArraySize = successAnimations.Animations.Length;
 
-        if (delaysArraySize > 0 && delaysArraySize != successAnimations.Length) {
-            throw new System.IndexOutOfRangeException("Delays array size is inconsistent on " + name);
+        if (animationsArraySize != successAnimations.Delays.Count) {
+            ResizeList(successAnimations.Delays, animationsArraySize);
+        }
+
+        animationsArraySize = failAnimations.Length;
+        if (animationsArraySize != failAnimations.Delays.Count) {
+            ResizeList(failAnimations.Delays, animationsArraySize);
+        }
+    }
+
+    /// <summary>
+    /// Resizes the list until to the wanted size. The empty elements are filled with default values.
+    /// </summary>
+    /// <param name="size">
+    /// The size to be match.
+    /// </param>
+    private void ResizeList<T>(List<T> listToResize, int size) {
+        int countDifference = -listToResize.Count + size;
+
+        if (countDifference > 0) {
+            for (int i = 0; i < countDifference; i++) {
+                listToResize.Add(default(T));
+            }
+        } else {
+            countDifference = -countDifference;
+
+            for (int i = 0; i < countDifference; i++) {
+                listToResize.RemoveAt(listToResize.Count - 1);
+            }
         }
     }
 }

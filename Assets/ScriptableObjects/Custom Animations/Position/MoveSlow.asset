@@ -8,8 +8,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d73bf415c1f763f4c88bcb57a971ef6b, type: 3}
-  m_Name: FadeOut
+  m_Script: {fileID: 11500000, guid: 08268968d2e118e40ba6b2fafdca26b3, type: 3}
+  m_Name: MoveSlow
   m_EditorClassIdentifier: 
   animationCurve:
     serializedVersion: 2
@@ -17,12 +17,12 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 3.3535976
-      outSlope: 3.3535976
+      inSlope: 3.071229
+      outSlope: 3.071229
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.063725494
+      outWeight: 0.061313566
     - serializedVersion: 3
       time: 1
       value: 1
@@ -35,11 +35,5 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  animationSpeed: 6
-  targetColor: {r: 1, g: 1, b: 1, a: 0}
-  leaveUnchanged:
-    x: 1
-    y: 1
-    z: 1
-    w: 0
-  cycleOffset: 0
+  animationSpeed: 1
+  moveDistance: 200

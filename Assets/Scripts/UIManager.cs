@@ -59,22 +59,16 @@ public class UIManager : MonoBehaviour {
     }
 
     private IEnumerator PlayAnimations(bool isValidated) {
-        ArrowType currentArrow = GameManager.CurrentArrow;
+        ArrowType.AnimationsHolder animationsHolder = GameManager.CurrentArrow.GetValidationAnimations(isValidated);
 
-        float[] animationDelays = currentArrow.GetValidationAnimationsDelays(isValidated);
-
-        if (animationDelays.Length > 0) {
-
-        }
-
-        int animationIndex = 0;
-        foreach (CustomAnimation animation in currentArrow.GetValidationAnimations(isValidated)) {
-            if (animationDelays[animationIndex] > 0f) {
-                yield return new WaitForSeconds(animationDelays[animationIndex]);
+        int delayIndex = 0;
+        foreach (CustomAnimation animation in animationsHolder.Animations) {
+            if (animationsHolder.Delays[delayIndex] > 0f) {
+                yield return new WaitForSeconds(animationsHolder.Delays[delayIndex]);
             }
 
             StartCoroutine(animation.GetAnimation(arrowImg.GetComponent(animation.AnimatedComponent))); // we can yield this
-            animationIndex++;
+            delayIndex++;
         }
     }
 

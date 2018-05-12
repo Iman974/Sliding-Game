@@ -5,7 +5,7 @@ using System;
 [CreateAssetMenu(fileName = "New position animation", menuName = "Game/Custom Animations/Position")]
 public class PositionAnimation : CustomAnimation {
 
-    [SerializeField] private float moveDistance = 100f;
+    [SerializeField] private float moveDistance = 500f;
 
     public override Type AnimatedComponent {
         get {

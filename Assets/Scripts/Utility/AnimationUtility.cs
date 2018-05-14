@@ -36,14 +36,14 @@ public static class AnimationUtility {
     /// How fast the movement is.
     /// </param>
     public static IEnumerator MoveToPosition(Transform toMove, Vector2 destination, AnimationCurve curve, float speed) {
-        Vector2 startPosition = toMove.position;
+        Vector2 startPosition = toMove.localPosition;
 
         for (float time = 0f; time < 1f; time += speed * Time.deltaTime) {
-            toMove.position = Vector2.LerpUnclamped(startPosition, destination, curve.Evaluate(time));
+            toMove.localPosition = Vector2.LerpUnclamped(startPosition, destination, curve.Evaluate(time));
 
             yield return null;
         }
-        toMove.position = destination;
+        toMove.localPosition = destination;
     }
 
     /// <summary>
@@ -62,14 +62,14 @@ public static class AnimationUtility {
     /// How fast the movement is.
     /// </param>
     public static IEnumerator MoveToPosition(Transform toMove, Vector3 destination, AnimationCurve curve, float speed) {
-        Vector3 startPosition = toMove.position;
+        Vector3 startPosition = toMove.localPosition;
 
         for (float time = 0f; time < 1f; time += speed * Time.deltaTime) {
-            toMove.position = Vector3.LerpUnclamped(startPosition, destination, curve.Evaluate(time));
+            toMove.localPosition = Vector3.LerpUnclamped(startPosition, destination, curve.Evaluate(time));
 
             yield return null;
         }
-        toMove.position = destination;
+        toMove.localPosition = destination;
     }
 
     /// <summary>

@@ -37,3 +37,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   animationSpeed: 2
   targetRotation: {x: 0, y: 180, z: 0}
+  leaveUnchanged:
+    x: 0
+    y: 0
+    z: 1

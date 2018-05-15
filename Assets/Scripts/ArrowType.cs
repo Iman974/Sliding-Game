@@ -39,6 +39,11 @@ public class ArrowType : ScriptableObject {
         get { return nextDelay; }
     }
 
+    [SerializeField] private SerializableDictionnary_SlideDirection sDictionnary;
+    public SerializableDictionnary_SlideDirection DirectionBinder {
+        get { return sDictionnary; }
+    }
+
     [Header("Colors")]
     [SerializeField] private Color baseColor = Color.white;
     public Color BaseColor {

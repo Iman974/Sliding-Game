@@ -4,6 +4,21 @@ using System;
 public static class DirectionUtility {
 
     /// <summary>
+    /// The values of the SlideDirection enum.
+    /// </summary>
+    public static SlideDirection[] DirectionValues { get; private set; }
+
+    /// <summary>
+    /// How many elements the SlideDirection enum contains.
+    /// </summary>
+    public static int DirectionCount { get; private set; }
+
+    static DirectionUtility() {
+        DirectionValues = (SlideDirection[])Enum.GetValues(typeof(SlideDirection));
+        DirectionCount = DirectionValues.Length;
+    }
+
+    /// <summary>
     /// Converts the given direction to a vector.
     /// </summary>
     /// <param name="direction">

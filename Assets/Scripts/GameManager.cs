@@ -105,7 +105,7 @@ public class GameManager : MonoBehaviour {
     /// Continues the game by changing the current direction.
     /// </summary>
     private void Next() {
-        CurrentDirection = (SlideDirection)Random.Range(0, 4);
+        CurrentDirection = DirectionUtility.DirectionValues[Random.Range(0, DirectionUtility.DirectionCount)];
         CurrentArrow = arrowDatas[Random.Range(0, arrowDatas.Length)];
 
         RecalculateDelays();

@@ -74,7 +74,7 @@ public class UIManager : MonoBehaviour {
 
     private void OnNext() {
         float rotation = 0;
-        SlideDirection newDirection = GameManager.CurrentDirection;
+        SlideDirection newDirection = GameManager.CurrentArrow.DirectionBinder[GameManager.CurrentDirection];
 
         if (newDirection == SlideDirection.Right) {
             rotation = 90f;

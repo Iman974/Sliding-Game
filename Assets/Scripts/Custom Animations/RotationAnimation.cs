@@ -9,7 +9,6 @@ public class RotationAnimation : CustomAnimation {
     [SerializeField] private VectorUtility.Vector3Bool leaveUnchanged;
 
     private Vector3 unchangedRotation;
-    public SerializableDictionnary_SlideDirection sDictionnary;
 
     public override Type AnimatedComponent {
         get {

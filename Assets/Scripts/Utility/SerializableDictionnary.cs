@@ -6,8 +6,8 @@ using System;
 public class SerializableDictionnary<TKey, TValue> : ScriptableObject, ISerializationCallbackReceiver, IDictionary<TKey,TValue>,
     IDictionary {
 
-    private List<TKey> keys = new List<TKey>();
-    private List<TValue> values = new List<TValue>();
+    protected List<TKey> keys = new List<TKey>();
+    protected List<TValue> values = new List<TValue>();
 
     //public object Current {
     //    get {
@@ -15,7 +15,7 @@ public class SerializableDictionnary<TKey, TValue> : ScriptableObject, ISerializ
     //    }
     //}
 
-    private Dictionary<TKey, TValue> dictionnary = new Dictionary<TKey, TValue>();
+    protected Dictionary<TKey, TValue> dictionnary = new Dictionary<TKey, TValue>();
 
     public TValue this[TKey key] {
         get {
@@ -89,6 +89,10 @@ public class SerializableDictionnary<TKey, TValue> : ScriptableObject, ISerializ
         get {
             return ((IDictionary)dictionnary).Values;
         }
+    }
+
+    public SerializableDictionnary() {
+        dictionnary = new Dictionary<TKey, TValue>();
     }
 
     public void Add(TKey key, TValue value) {

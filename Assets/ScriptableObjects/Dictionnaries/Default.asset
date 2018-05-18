@@ -11,3 +11,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37e2ff5646b9ff54f92038a002dd83b6, type: 3}
   m_Name: Default
   m_EditorClassIdentifier: 
+  keys: 00000000010000000200000003000000
+  values: 00000000010000000200000003000000

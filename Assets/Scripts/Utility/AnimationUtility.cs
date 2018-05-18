@@ -169,11 +169,13 @@ public static class AnimationUtility {
         }
     }
 
-    public static IEnumerator RotateTransform(Transform transform, Quaternion targetRotation, AnimationCurve curve, float speed) {
-        Quaternion startRotation = transform.localRotation;
+    public static IEnumerator RotateTransform(Transform transform, Vector3 targetRotation, AnimationCurve curve, float speed) {
+        //Quaternion startRotation = transform.localRotation;
 
+        //Vector3 previousRotation = new Vector3();
         for (float time = 0f; time < 1f; time += speed * Time.deltaTime) {
-            transform.localRotation = Quaternion.Lerp(startRotation, targetRotation, curve.Evaluate(time));
+            //transform.localRotation = Quaternion.Lerp(startRotation, targetRotation, curve.Evaluate(time))
+            transform.Rotate(Vector3.Lerp(Vector3.zero, targetRotation, curve.Evaluate(time)));
 
             yield return null;
         }

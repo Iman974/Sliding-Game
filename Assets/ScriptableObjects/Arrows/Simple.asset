@@ -14,6 +14,7 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 56b90126c51627d49888917c41da1ce0, type: 3}
   stayDuration: 1.25
   nextDelay: 0.45
+  directionBinder: {fileID: 11400000, guid: 65958c1fbe866e64f870ea9479c6c6d9, type: 2}
   baseColor: {r: 1, g: 1, b: 1, a: 0}
   failColor: {r: 1, g: 0, b: 0, a: 1}
   successColor: {r: 0, g: 1, b: 0, a: 1}

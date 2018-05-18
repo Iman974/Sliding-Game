@@ -9,5 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 37e2ff5646b9ff54f92038a002dd83b6, type: 3}
-  m_Name: Reversed
+  m_Name: Opposite
   m_EditorClassIdentifier: 
+  keys: 00000000010000000200000003000000
+  values: 01000000000000000300000002000000

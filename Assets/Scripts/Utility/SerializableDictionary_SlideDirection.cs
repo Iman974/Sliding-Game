@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "New dictionnary", menuName = "Game/Utility/Dictionnary")]
-public class SerializableDictionnary_SlideDirection : SerializableDictionnary<SlideDirection, SlideDirection> {
+[CreateAssetMenu(fileName = "New dictionary", menuName = "Game/Utility/Dictionary")]
+public class SerializableDictionary_SlideDirection : SerializableDictionary<SlideDirection, SlideDirection> {
 
     //public static SerializableDictionnary_SlideDirection Default { get; private set; }
 
@@ -13,9 +13,9 @@ public class SerializableDictionnary_SlideDirection : SerializableDictionnary<Sl
     //    }
     //}
 
-    public SerializableDictionnary_SlideDirection() {
+    public SerializableDictionary_SlideDirection() {
         foreach (SlideDirection direction in DirectionUtility.DirectionValues) {
-            dictionnary.Add(direction, direction);
+            dictionary.Add(direction, direction);
         }
     }
 }

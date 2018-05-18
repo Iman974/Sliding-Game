@@ -39,9 +39,9 @@ public class ArrowType : ScriptableObject {
         get { return nextDelay; }
     }
 
-    [SerializeField] private SerializableDictionnary_SlideDirection sDictionnary;
-    public SerializableDictionnary_SlideDirection DirectionBinder {
-        get { return sDictionnary; }
+    [SerializeField] private SerializableDictionary_SlideDirection directionBinder;
+    public SerializableDictionary_SlideDirection DirectionBinder {
+        get { return directionBinder; }
     }
 
     [Header("Colors")]
@@ -103,6 +103,9 @@ public class ArrowType : ScriptableObject {
         if (animationsArraySize != failAnimations.Delays.Count) {
             ResizeList(failAnimations.Delays, animationsArraySize);
         }
+
+        //successAnimations.Delays.Sort();
+        //failAnimations.Delays.Sort();
     }
 
     /// <summary>
@@ -126,4 +129,14 @@ public class ArrowType : ScriptableObject {
             }
         }
     }
+
+    //private void SortListTogether<T, U>(List<T> list1, List<U> list2) where T: IComparable<T> where U : IComparer<U> {
+    //    for (int i = 1; i < list1.Count; i++) {
+    //        if (list1[i].CompareTo(list1[i - 1]) < 0) {
+    //            T temp = list1[i];
+    //            list1[i] = list1[i - 1];
+    //            list1[i - 1] = temp;
+    //        }
+    //    }
+    //}
 }

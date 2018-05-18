@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Collections;
 using System;
 
-public class SerializableDictionnary<TKey, TValue> : ScriptableObject, ISerializationCallbackReceiver, IDictionary<TKey,TValue>,
+public class SerializableDictionary<TKey, TValue> : ScriptableObject, ISerializationCallbackReceiver, IDictionary<TKey,TValue>,
     IDictionary {
 
-    protected List<TKey> keys = new List<TKey>();
-    protected List<TValue> values = new List<TValue>();
+    [SerializeField] protected List<TKey> keys = new List<TKey>();
+    [SerializeField] protected List<TValue> values = new List<TValue>();
 
     //public object Current {
     //    get {
@@ -15,166 +15,166 @@ public class SerializableDictionnary<TKey, TValue> : ScriptableObject, ISerializ
     //    }
     //}
 
-    protected Dictionary<TKey, TValue> dictionnary = new Dictionary<TKey, TValue>();
+    protected Dictionary<TKey, TValue> dictionary = new Dictionary<TKey, TValue>();
 
     public TValue this[TKey key] {
         get {
-            return ((IDictionary<TKey, TValue>)dictionnary)[key];
+            return ((IDictionary<TKey, TValue>)dictionary)[key];
         }
 
         set {
-            ((IDictionary<TKey, TValue>)dictionnary)[key] = value;
+            ((IDictionary<TKey, TValue>)dictionary)[key] = value;
         }
     }
 
     public object this[object key] {
         get {
-            return ((IDictionary)dictionnary)[key];
+            return ((IDictionary)dictionary)[key];
         }
 
         set {
-            ((IDictionary)dictionnary)[key] = value;
+            ((IDictionary)dictionary)[key] = value;
         }
     }
 
     public ICollection<TKey> Keys {
         get {
-            return ((IDictionary<TKey, TValue>)dictionnary).Keys;
+            return ((IDictionary<TKey, TValue>)dictionary).Keys;
         }
     }
 
     public ICollection<TValue> Values {
         get {
-            return ((IDictionary<TKey, TValue>)dictionnary).Values;
+            return ((IDictionary<TKey, TValue>)dictionary).Values;
         }
     }
 
     public int Count {
         get {
-            return ((IDictionary<TKey, TValue>)dictionnary).Count;
+            return ((IDictionary<TKey, TValue>)dictionary).Count;
         }
     }
 
     public bool IsReadOnly {
         get {
-            return ((IDictionary<TKey, TValue>)dictionnary).IsReadOnly;
+            return ((IDictionary<TKey, TValue>)dictionary).IsReadOnly;
         }
     }
 
     public bool IsFixedSize {
         get {
-            return ((IDictionary)dictionnary).IsFixedSize;
+            return ((IDictionary)dictionary).IsFixedSize;
         }
     }
 
     public bool IsSynchronized {
         get {
-            return ((IDictionary)dictionnary).IsSynchronized;
+            return ((IDictionary)dictionary).IsSynchronized;
         }
     }
 
     public object SyncRoot {
         get {
-            return ((IDictionary)dictionnary).SyncRoot;
+            return ((IDictionary)dictionary).SyncRoot;
         }
     }
 
     ICollection IDictionary.Keys {
         get {
-            return ((IDictionary)dictionnary).Keys;
+            return ((IDictionary)dictionary).Keys;
         }
     }
 
     ICollection IDictionary.Values {
         get {
-            return ((IDictionary)dictionnary).Values;
+            return ((IDictionary)dictionary).Values;
         }
     }
 
-    public SerializableDictionnary() {
-        dictionnary = new Dictionary<TKey, TValue>();
+    public SerializableDictionary() {
+        dictionary = new Dictionary<TKey, TValue>();
     }
 
     public void Add(TKey key, TValue value) {
-        ((IDictionary<TKey, TValue>)dictionnary).Add(key, value);
+        ((IDictionary<TKey, TValue>)dictionary).Add(key, value);
     }
 
     public void Add(KeyValuePair<TKey, TValue> item) {
-        ((IDictionary<TKey, TValue>)dictionnary).Add(item);
+        ((IDictionary<TKey, TValue>)dictionary).Add(item);
     }
 
     public void Add(object key, object value) {
-        ((IDictionary)dictionnary).Add(key, value);
+        ((IDictionary)dictionary).Add(key, value);
     }
 
     public void Clear() {
-        ((IDictionary<TKey, TValue>)dictionnary).Clear();
+        ((IDictionary<TKey, TValue>)dictionary).Clear();
     }
 
     public bool Contains(KeyValuePair<TKey, TValue> item) {
-        return ((IDictionary<TKey, TValue>)dictionnary).Contains(item);
+        return ((IDictionary<TKey, TValue>)dictionary).Contains(item);
     }
 
     public bool Contains(object key) {
-        return ((IDictionary)dictionnary).Contains(key);
+        return ((IDictionary)dictionary).Contains(key);
     }
 
     public bool ContainsKey(TKey key) {
-        return ((IDictionary<TKey, TValue>)dictionnary).ContainsKey(key);
+        return ((IDictionary<TKey, TValue>)dictionary).ContainsKey(key);
     }
 
     public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex) {
-        ((IDictionary<TKey, TValue>)dictionnary).CopyTo(array, arrayIndex);
+        ((IDictionary<TKey, TValue>)dictionary).CopyTo(array, arrayIndex);
     }
 
     public void CopyTo(Array array, int index) {
-        ((IDictionary)dictionnary).CopyTo(array, index);
+        ((IDictionary)dictionary).CopyTo(array, index);
     }
 
     public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() {
-        return ((IDictionary<TKey, TValue>)dictionnary).GetEnumerator();
+        return ((IDictionary<TKey, TValue>)dictionary).GetEnumerator();
     }
 
     public void OnBeforeSerialize() {
         keys.Clear();
         values.Clear();
 
-        foreach (var keyValuePair in dictionnary) {
+        foreach (var keyValuePair in dictionary) {
             keys.Add(keyValuePair.Key);
             values.Add(keyValuePair.Value);
         }
     }
 
     public void OnAfterDeserialize() {
-        dictionnary = new Dictionary<TKey, TValue>();
+        dictionary = new Dictionary<TKey, TValue>();
 
         for (int i = 0; i < Mathf.Min(keys.Count, values.Count); i++) {
-            dictionnary.Add(keys[i], values[i]);
+            dictionary.Add(keys[i], values[i]);
         }
     }
 
     public bool Remove(TKey key) {
-        return ((IDictionary<TKey, TValue>)dictionnary).Remove(key);
+        return ((IDictionary<TKey, TValue>)dictionary).Remove(key);
     }
 
     public bool Remove(KeyValuePair<TKey, TValue> item) {
-        return ((IDictionary<TKey, TValue>)dictionnary).Remove(item);
+        return ((IDictionary<TKey, TValue>)dictionary).Remove(item);
     }
 
     public void Remove(object key) {
-        ((IDictionary)dictionnary).Remove(key);
+        ((IDictionary)dictionary).Remove(key);
     }
 
     public bool TryGetValue(TKey key, out TValue value) {
-        return ((IDictionary<TKey, TValue>)dictionnary).TryGetValue(key, out value);
+        return ((IDictionary<TKey, TValue>)dictionary).TryGetValue(key, out value);
     }
 
     IEnumerator IEnumerable.GetEnumerator() {
-        return ((IDictionary<TKey, TValue>)dictionnary).GetEnumerator();
+        return ((IDictionary<TKey, TValue>)dictionary).GetEnumerator();
     }
 
     IDictionaryEnumerator IDictionary.GetEnumerator() {
-        return ((IDictionary)dictionnary).GetEnumerator();
+        return ((IDictionary)dictionary).GetEnumerator();
     }
 
     //public int KeyCount {

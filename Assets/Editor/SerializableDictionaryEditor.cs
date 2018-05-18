@@ -12,16 +12,14 @@ using System;
 //    }
 //}
 
-[CustomEditor(typeof(SerializableDictionnary_SlideDirection))]
-public class SerializableDictionnary_SlideDirectionEditor : Editor {
+[CustomEditor(typeof(SerializableDictionary_SlideDirection))]
+public class SerializableDictionary_SlideDirectionEditor : Editor {
 
-    private SerializableDictionnary_SlideDirection dictionnary;
-    int enumElementCount = Enum.GetNames(typeof(SlideDirection)).Length;
-    SlideDirection[] enumValues = (SlideDirection[])Enum.GetValues(typeof(SlideDirection));
+    private SerializableDictionary_SlideDirection dictionary;
     //private bool displayAddButton;
 
     private void OnEnable() {
-        dictionnary = (SerializableDictionnary_SlideDirection)target;
+        dictionary = (SerializableDictionary_SlideDirection)target;
 
         //if (dictionnary.Count < enumElementCount) {
         //    displayAddButton = true;
@@ -29,17 +27,17 @@ public class SerializableDictionnary_SlideDirectionEditor : Editor {
     }
 
     public override void OnInspectorGUI() {
-        if (dictionnary == null) {
+        if (dictionary == null) {
             return;
         }
 
-        var keys = new SlideDirection[dictionnary.Keys.Count];
-        var values = new SlideDirection[dictionnary.Values.Count];
+        var keys = new SlideDirection[dictionary.Keys.Count];
+        var values = new SlideDirection[dictionary.Values.Count];
 
-        dictionnary.Keys.CopyTo(keys, 0);
-        dictionnary.Values.CopyTo(values, 0);
+        dictionary.Keys.CopyTo(keys, 0);
+        dictionary.Values.CopyTo(values, 0);
 
-        for (int i = 0; i < dictionnary.Count; i++) {
+        for (int i = 0; i < dictionary.Count; i++) {
             EditorGUILayout.BeginHorizontal();
 
             //if (GUILayout.Button("X", GUILayout.MaxHeight(15f))) {
@@ -54,15 +52,15 @@ public class SerializableDictionnary_SlideDirectionEditor : Editor {
 
             if (newKey != keys[i]) {
                 if (Array.IndexOf(keys, newKey) > -1) {
-                    dictionnary.Remove(keys[i]);
-                    dictionnary.Add(newKey, newValue);
+                    dictionary.Remove(keys[i]);
+                    dictionary.Add(newKey, newValue);
 
-                    EditorUtility.SetDirty(dictionnary);
+                    EditorUtility.SetDirty(dictionary);
                 }
             } else if (newValue != values[i]) {
-                dictionnary[keys[i]] = newValue;
+                dictionary[keys[i]] = newValue;
 
-                EditorUtility.SetDirty(dictionnary);
+                EditorUtility.SetDirty(dictionary);
             }
 
             EditorGUILayout.EndHorizontal();

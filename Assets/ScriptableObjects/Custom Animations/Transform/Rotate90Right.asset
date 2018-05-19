@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d2a49f24d2d58b64698ce92edc77bb98, type: 3}
-  m_Name: Rotate
+  m_Name: Rotate90Right
   m_EditorClassIdentifier: 
   animationCurve:
     serializedVersion: 2
@@ -36,10 +36,4 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   animationSpeed: 2
-  targetRotation: {x: 0, y: 180, z: 0}
-  leaveUnchanged:
-    x: 1
-    y: 0
-    z: 1
-  axisToRotate: 1
-  rotateAxisWith: 2
+  targetRotation: {x: 0, y: 0, z: 90}

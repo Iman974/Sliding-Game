@@ -8,7 +8,7 @@ public class ArrowType : ScriptableObject {
     [Serializable]
     public class AnimationsHolder {
 
-        [SerializeField] private CustomAnimation[] animations;
+        [SerializeField] private CustomAnimation[] animations = new CustomAnimation[0];
 
         public CustomAnimation[] Animations {
             get { return animations; }
@@ -17,7 +17,7 @@ public class ArrowType : ScriptableObject {
             get { return animations.Length; }
         }
 
-        [SerializeField] private List<float> delays;
+        [SerializeField] private List<float> delays = new List<float>();
         public List<float> Delays {
             get { return delays; }
         }
@@ -76,8 +76,8 @@ public class ArrowType : ScriptableObject {
         get { return appearAnimation; }
     }
 
-    [SerializeField] private AnimationsHolder successAnimations;
-    [SerializeField] private AnimationsHolder failAnimations;
+    [SerializeField] private AnimationsHolder successAnimations = new AnimationsHolder();
+    [SerializeField] private AnimationsHolder failAnimations = new AnimationsHolder();
 
     [SerializeField] private CustomAnimation[] skipAnimations;
     public CustomAnimation[] SkipAnimations {

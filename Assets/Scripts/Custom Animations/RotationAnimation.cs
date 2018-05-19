@@ -7,8 +7,8 @@ public class RotationAnimation : CustomAnimation {
 
     [SerializeField] private Vector3 targetRotation;
     //[SerializeField] private VectorUtility.Vector3Bool leaveUnchanged;
-    [SerializeField] private VectorUtility.Vector3Axis axisToRotate;
-    [SerializeField] private VectorUtility.Vector3Axis rotateAxisWith;
+    //[SerializeField] private VectorUtility.Vector3Axis axisToRotate;
+    //[SerializeField] private VectorUtility.Vector3Axis rotateAxisWith;
 
     //private Vector3 unchangedRotation;
 

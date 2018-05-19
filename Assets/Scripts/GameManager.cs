@@ -149,7 +149,7 @@ public class GameManager : MonoBehaviour {
             totalScore += CalculateScore();
             isValidated = true;
         } else {
-            Debug.Log("Lose, input was:" + inputDirection);
+            Debug.Log("Lose: " + CurrentDirection + ", input was:" + inputDirection);
             totalScore -= CurrentArrow.ScoreValue;
             isValidated = false;
         }

@@ -533,6 +533,7 @@ MonoBehaviour:
   arrowDatas:
   - {fileID: 11400000, guid: 1923d410daa5157488588440c8a889cd, type: 2}
   - {fileID: 11400000, guid: fdc15f69be2da9f4d843fb81088a60ef, type: 2}
+  - {fileID: 11400000, guid: 01350e1e9a6aa0342ad673e843fa5b8b, type: 2}
 --- !u!4 &1284931421
 Transform:
   m_ObjectHideFlags: 0

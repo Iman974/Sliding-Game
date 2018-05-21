@@ -99,6 +99,7 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Skip() {
+        nextDelay = CurrentArrow.SkipDelay;
         StartCoroutine(TriggerNextDelayed());
 
         if (SkipEvent != null) {
@@ -141,5 +142,9 @@ public class GameManager : MonoBehaviour {
     /// </summary>
     private int CalculateScore() {
         return Mathf.RoundToInt(CurrentArrow.ScoreValue * countdown * (1f / skipDelay));
+    }
+
+    public void ResetGame() {
+        Next();
     }
 }

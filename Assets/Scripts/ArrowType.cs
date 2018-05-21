@@ -29,6 +29,12 @@ public class ArrowType : ScriptableObject {
         get { return sprite; }
     }
 
+    [SerializeField] private SerializableDictionary_SlideDirection directionBinder;
+    public SerializableDictionary_SlideDirection DirectionBinder {
+        get { return directionBinder; }
+    }
+
+    [Header("Time")]
     [SerializeField] private float stayDuration = 1.25f;
     public float StayDuration {
         get { return stayDuration; }
@@ -39,9 +45,9 @@ public class ArrowType : ScriptableObject {
         get { return nextDelay; }
     }
 
-    [SerializeField] private SerializableDictionary_SlideDirection directionBinder;
-    public SerializableDictionary_SlideDirection DirectionBinder {
-        get { return directionBinder; }
+    [SerializeField] private float skipDelay = 0.3f;
+    public float SkipDelay {
+        get { return skipDelay; }
     }
 
     [Header("Colors")]

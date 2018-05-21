@@ -16,46 +16,24 @@ public class GameManager : MonoBehaviour {
     private int totalScore;
     private bool isReady = true;
 
-    private event System.Action<bool, int> _ValidationEvent;
-    private event System.Action _NextEvent;
-    private event System.Action _SkipEvent;
-
-    public static GameManager Instance { get; private set; }
-    public static SlideDirection CurrentDirection { get; private set; }
-    public static ArrowType CurrentArrow { get; private set; }
-
     /// <summary>
     /// Event triggered when the player sliding input is validated or not.
     /// </summary>
-    public static event System.Action<bool, int> ValidationEvent {
-        add {
-            Instance._ValidationEvent += value;
-        }
-        remove {
-            Instance._ValidationEvent -= value;
-        }
-    }
+    public static event System.Action<bool, int> ValidationEvent;
 
     /// <summary>
     /// Event triggered when the next direction is chosen.
     /// </summary>
-    public static event System.Action NextEvent {
-        add {
-            Instance._NextEvent += value;
-        }
-        remove {
-            Instance._NextEvent -= value;
-        }
-    }
+    public static event System.Action NextEvent;
 
-    public static event System.Action SkipEvent {
-        add {
-            Instance._SkipEvent += value;
-        }
-        remove {
-            Instance._SkipEvent -= value;
-        }
-    }
+    /// <summary>
+    /// Event triggered when the player misses a turn.
+    /// </summary>
+    public static event System.Action SkipEvent;
+
+    public static GameManager Instance { get; private set; }
+    public static SlideDirection CurrentDirection { get; private set; }
+    public static ArrowType CurrentArrow { get; private set; }
 
     private void Awake() {
         #region Singleton
@@ -68,11 +46,10 @@ public class GameManager : MonoBehaviour {
         #endregion
 
         countdown = skipDelay;
-        CurrentDirection = SlideDirection.Right;
     }
 
     private void Start() {
-        //UIManager.AnimationEnd += OnAnimationEnd;
+        Next();
     }
 
     private void Update() {
@@ -111,8 +88,8 @@ public class GameManager : MonoBehaviour {
         RecalculateDelays();
         countdown = skipDelay;
 
-        if (_NextEvent != null) {
-            _NextEvent();
+        if (NextEvent != null) {
+            NextEvent();
         }
     }
 
@@ -124,8 +101,8 @@ public class GameManager : MonoBehaviour {
     private void Skip() {
         StartCoroutine(TriggerNextDelayed());
 
-        if (_SkipEvent != null) {
-            _SkipEvent();
+        if (SkipEvent != null) {
+            SkipEvent();
         }
     }
 
@@ -154,8 +131,8 @@ public class GameManager : MonoBehaviour {
             isValidated = false;
         }
 
-        if (_ValidationEvent != null) {
-            _ValidationEvent(isValidated, totalScore);
+        if (ValidationEvent != null) {
+            ValidationEvent(isValidated, totalScore);
         }
     }
 
@@ -164,13 +141,5 @@ public class GameManager : MonoBehaviour {
     /// </summary>
     private int CalculateScore() {
         return Mathf.RoundToInt(CurrentArrow.ScoreValue * countdown * (1f / skipDelay));
-    }
-
-    private void OnAnimationEnd() {
-        //isReady = true;
-    }
-
-    private void OnDestroy() {
-        //UIManager.AnimationEnd -= OnAnimationEnd;
     }
 }

@@ -36,4 +36,4 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   animationSpeed: 2
-  targetRotation: {x: 0, y: 0, z: 90}
+  targetRotation: {x: 0, y: 0, z: -90}

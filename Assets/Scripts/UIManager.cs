@@ -34,14 +34,10 @@ public class UIManager : MonoBehaviour {
         //fadeOutSpeed = 1f - fadeOutSpeed;
         scaleDownSpeed = 1f - scaleDownSpeed;
         initialArrowScale = arrowImg.transform.localScale;
-    }
 
-    private void Start() {
         GameManager.ValidationEvent += OnMovementValidation;
         GameManager.NextEvent += OnNext;
         GameManager.SkipEvent += OnSkip;
-
-        //arrowAnimator = arrowImg.GetComponent<Animator>();
     }
 
     private void OnMovementValidation(bool isValidated, int scoreValue) {
@@ -73,7 +69,7 @@ public class UIManager : MonoBehaviour {
     }
 
     private void OnNext() {
-        float rotation = 0;
+        float rotation = 0f;
         SlideDirection newDirection = GameManager.CurrentArrow.DirectionBinder[GameManager.CurrentDirection];
 
         if (newDirection == SlideDirection.Right) {

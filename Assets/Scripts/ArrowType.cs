@@ -94,10 +94,6 @@ public class ArrowType : ScriptableObject {
         return isValidated ? successAnimations : failAnimations;
     }
 
-    //public float[] GetValidationAnimationsDelays(bool isValidated) {
-    //    return isValidated ? successAnimationsDelays : failAnimationsDelays;
-    //}
-
     private void OnEnable() {
         int animationsArraySize = successAnimations.Animations.Length;
 
@@ -109,17 +105,8 @@ public class ArrowType : ScriptableObject {
         if (animationsArraySize != failAnimations.Delays.Count) {
             ResizeList(failAnimations.Delays, animationsArraySize);
         }
-
-        //successAnimations.Delays.Sort();
-        //failAnimations.Delays.Sort();
     }
 
-    /// <summary>
-    /// Resizes the list until to the wanted size. The empty elements are filled with default values.
-    /// </summary>
-    /// <param name="size">
-    /// The size to be match.
-    /// </param>
     private void ResizeList<T>(List<T> listToResize, int size) {
         int countDifference = -listToResize.Count + size;
 
@@ -135,14 +122,4 @@ public class ArrowType : ScriptableObject {
             }
         }
     }
-
-    //private void SortListTogether<T, U>(List<T> list1, List<U> list2) where T: IComparable<T> where U : IComparer<U> {
-    //    for (int i = 1; i < list1.Count; i++) {
-    //        if (list1[i].CompareTo(list1[i - 1]) < 0) {
-    //            T temp = list1[i];
-    //            list1[i] = list1[i - 1];
-    //            list1[i - 1] = temp;
-    //        }
-    //    }
-    //}
 }

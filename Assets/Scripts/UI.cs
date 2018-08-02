@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIManager : MonoBehaviour {
+public class UI : MonoBehaviour {
 
     [SerializeField] private Text scoreText;
     [SerializeField] private Image arrowImg;
@@ -35,15 +35,15 @@ public class UIManager : MonoBehaviour {
         scaleDownSpeed = 1f - scaleDownSpeed;
         initialArrowScale = arrowImg.transform.localScale;
 
-        GameManager.ValidationEvent += OnMovementValidation;
-        GameManager.NextEvent += OnNext;
-        GameManager.SkipEvent += OnSkip;
+        Game.InputValidationEvent += OnMovementValidation;
+        Game.NextEvent += OnNext;
+        Game.MissEvent += OnSkip;
     }
 
     private void OnMovementValidation(bool isValidated, int scoreValue) {
         scoreText.text = "Score: " + scoreValue;
 
-        ArrowType currentArrow = GameManager.CurrentArrow;
+        ArrowType currentArrow = Game.CurrentArrow;
 
         if (isValidated) {
             arrowImg.color = currentArrow.SuccessColor;
@@ -55,7 +55,7 @@ public class UIManager : MonoBehaviour {
     }
 
     private IEnumerator PlayAnimations(bool isValidated) {
-        ArrowType.AnimationsHolder animationsHolder = GameManager.CurrentArrow.GetValidationAnimations(isValidated);
+        ArrowType.AnimationsHolder animationsHolder = Game.CurrentArrow.GetValidationAnimations(isValidated);
 
         int delayIndex = 0;
         foreach (CustomAnimation animation in animationsHolder.Animations) {
@@ -70,7 +70,7 @@ public class UIManager : MonoBehaviour {
 
     private void OnNext() {
         float rotation = 0f;
-        SlideDirection newDirection = GameManager.CurrentArrow.DirectionBinder[GameManager.CurrentDirection];
+        SlideDirection newDirection = Game.CurrentArrow.DirectionBinder[Game.CurrentDirection];
 
         if (newDirection == SlideDirection.Right) {
             rotation = 90f;
@@ -87,27 +87,27 @@ public class UIManager : MonoBehaviour {
         arrowImg.transform.localScale = initialArrowScale;
         //StartCoroutine(FadeArrow(false));
 
-        arrowImg.color = GameManager.CurrentArrow.BaseColor;
-        arrowImg.sprite = GameManager.CurrentArrow.Sprite;
+        arrowImg.color = Game.CurrentArrow.BaseColor;
+        arrowImg.sprite = Game.CurrentArrow.Sprite;
 
-        foreach (CustomAnimation animation in GameManager.CurrentArrow.AppearAnimations) {
+        foreach (CustomAnimation animation in Game.CurrentArrow.AppearAnimations) {
             StartCoroutine(animation.GetAnimation(arrowImg.GetComponent(animation.AnimatedComponent)));
         }
     }
 
     private void OnSkip() {
-        if (GameManager.CurrentArrow == null) {
+        if (Game.CurrentArrow == null) {
             return;
         }
 
-        arrowImg.color = GameManager.CurrentArrow.SkipColor;
-        foreach (CustomAnimation animation in GameManager.CurrentArrow.SkipAnimations) {
+        arrowImg.color = Game.CurrentArrow.SkipColor;
+        foreach (CustomAnimation animation in Game.CurrentArrow.SkipAnimations) {
             StartCoroutine(animation.GetAnimation(arrowImg.GetComponent(animation.AnimatedComponent)));
         }
     }
 
     private IEnumerator SlideArrow() {
-        Vector2 slideDirection = DirectionUtility.DirectionToVector(GameManager.CurrentDirection) * slideDistance;
+        Vector2 slideDirection = DirectionUtility.DirectionToVector(Game.CurrentDirection) * slideDistance;
         Vector2 startPosition = arrowImg.rectTransform.anchoredPosition;
 
         for (float time = 0f; time < 1f; time += slideSpeed * Time.deltaTime) {
@@ -138,8 +138,8 @@ public class UIManager : MonoBehaviour {
     }
 
     private void OnDestroy() {
-        GameManager.ValidationEvent -= OnMovementValidation;
-        GameManager.NextEvent -= OnNext;
-        GameManager.SkipEvent -= OnSkip;
+        Game.InputValidationEvent -= OnMovementValidation;
+        Game.NextEvent -= OnNext;
+        Game.MissEvent -= OnSkip;
     }
 }

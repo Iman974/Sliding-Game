@@ -1,11 +1,10 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour {
+public class Game : MonoBehaviour {
 
-    //[SerializeField] private int baseScoreValue = 10;
-    [Tooltip("The threshold that need to be reached in order to consider the sliding. This is a value squared.")]
-    [SerializeField] private float sensibility = 0.07f;
+    [Tooltip("The threshold that need to be reached in order to consider the sliding.")]
+    [SerializeField] private float slidingSensibility = 0.25f;
 
     [Header("")]
     [SerializeField] private ArrowType[] arrowDatas;
@@ -16,22 +15,13 @@ public class GameManager : MonoBehaviour {
     private int totalScore;
     private bool isReady = true;
 
-    /// <summary>
-    /// Event triggered when the player sliding input is validated or not.
-    /// </summary>
-    public static event System.Action<bool, int> ValidationEvent;
+    public static event System.Action<bool, int> InputValidationEvent;
 
-    /// <summary>
-    /// Event triggered when the next direction is chosen.
-    /// </summary>
     public static event System.Action NextEvent;
 
-    /// <summary>
-    /// Event triggered when the player misses a turn.
-    /// </summary>
-    public static event System.Action SkipEvent;
+    public static event System.Action MissEvent;
 
-    public static GameManager Instance { get; private set; }
+    public static Game Instance { get; private set; }
     public static SlideDirection CurrentDirection { get; private set; }
     public static ArrowType CurrentArrow { get; private set; }
 
@@ -46,6 +36,7 @@ public class GameManager : MonoBehaviour {
         #endregion
 
         countdown = skipDelay;
+        slidingSensibility *= slidingSensibility;
     }
 
     private void Start() {
@@ -61,15 +52,12 @@ public class GameManager : MonoBehaviour {
 
         if (countdown <= 0f) {
             isReady = false;
-            // -1 life
-            //Debug.Log("Missed !");
 
             Skip();
         } else if (Input.touchCount > 0 && isReady) {
             Touch touch = Input.GetTouch(0);
 
-            if (touch.phase == TouchPhase.Moved && touch.deltaPosition.sqrMagnitude > sensibility) {
-                //Debug.Log("Slide: " + touch.deltaPosition);
+            if (touch.phase == TouchPhase.Moved && touch.deltaPosition.sqrMagnitude > slidingSensibility) {
                 isReady = false;
 
                 ValidateMovement(DirectionUtility.VectorToDirection(touch.deltaPosition));
@@ -102,8 +90,8 @@ public class GameManager : MonoBehaviour {
         nextDelay = CurrentArrow.SkipDelay;
         StartCoroutine(TriggerNextDelayed());
 
-        if (SkipEvent != null) {
-            SkipEvent();
+        if (MissEvent != null) {
+            MissEvent();
         }
     }
 
@@ -111,7 +99,6 @@ public class GameManager : MonoBehaviour {
         yield return new WaitForSeconds(nextDelay);
         Next();
         isReady = true;
-        //Debug.Log("Ready !");
     }
 
     /// <summary>
@@ -132,14 +119,11 @@ public class GameManager : MonoBehaviour {
             isValidated = false;
         }
 
-        if (ValidationEvent != null) {
-            ValidationEvent(isValidated, totalScore);
+        if (InputValidationEvent != null) {
+            InputValidationEvent(isValidated, totalScore);
         }
     }
 
-    /// <summary>
-    /// Calculates the score proportionally to the elapsed time.
-    /// </summary>
     private int CalculateScore() {
         return Mathf.RoundToInt(CurrentArrow.ScoreValue * countdown * (1f / skipDelay));
     }

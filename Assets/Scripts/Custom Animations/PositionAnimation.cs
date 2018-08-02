@@ -14,7 +14,7 @@ public class PositionAnimation : CustomAnimation {
     }
 
     public override IEnumerator GetAnimation(Component transform) {
-        Vector2 slideDirection = DirectionUtility.DirectionToVector(GameManager.CurrentDirection) * moveDistance;
+        Vector2 slideDirection = DirectionUtility.DirectionToVector(Game.CurrentDirection) * moveDistance;
 
         return AnimationUtility.MoveToPosition((RectTransform)transform, slideDirection, animationCurve, animationSpeed);
     }

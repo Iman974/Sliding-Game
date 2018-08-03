@@ -7,7 +7,7 @@ public class Game : MonoBehaviour {
     [SerializeField] private float slidingSensibility = 0.25f;
 
     [Header("")]
-    [SerializeField] private ArrowType[] arrowDatas;
+    [SerializeField] private Arrow[] arrowPrefabs;
 
     private float skipDelay = 1.5f;
     private float nextDelay = 0.4f;
@@ -15,15 +15,15 @@ public class Game : MonoBehaviour {
     private int totalScore;
     private bool isReady = true;
 
-    public static event System.Action<bool, int> InputValidationEvent;
+    public static event System.Action<bool, int> OnInputValidationEvent;
 
-    public static event System.Action NextEvent;
+    public static event System.Action OnNextEvent;
 
-    public static event System.Action MissEvent;
+    public static event System.Action OnMissEvent;
 
     public static Game Instance { get; private set; }
     public static SlideDirection CurrentDirection { get; private set; }
-    public static ArrowType CurrentArrow { get; private set; }
+    public static Arrow CurrentArrow { get; private set; }
 
     private void Awake() {
         #region Singleton
@@ -66,18 +66,16 @@ public class Game : MonoBehaviour {
         }
     }
 
-    /// <summary>
-    /// Continues the game by changing the current direction.
-    /// </summary>
     private void Next() {
         CurrentDirection = DirectionUtility.DirectionValues[Random.Range(0, DirectionUtility.DirectionCount)];
-        CurrentArrow = arrowDatas[Random.Range(0, arrowDatas.Length)];
+        //CurrentArrow = arrowDatas[Random.Range(0, arrowDatas.Length)];
+        CurrentArrow = Instantiate(arrowPrefabs[Random.Range(0, arrowPrefabs.Length)]).GetComponent<Arrow>();
 
         RecalculateDelays();
         countdown = skipDelay;
 
-        if (NextEvent != null) {
-            NextEvent();
+        if (OnNextEvent != null) {
+            OnNextEvent();
         }
     }
 
@@ -90,8 +88,8 @@ public class Game : MonoBehaviour {
         nextDelay = CurrentArrow.SkipDelay;
         StartCoroutine(TriggerNextDelayed());
 
-        if (MissEvent != null) {
-            MissEvent();
+        if (OnMissEvent != null) {
+            OnMissEvent();
         }
     }
 
@@ -101,12 +99,6 @@ public class Game : MonoBehaviour {
         isReady = true;
     }
 
-    /// <summary>
-    /// Validates the movement.
-    /// </summary>
-    /// <param name="inputDirection">
-    /// The direction the player slided to.
-    /// </param>
     private void ValidateMovement(SlideDirection inputDirection) {
         bool isValidated;
 
@@ -119,13 +111,13 @@ public class Game : MonoBehaviour {
             isValidated = false;
         }
 
-        if (InputValidationEvent != null) {
-            InputValidationEvent(isValidated, totalScore);
+        if (OnInputValidationEvent != null) {
+            OnInputValidationEvent(isValidated, totalScore);
         }
     }
 
     private int CalculateScore() {
-        return Mathf.RoundToInt(CurrentArrow.ScoreValue * countdown * (1f / skipDelay));
+        return Mathf.RoundToInt((CurrentArrow.ScoreValue * countdown) / skipDelay);
     }
 
     public void ResetGame() {

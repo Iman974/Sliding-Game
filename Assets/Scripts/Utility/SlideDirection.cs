@@ -3,14 +3,8 @@ using System;
 
 public static class DirectionUtility {
 
-    /// <summary>
-    /// The values of the SlideDirection enum.
-    /// </summary>
     public static SlideDirection[] DirectionValues { get; private set; }
 
-    /// <summary>
-    /// How many elements the SlideDirection enum contains.
-    /// </summary>
     public static int DirectionCount { get; private set; }
 
     static DirectionUtility() {
@@ -18,15 +12,6 @@ public static class DirectionUtility {
         DirectionCount = DirectionValues.Length;
     }
 
-    /// <summary>
-    /// Converts the given direction to a vector.
-    /// </summary>
-    /// <param name="direction">
-    /// The direction to convert from.
-    /// </param>
-    /// <returns>
-    /// Returns the converted direction as a vector.
-    /// </returns>
     public static Vector2 DirectionToVector(SlideDirection direction) {
         Vector2 convertedDirection;
 
@@ -43,15 +28,6 @@ public static class DirectionUtility {
         return convertedDirection;
     }
 
-    /// <summary>
-    /// Converts the given vector to a direction.
-    /// </summary>
-    /// <param name="direction">
-    /// The vector to convert from.
-    /// </param>
-    /// <returns>
-    /// Returns the converted vector as a direction.
-    /// </returns>
     public static SlideDirection VectorToDirection(Vector2 direction) {
         SlideDirection convertedVector;
 
@@ -62,6 +38,20 @@ public static class DirectionUtility {
         }
 
         return convertedVector;
+    }
+
+    public static float GetRotationFromDirection(SlideDirection direction) {
+        float rotation = 0f;
+
+        if (direction == SlideDirection.Right) {
+            rotation = 90f;
+        } else if (direction == SlideDirection.Down) {
+            rotation = 180f;
+        } else if (direction == SlideDirection.Left) {
+            rotation = 270f;
+        }
+
+        return 90f - rotation;
     }
 }
 

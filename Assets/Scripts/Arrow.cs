@@ -39,7 +39,9 @@ public class Arrow : MonoBehaviour {
         animator = GetComponent<Animator>();
 
         Game.OnInputValidationEvent += OnMovementValidation;
+        Game.OnMissEvent += OnMiss;
 
+        currentDirection = Game.CurrentDirection;
         Orient();
     }
 
@@ -51,30 +53,29 @@ public class Arrow : MonoBehaviour {
         }
 
         animator.SetBool("skip", !isValidated);
-        animator.SetTrigger(Game.CurrentDirection.ToString());
+        animator.SetTrigger(currentDirection.ToString());
     }
 
     private void Orient() {
-        float rotation = 0f;
-        SlideDirection matchingDirection = directionBinder[Game.CurrentDirection];
+        SlideDirection matchingDirection = directionBinder[currentDirection];
 
-        if (matchingDirection == SlideDirection.Right) {
-            rotation = 90f;
-        } else if (matchingDirection == SlideDirection.Down) {
-            rotation = 180f;
-        } else if (matchingDirection == SlideDirection.Left) {
-            rotation = 270f;
-        }
-
+        float rotation = DirectionUtility.GetRotationFromDirection(matchingDirection);
         transform.rotation = Quaternion.Euler(0f, 0f, rotation);
     }
 
     private void OnMiss() {
         spriteRenderer.color = skipColor;
-        //TODO: play skip animations
+
+        animator.SetBool("skip", true);
+        animator.SetTrigger(currentDirection.ToString());
+    }
+
+    private void DestroyGameObject() {
+        Destroy(gameObject);
     }
 
     private void OnDestroy() {
         Game.OnInputValidationEvent -= OnMovementValidation;
+        Game.OnMissEvent -= OnMiss;
     }
 }

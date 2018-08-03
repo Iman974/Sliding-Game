@@ -75,7 +75,7 @@ public class Game : MonoBehaviour {
         countdown = skipDelay;
 
         if (OnNextEvent != null) {
-            OnNextEvent();
+            OnNextEvent(); // delete this event call later ?
         }
     }
 

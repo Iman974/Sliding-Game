@@ -18,7 +18,6 @@ public class StartCountdown : MonoBehaviour {
         countDownText.enabled = false;
         enabled = false;
 
-        arrowImg.SetActive(true);
         Game.Instance.enabled = true;
     }
 }

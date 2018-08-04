@@ -39,7 +39,7 @@ public class Arrow : MonoBehaviour {
         animator = GetComponent<Animator>();
 
         Game.OnInputValidationEvent += OnMovementValidation;
-        Game.OnMissEvent += OnMiss;
+        Game.OnMissedEvent += OnMissed;
 
         currentDirection = Game.CurrentDirection;
         Orient();
@@ -48,12 +48,13 @@ public class Arrow : MonoBehaviour {
     private void OnMovementValidation(bool isValidated, int scoreValue) {
         if (isValidated) {
             spriteRenderer.color = successColor;
+            animator.SetTrigger(currentDirection.ToString());
         } else {
             spriteRenderer.color = failColor;
+            animator.SetTrigger("failed");
         }
 
-        animator.SetBool("skip", !isValidated);
-        animator.SetTrigger(currentDirection.ToString());
+        //animator.SetBool("skip", !isValidated);
     }
 
     private void Orient() {
@@ -63,11 +64,11 @@ public class Arrow : MonoBehaviour {
         transform.rotation = Quaternion.Euler(0f, 0f, rotation);
     }
 
-    private void OnMiss() {
+    private void OnMissed() {
         spriteRenderer.color = skipColor;
 
-        animator.SetBool("skip", true);
-        animator.SetTrigger(currentDirection.ToString());
+        //animator.SetBool("skip", true);
+        animator.SetTrigger("missed");
     }
 
     private void DestroyGameObject() {
@@ -76,6 +77,6 @@ public class Arrow : MonoBehaviour {
 
     private void OnDestroy() {
         Game.OnInputValidationEvent -= OnMovementValidation;
-        Game.OnMissEvent -= OnMiss;
+        Game.OnMissedEvent -= OnMissed;
     }
 }

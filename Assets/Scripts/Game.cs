@@ -19,7 +19,7 @@ public class Game : MonoBehaviour {
 
     public static event System.Action OnNextEvent;
 
-    public static event System.Action OnMissEvent;
+    public static event System.Action OnMissedEvent;
 
     public static Game Instance { get; private set; }
     public static SlideDirection CurrentDirection { get; private set; }
@@ -88,8 +88,8 @@ public class Game : MonoBehaviour {
         nextDelay = CurrentArrow.SkipDelay;
         StartCoroutine(TriggerNextDelayed());
 
-        if (OnMissEvent != null) {
-            OnMissEvent();
+        if (OnMissedEvent != null) {
+            OnMissedEvent();
         }
     }
 

@@ -6,15 +6,5 @@ AnimatorOverrideController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: ArrowReverse
-  m_Controller: {fileID: 9100000, guid: 38d1bd21b3ea3c14ba0308623b0d17ac, type: 2}
-  m_Clips:
-  - m_OriginalClip: {fileID: 7400000, guid: eee284fee8529c54e8aa5e88abd0d44a, type: 2}
-    m_OverrideClip: {fileID: 7400000, guid: eee284fee8529c54e8aa5e88abd0d44a, type: 2}
-  - m_OriginalClip: {fileID: 7400000, guid: d0ff37beceaf03246925cadd7d9d0eb8, type: 2}
-    m_OverrideClip: {fileID: 7400000, guid: f5ae7969d601394409e70702721fdd8a, type: 2}
-  - m_OriginalClip: {fileID: 7400000, guid: 887aaffe8fa8f244a9f988813107e073, type: 2}
-    m_OverrideClip: {fileID: 7400000, guid: 9c194440cce3f2a449eb586eaee7797b, type: 2}
-  - m_OriginalClip: {fileID: 7400000, guid: ebd942b841a509747ba568aa1a32e9ac, type: 2}
-    m_OverrideClip: {fileID: 7400000, guid: 4a515edfcd7c7ff4a931d1bc60cecc6b, type: 2}
-  - m_OriginalClip: {fileID: 7400000, guid: 3c79a0a7ff21d2548a83905825ba112c, type: 2}
-    m_OverrideClip: {fileID: 7400000, guid: 6ad9ce7af74b1b042979b22fda6c1468, type: 2}
+  m_Controller: {fileID: 9100000, guid: 55821a9ff9986eb4a80f3ab69580e948, type: 2}
+  m_Clips: []

@@ -6,7 +6,7 @@ AnimatorOverrideController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: ArrowRotater90Left
-  m_Controller: {fileID: 9100000, guid: 38d1bd21b3ea3c14ba0308623b0d17ac, type: 2}
+  m_Controller: {fileID: 9100000, guid: 55821a9ff9986eb4a80f3ab69580e948, type: 2}
   m_Clips:
   - m_OriginalClip: {fileID: 7400000, guid: 887aaffe8fa8f244a9f988813107e073, type: 2}
     m_OverrideClip: {fileID: 7400000, guid: a3f7a1ea9eaa7f647a922114cd5d6c4f, type: 2}

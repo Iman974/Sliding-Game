@@ -68,15 +68,10 @@ public class Game : MonoBehaviour {
 
     private void Next() {
         CurrentDirection = DirectionUtility.DirectionValues[Random.Range(0, DirectionUtility.DirectionCount)];
-        //CurrentArrow = arrowDatas[Random.Range(0, arrowDatas.Length)];
-        CurrentArrow = Instantiate(arrowPrefabs[Random.Range(0, arrowPrefabs.Length)]).GetComponent<Arrow>();
+        CurrentArrow = Instantiate(arrowPrefabs[Random.Range(0, arrowPrefabs.Length)]);
 
         RecalculateDelays();
         countdown = skipDelay;
-
-        if (OnNextEvent != null) {
-            OnNextEvent(); // delete this event call later ?
-        }
     }
 
     private void RecalculateDelays() {

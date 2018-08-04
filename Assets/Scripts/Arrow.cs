@@ -61,6 +61,7 @@ public class Arrow : MonoBehaviour {
         SlideDirection matchingDirection = directionBinder[currentDirection];
 
         float rotation = DirectionUtility.GetRotationFromDirection(matchingDirection);
+        Debug.Log(rotation);
         transform.rotation = Quaternion.Euler(0f, 0f, rotation);
     }
 

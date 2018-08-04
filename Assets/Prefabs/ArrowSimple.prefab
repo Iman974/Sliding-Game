@@ -75,7 +75,7 @@ MonoBehaviour:
   scoreValue: 50
   stayDuration: 1
   nextDelay: 0.5
-  skipDelay: 0.3
+  skipDelay: 0.5
   successColor: {r: 0, g: 1, b: 0, a: 1}
   failColor: {r: 1, g: 0, b: 0, a: 1}
   skipColor: {r: 0, g: 0, b: 1, a: 1}

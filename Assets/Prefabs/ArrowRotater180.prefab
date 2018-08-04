@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 95262726239850040}
   - component: {fileID: 114367576445308934}
   m_Layer: 5
-  m_Name: ArrowReverse
+  m_Name: ArrowRotater180
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -51,7 +51,7 @@ Animator:
   m_GameObject: {fileID: 1678105645422108}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: 57f376993cc2a5a41bef8843d238858d, type: 2}
+  m_Controller: {fileID: 9100000, guid: bb30c97e64938c340931b89f085ad662, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -75,7 +75,7 @@ MonoBehaviour:
   scoreValue: 100
   stayDuration: 1.25
   nextDelay: 0.5
-  skipDelay: 0.3
+  skipDelay: 0.5
   successColor: {r: 0, g: 1, b: 0, a: 1}
   failColor: {r: 1, g: 0, b: 0, a: 1}
   skipColor: {r: 0, g: 0, b: 1, a: 1}

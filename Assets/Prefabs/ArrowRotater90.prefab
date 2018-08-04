@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 95023879109896484}
   - component: {fileID: 114879173421589942}
   m_Layer: 5
-  m_Name: ArrowRotater90Left
+  m_Name: ArrowRotater90
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

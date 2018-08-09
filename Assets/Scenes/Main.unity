@@ -554,34 +554,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreText: {fileID: 207040874}
-  arrowImg: {fileID: 0}
-  slidingAnimation:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 2.757938
-      outSlope: 2.757938
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
-  slideSpeed: 1
-  slideDistance: 100
-  scaleDownSpeed: 0.1
 --- !u!1 &1284931419
 GameObject:
   m_ObjectHideFlags: 0
@@ -612,7 +584,6 @@ MonoBehaviour:
   slidingSensibility: 0.25
   arrowPrefabs:
   - {fileID: 114772171678987794, guid: 495a8ae89bebef042ba49cc3a2668dad, type: 2}
-  - {fileID: 114367576445308934, guid: a94a4bda71242a442815779c9e5b6e14, type: 2}
 --- !u!4 &1284931421
 Transform:
   m_ObjectHideFlags: 0

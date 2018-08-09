@@ -33,6 +33,7 @@ public class Arrow : MonoBehaviour {
     private SpriteRenderer spriteRenderer;
     private Animator animator;
     private SlideDirection currentDirection;
+    private Quaternion targetRotation;
 
     private void Start() {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -43,6 +44,8 @@ public class Arrow : MonoBehaviour {
 
         currentDirection = Game.CurrentDirection;
         Orient();
+
+        animator.enabled = true;
     }
 
     private void OnMovementValidation(bool isValidated, int scoreValue) {
@@ -53,22 +56,18 @@ public class Arrow : MonoBehaviour {
             spriteRenderer.color = failColor;
             animator.SetTrigger("failed");
         }
-
-        //animator.SetBool("skip", !isValidated);
     }
 
     private void Orient() {
         SlideDirection matchingDirection = directionBinder[currentDirection];
 
         float rotation = DirectionUtility.GetRotationFromDirection(matchingDirection);
-        Debug.Log(rotation);
-        transform.rotation = Quaternion.Euler(0f, 0f, rotation);
+        targetRotation = Quaternion.Euler(0f, 0f, rotation);
+        transform.rotation = targetRotation;
     }
 
     private void OnMissed() {
         spriteRenderer.color = skipColor;
-
-        //animator.SetBool("skip", true);
         animator.SetTrigger("missed");
     }
 

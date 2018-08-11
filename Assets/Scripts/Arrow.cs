@@ -49,6 +49,7 @@ public class Arrow : MonoBehaviour {
         if (isValidated) {
             spriteRenderer.color = successColor;
             animator.SetTrigger("success");
+            animator.SetBool(currentDirection.ToString(), true);
         } else {
             spriteRenderer.color = failColor;
             animator.SetTrigger("failed");

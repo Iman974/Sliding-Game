@@ -10,9 +10,14 @@ public class UI : MonoBehaviour {
     private void Start() {
         Game.OnInputValidationEvent += OnMovementValidation;
         Game.OnGameOverEvent += OnGameOver;
+        Game.OnGameResetEvent += OnGameReset;
     }
 
     private void OnMovementValidation(bool isValidated) {
+        UpdateStatsText();
+    }
+
+    private void UpdateStatsText() {
         scoreText.text = "Score: " + Game.TotalScore;
         livesText.text = "Lives: " + Game.Instance.Lives;
     }
@@ -21,8 +26,13 @@ public class UI : MonoBehaviour {
         gameoverUIElementsContainer.SetActive(true);
     }
 
+    private void OnGameReset() {
+        UpdateStatsText();
+    }
+
     private void OnDestroy() {
         Game.OnInputValidationEvent -= OnMovementValidation;
         Game.OnGameOverEvent -= OnGameOver;
+        Game.OnGameResetEvent -= OnGameReset;
     }
 }

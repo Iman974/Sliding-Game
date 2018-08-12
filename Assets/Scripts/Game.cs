@@ -18,6 +18,7 @@ public class Game : MonoBehaviour {
     public static event System.Action<bool> OnInputValidationEvent;
     public static event System.Action OnMissedEvent;
     public static event System.Action OnGameOverEvent;
+    public static event System.Action OnGameResetEvent;
 
     public static Game Instance { get; private set; }
     public static SlideDirection CurrentDirection { get; private set; }
@@ -36,16 +37,13 @@ public class Game : MonoBehaviour {
         }
         #endregion
 
-        countdown = skipDelay;
         slidingSensibility *= slidingSensibility;
     }
 
     private void OnEnable() {
         Lives = maxLives;
-        TotalScore = 0;
-    }
+        wait = false;
 
-    private void Start() {
         Next();
     }
 
@@ -67,7 +65,7 @@ public class Game : MonoBehaviour {
                 wait = true;
 
                 if (!ValidateMovement(DirectionUtility.VectorToDirection(touch.deltaPosition))) {
-                    if (maxLives <= 0) {
+                    if (Lives <= 0) {
                         GameOver();
                         return;
                     }
@@ -113,7 +111,7 @@ public class Game : MonoBehaviour {
             isValidated = true;
         } else {
             TotalScore -= CurrentArrow.ScoreValue;
-            maxLives--;
+            Lives--;
             isValidated = false;
         }
 
@@ -134,5 +132,14 @@ public class Game : MonoBehaviour {
         }
 
         enabled = false;
+    }
+
+    public void ResetGame() {
+        Lives = maxLives;
+        TotalScore = 0;
+
+        if (OnGameResetEvent != null) {
+            OnGameResetEvent();
+        }
     }
 }

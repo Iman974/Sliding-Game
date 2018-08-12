@@ -18,8 +18,7 @@ public class StartCountdown : MonoBehaviour {
             yield return new WaitForSeconds(1f);
         }
 
-        countDownText.enabled = false;
-        enabled = false;
+        gameObject.SetActive(false);
         Game.Instance.enabled = true;
     }
 }

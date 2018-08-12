@@ -489,8 +489,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 981178319}
-        m_MethodName: set_enabled
+      - m_Target: {fileID: 981178315}
+        m_MethodName: SetActive
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -500,9 +500,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 207040874}
-        m_MethodName: set_text
-        m_Mode: 5
+      - m_Target: {fileID: 1284931420}
+        m_MethodName: ResetGame
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -510,6 +510,17 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 'Score: 0'
           m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 2003800071}
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
@@ -703,7 +714,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: 1083950815
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!1 &981178315
@@ -723,7 +734,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &981178316
 RectTransform:
   m_ObjectHideFlags: 0
@@ -788,7 +799,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 981178315}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c6bf2d4c95d15eb4fbec743a60be4a11, type: 3}
   m_Name: 
@@ -839,7 +850,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreText: {fileID: 207040874}
-  livesText: {fileID: 0}
+  livesText: {fileID: 450119698}
   gameoverUIElementsContainer: {fileID: 2003800071}
 --- !u!1 &1021267880
 GameObject:
@@ -1078,7 +1089,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slidingSensibility: 0.25
-  lives: 3
+  maxLives: 3
   arrowPrefabs:
   - {fileID: 114879173421589942, guid: c7af62a062bcb5842a0d7dffc8122168, type: 2}
 --- !u!4 &1284931421
@@ -1455,9 +1466,20 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 981178319}
-        m_MethodName: set_enabled
+      - m_Target: {fileID: 981178315}
+        m_MethodName: SetActive
         m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 1284931420}
+        m_MethodName: ResetGame
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

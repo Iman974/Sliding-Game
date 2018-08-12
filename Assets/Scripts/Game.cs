@@ -5,7 +5,7 @@ public class Game : MonoBehaviour {
 
     [Tooltip("The threshold that need to be reached in order to consider the sliding.")]
     [SerializeField] private float slidingSensibility = 0.25f;
-    [SerializeField] private int lives = 3;
+    [SerializeField] private int maxLives = 3;
 
     [Header("")]
     [SerializeField] private Arrow[] arrowPrefabs;
@@ -13,15 +13,18 @@ public class Game : MonoBehaviour {
     private float skipDelay = 1.5f;
     private float nextDelay = 0.4f;
     private float countdown;
-    private int totalScore;
     private bool wait;
 
-    public static event System.Action<bool, int> OnInputValidationEvent;
+    public static event System.Action<bool> OnInputValidationEvent;
     public static event System.Action OnMissedEvent;
+    public static event System.Action OnGameOverEvent;
 
     public static Game Instance { get; private set; }
     public static SlideDirection CurrentDirection { get; private set; }
     public static Arrow CurrentArrow { get; private set; }
+    public static int TotalScore { get; private set; }
+
+    public int Lives { get; private set; }
 
     private void Awake() {
         #region Singleton
@@ -35,6 +38,11 @@ public class Game : MonoBehaviour {
 
         countdown = skipDelay;
         slidingSensibility *= slidingSensibility;
+    }
+
+    private void OnEnable() {
+        Lives = maxLives;
+        TotalScore = 0;
     }
 
     private void Start() {
@@ -59,8 +67,8 @@ public class Game : MonoBehaviour {
                 wait = true;
 
                 if (!ValidateMovement(DirectionUtility.VectorToDirection(touch.deltaPosition))) {
-                    if (lives <= 0) {
-                        OnGameOver();
+                    if (maxLives <= 0) {
+                        GameOver();
                         return;
                     }
                 }
@@ -101,16 +109,16 @@ public class Game : MonoBehaviour {
         bool isValidated;
 
         if (inputDirection == CurrentDirection) {
-            totalScore += CalculateScore();
+            TotalScore += CalculateScore();
             isValidated = true;
         } else {
-            totalScore -= CurrentArrow.ScoreValue;
-            lives--;
+            TotalScore -= CurrentArrow.ScoreValue;
+            maxLives--;
             isValidated = false;
         }
 
         if (OnInputValidationEvent != null) {
-            OnInputValidationEvent(isValidated, totalScore);
+            OnInputValidationEvent(isValidated);
         }
 
         return isValidated;
@@ -120,7 +128,11 @@ public class Game : MonoBehaviour {
         return Mathf.RoundToInt((CurrentArrow.ScoreValue * countdown) / skipDelay);
     }
 
-    private void OnGameOver() {
+    private void GameOver() {
+        if (OnGameOverEvent != null) {
+            OnGameOverEvent();
+        }
 
+        enabled = false;
     }
 }

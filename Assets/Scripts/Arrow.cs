@@ -45,7 +45,7 @@ public class Arrow : MonoBehaviour {
         Orient();
     }
 
-    private void OnMovementValidation(bool isValidated, int scoreValue) {
+    private void OnMovementValidation(bool isValidated) {
         if (isValidated) {
             spriteRenderer.color = successColor;
 

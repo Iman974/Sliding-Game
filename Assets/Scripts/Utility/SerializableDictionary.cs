@@ -9,12 +9,6 @@ public class SerializableDictionary<TKey, TValue> : ScriptableObject, ISerializa
     [SerializeField] protected List<TKey> keys = new List<TKey>();
     [SerializeField] protected List<TValue> values = new List<TValue>();
 
-    //public object Current {
-    //    get {
-    //        return new KeyValuePair<TKey, TValue>(keys[], values[]);
-    //    }
-    //}
-
     protected Dictionary<TKey, TValue> dictionary = new Dictionary<TKey, TValue>();
 
     public TValue this[TKey key] {
@@ -176,70 +170,4 @@ public class SerializableDictionary<TKey, TValue> : ScriptableObject, ISerializa
     IDictionaryEnumerator IDictionary.GetEnumerator() {
         return ((IDictionary)dictionary).GetEnumerator();
     }
-
-    //public int KeyCount {
-    //    get {
-    //        return keys.Count;
-    //    }
-    //}
-
-    //public int ValueCount {
-    //    get {
-    //        return values.Count;
-    //    }
-    //}
-
-    //public TValue this[TKey index] {
-    //    get {
-    //        int valueIndex = keys.FindIndex(x => EqualityComparer<TKey>.Default.Equals(x, index));
-
-    //        if (valueIndex == -1) {
-    //            throw new KeyNotFoundException("The key " + index + " was not found.");
-    //        }
-
-    //        return values[valueIndex];
-    //    }
-    //    set {
-    //        int valueIndex = keys.FindIndex(x => EqualityComparer<TKey>.Default.Equals(x, index));
-
-    //        if (valueIndex == -1) {
-    //            values.Add(value);
-    //        } else {
-    //            values[valueIndex] = value;
-    //        }
-    //    }
-    //}
-
-    //public TValue this[int index] {
-    //    get {
-    //        return values[index];
-    //    }
-    //    set {
-    //        values[index] = value;
-    //    }
-    //}
-
-    //public void Add(TKey key, TValue value) {
-    //    new Dictionary<string, int>()["d"] = 5;
-    //    int valueIndex = keys.FindIndex(x => EqualityComparer<TKey>.Default.Equals(x, key));
-
-    //    if (keys.Contains(key)) {
-    //        throw new ArgumentException("A value with the key " + key + " already exists.");
-    //    }
-
-    //    keys.Add(key);
-    //    values.Add(value);
-    //}
-
-    //public IEnumerator GetEnumerator() {
-    //    return this;
-    //}
-
-    //public bool MoveNext() {
-    //    throw new System.NotImplementedException();
-    //}
-
-    //public void Reset() {
-    //    throw new System.NotImplementedException();
-    //}
 }

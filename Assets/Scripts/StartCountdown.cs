@@ -6,9 +6,12 @@ public class StartCountdown : MonoBehaviour {
 
     [SerializeField] private int countDownStart = 3;
     [SerializeField] private Text countDownText;
-    [SerializeField] private GameObject arrowImg;
 
-    private IEnumerator Start() {
+    private void OnEnable() {
+        StartCoroutine(ShowCountDown());
+    }
+
+    private IEnumerator ShowCountDown() {
         for (int i = countDownStart; i > 0; i--) {
             countDownText.text = i.ToString();
 
@@ -17,7 +20,6 @@ public class StartCountdown : MonoBehaviour {
 
         countDownText.enabled = false;
         enabled = false;
-
         Game.Instance.enabled = true;
     }
 }

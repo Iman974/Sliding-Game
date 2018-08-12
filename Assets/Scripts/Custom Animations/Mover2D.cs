@@ -14,6 +14,9 @@ public class Mover2D : CustomStateMachineBehaviour {
         base.OnStateEnter(animator, stateInfo, layerIndex);
         transform = animator.transform;
 
+        startPosition = transform.position;
+        targetPosition += startPosition;
+
         if (multiplierParamX) {
             targetPosition.x = targetPosition.x * animator.GetFloat("moveX");
         }

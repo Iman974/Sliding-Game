@@ -5,6 +5,7 @@ public class Game : MonoBehaviour {
 
     [Tooltip("The threshold that need to be reached in order to consider the sliding.")]
     [SerializeField] private float slidingSensibility = 0.25f;
+    [SerializeField] private int lives = 3;
 
     [Header("")]
     [SerializeField] private Arrow[] arrowPrefabs;
@@ -13,12 +14,9 @@ public class Game : MonoBehaviour {
     private float nextDelay = 0.4f;
     private float countdown;
     private int totalScore;
-    private bool isReady = true;
+    private bool wait;
 
     public static event System.Action<bool, int> OnInputValidationEvent;
-
-    public static event System.Action OnNextEvent;
-
     public static event System.Action OnMissedEvent;
 
     public static Game Instance { get; private set; }
@@ -44,23 +42,28 @@ public class Game : MonoBehaviour {
     }
 
     private void Update() {
-        if (!isReady) {
+        if (wait) {
             return;
         }
 
         countdown -= Time.deltaTime;
 
         if (countdown <= 0f) {
-            isReady = false;
+            wait = true;
 
             Skip();
-        } else if (Input.touchCount > 0 && isReady) {
+        } else if (Input.touchCount > 0) {
             Touch touch = Input.GetTouch(0);
 
             if (touch.phase == TouchPhase.Moved && touch.deltaPosition.sqrMagnitude > slidingSensibility) {
-                isReady = false;
+                wait = true;
 
-                ValidateMovement(DirectionUtility.VectorToDirection(touch.deltaPosition));
+                if (!ValidateMovement(DirectionUtility.VectorToDirection(touch.deltaPosition))) {
+                    if (lives <= 0) {
+                        OnGameOver();
+                        return;
+                    }
+                }
                 StartCoroutine(TriggerNextDelayed());
             }
         }
@@ -91,31 +94,33 @@ public class Game : MonoBehaviour {
     private IEnumerator TriggerNextDelayed() {
         yield return new WaitForSeconds(nextDelay);
         Next();
-        isReady = true;
+        wait = false;
     }
 
-    private void ValidateMovement(SlideDirection inputDirection) {
+    private bool ValidateMovement(SlideDirection inputDirection) {
         bool isValidated;
 
         if (inputDirection == CurrentDirection) {
             totalScore += CalculateScore();
             isValidated = true;
         } else {
-            Debug.Log("Lose: " + CurrentDirection + ", input was:" + inputDirection);
             totalScore -= CurrentArrow.ScoreValue;
+            lives--;
             isValidated = false;
         }
 
         if (OnInputValidationEvent != null) {
             OnInputValidationEvent(isValidated, totalScore);
         }
+
+        return isValidated;
     }
 
     private int CalculateScore() {
         return Mathf.RoundToInt((CurrentArrow.ScoreValue * countdown) / skipDelay);
     }
 
-    public void ResetGame() {
-        Next();
+    private void OnGameOver() {
+
     }
 }

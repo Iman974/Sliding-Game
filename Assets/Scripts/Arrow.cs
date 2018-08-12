@@ -48,8 +48,11 @@ public class Arrow : MonoBehaviour {
     private void OnMovementValidation(bool isValidated, int scoreValue) {
         if (isValidated) {
             spriteRenderer.color = successColor;
-            animator.SetTrigger("success");
-            animator.SetBool(currentDirection.ToString(), true);
+
+            animator.SetTrigger(currentDirection.ToString());
+            Vector2 movement = DirectionUtility.DirectionToVector(currentDirection);
+            animator.SetFloat("moveX", movement.x);
+            animator.SetFloat("moveY", movement.y);
         } else {
             spriteRenderer.color = failColor;
             animator.SetTrigger("failed");
@@ -62,8 +65,6 @@ public class Arrow : MonoBehaviour {
         float rotation = DirectionUtility.GetRotationFromDirection(matchingDirection);
         transform.rotation = Quaternion.Euler(0f, 0f, rotation);
     }
-
-    //private void OnAnimatorMove() { }
 
     private void OnMissed() {
         spriteRenderer.color = skipColor;

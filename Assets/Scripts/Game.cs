@@ -10,10 +10,11 @@ public class Game : MonoBehaviour {
     [Header("")]
     [SerializeField] private Arrow[] arrowPrefabs;
 
-    private float skipDelay = 1.5f;
+    private float stayDuration = 1.5f;
     private float nextDelay = 0.4f;
-    private float countdown;
-    private bool wait;
+    //private float countdown;
+    private bool checkInput;
+    private Countdown countdown;
 
     public static event System.Action<bool> OnInputValidationEvent;
     public static event System.Action OnMissedEvent;
@@ -42,78 +43,48 @@ public class Game : MonoBehaviour {
 
     private void OnEnable() {
         Lives = maxLives;
-        wait = false;
 
         Next();
+        countdown.Begin();
+    }
+
+    private void Start() {
+        countdown = GetComponent<Countdown>();
+        countdown.Elapsed += OnCountDownElapsed;
+    }
+
+    private void OnCountDownElapsed() {
+        checkInput = false;
+        Skip();
     }
 
     private void Update() {
-        if (wait) {
+        if (!checkInput) {
             return;
         }
 
-        countdown -= Time.deltaTime;
-
-        if (countdown <= 0f) {
-            wait = true;
-
-            Skip();
-        } else if (Input.touchCount > 0) {
+        if (Input.touchCount > 0 && InputUtility.HasTouchMoved(slidingSensibility)) {
             Touch touch = Input.GetTouch(0);
 
-            if (touch.phase == TouchPhase.Moved && touch.deltaPosition.sqrMagnitude > slidingSensibility) {
-                wait = true;
+            SlideDirection inputDirection = DirectionUtility.VectorToDirection(touch.deltaPosition);
+            bool hasScored = IsMovementValid(inputDirection);
+            UpdateScore(hasScored);
 
-                if (!ValidateMovement(DirectionUtility.VectorToDirection(touch.deltaPosition))) {
-                    if (Lives <= 0) {
-                        GameOver();
-                        return;
-                    }
+            if (!hasScored) {
+                Lives--;
+                if (Lives <= 0) {
+                    GameOver();
+                    return;
                 }
-                StartCoroutine(TriggerNextDelayed());
             }
+
+            checkInput = false;
+            Invoke("Next", nextDelay);
         }
     }
 
-    private void Next() {
-        CurrentDirection = DirectionUtility.DirectionValues[Random.Range(0, DirectionUtility.DirectionCount)];
-        CurrentArrow = Instantiate(arrowPrefabs[Random.Range(0, arrowPrefabs.Length)]);
-
-        RecalculateDelays();
-        countdown = skipDelay;
-    }
-
-    private void RecalculateDelays() {
-        skipDelay = CurrentArrow.StayDuration;
-        nextDelay = CurrentArrow.NextDelay;
-    }
-
-    private void Skip() {
-        nextDelay = CurrentArrow.SkipDelay;
-        StartCoroutine(TriggerNextDelayed());
-
-        if (OnMissedEvent != null) {
-            OnMissedEvent();
-        }
-    }
-
-    private IEnumerator TriggerNextDelayed() {
-        yield return new WaitForSeconds(nextDelay);
-        Next();
-        wait = false;
-    }
-
-    private bool ValidateMovement(SlideDirection inputDirection) {
-        bool isValidated;
-
-        if (inputDirection == CurrentDirection) {
-            TotalScore += CalculateScore();
-            isValidated = true;
-        } else {
-            TotalScore -= CurrentArrow.ScoreValue;
-            Lives--;
-            isValidated = false;
-        }
+    private bool IsMovementValid(SlideDirection inputDirection) {
+        bool isValidated = inputDirection == CurrentDirection;
 
         if (OnInputValidationEvent != null) {
             OnInputValidationEvent(isValidated);
@@ -122,8 +93,37 @@ public class Game : MonoBehaviour {
         return isValidated;
     }
 
+    private void UpdateScore(bool hasScored) {
+        if (hasScored) {
+            TotalScore += CalculateScore();
+        } else {
+            TotalScore -= CurrentArrow.ScoreValue;
+        }
+    }
+
+    private void Next() {
+        CurrentDirection = DirectionUtility.DirectionValues[Random.Range(0, DirectionUtility.DirectionCount)];
+        CurrentArrow = Instantiate(arrowPrefabs[Random.Range(0, arrowPrefabs.Length)]);
+
+        stayDuration = CurrentArrow.StayDuration;
+        nextDelay = CurrentArrow.NextDelay;
+        countdown.WaitTime = stayDuration;
+        countdown.ResetCountdown();
+
+        checkInput = true;
+    }
+
+    private void Skip() {
+        nextDelay = CurrentArrow.SkipDelay;
+        Invoke("Next", nextDelay);
+
+        if (OnMissedEvent != null) {
+            OnMissedEvent();
+        }
+    }
+
     private int CalculateScore() {
-        return Mathf.RoundToInt((CurrentArrow.ScoreValue * countdown) / skipDelay);
+        return Mathf.RoundToInt((CurrentArrow.ScoreValue * countdown.WaitTime) / stayDuration);
     }
 
     private void GameOver() {
@@ -141,5 +141,9 @@ public class Game : MonoBehaviour {
         if (OnGameResetEvent != null) {
             OnGameResetEvent();
         }
+    }
+
+    private void OnDestroy() {
+        countdown.Elapsed -= OnCountDownElapsed;
     }
 }

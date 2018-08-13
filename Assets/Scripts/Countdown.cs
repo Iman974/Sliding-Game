@@ -4,6 +4,9 @@ using System;
 public class Countdown : MonoBehaviour {
 
     public float WaitTime { get; set; }
+    public float ElapsedTime {
+        get { return countdown; }
+    }
 
     public event Action Elapsed;
 
@@ -35,7 +38,12 @@ public class Countdown : MonoBehaviour {
         runCountdown = false;
     }
 
-    public void ResetCountdown() {
+    private void ResetCountdown() {
         countdown = WaitTime;
+    }
+
+    public void Restart() {
+        ResetCountdown();
+        Begin();
     }
 }

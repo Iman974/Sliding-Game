@@ -26,8 +26,8 @@ public class SerializableDictionary_SlideDirectionEditor : Editor {
             return;
         }
 
-        var keys = new SlideDirection[dictionary.Keys.Count];
-        var values = new SlideDirection[dictionary.Values.Count];
+        var keys = new Direction[dictionary.Keys.Count];
+        var values = new Direction[dictionary.Values.Count];
 
         dictionary.Keys.CopyTo(keys, 0);
         dictionary.Values.CopyTo(values, 0);
@@ -40,8 +40,8 @@ public class SerializableDictionary_SlideDirectionEditor : Editor {
         for (int i = 0; i < dictionary.Count; i++) {
             EditorGUILayout.BeginHorizontal();
 
-            SlideDirection newKey = (SlideDirection)EditorGUILayout.EnumPopup(keys[i]);
-            SlideDirection newValue = (SlideDirection)EditorGUILayout.EnumPopup(values[i]);
+            Direction newKey = (Direction)EditorGUILayout.EnumPopup(keys[i]);
+            Direction newValue = (Direction)EditorGUILayout.EnumPopup(values[i]);
 
             if (newKey != keys[i]) {
                 if (Array.IndexOf(keys, newKey) > -1) {

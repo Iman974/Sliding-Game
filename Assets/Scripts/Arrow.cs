@@ -32,7 +32,7 @@ public class Arrow : MonoBehaviour {
 
     private SpriteRenderer spriteRenderer;
     private Animator animator;
-    private SlideDirection currentDirection;
+    private Direction currentDirection;
 
     private void Start() {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -60,7 +60,7 @@ public class Arrow : MonoBehaviour {
     }
 
     private void Orient() {
-        SlideDirection matchingDirection = directionBinder[currentDirection];
+        Direction matchingDirection = directionBinder[currentDirection];
 
         float rotation = DirectionUtility.GetRotationFromDirection(matchingDirection);
         transform.rotation = Quaternion.Euler(0f, 0f, rotation);

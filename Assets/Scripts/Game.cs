@@ -12,7 +12,6 @@ public class Game : MonoBehaviour {
 
     private float stayDuration = 1.5f;
     private float nextDelay = 0.4f;
-    //private float countdown;
     private bool checkInput;
     private Countdown countdown;
 
@@ -22,7 +21,7 @@ public class Game : MonoBehaviour {
     public static event System.Action OnGameResetEvent;
 
     public static Game Instance { get; private set; }
-    public static SlideDirection CurrentDirection { get; private set; }
+    public static Direction CurrentDirection { get; private set; }
     public static Arrow CurrentArrow { get; private set; }
     public static int TotalScore { get; private set; }
 
@@ -44,13 +43,10 @@ public class Game : MonoBehaviour {
     private void OnEnable() {
         Lives = maxLives;
 
-        Next();
-        countdown.Begin();
-    }
-
-    private void Start() {
         countdown = GetComponent<Countdown>();
         countdown.Elapsed += OnCountDownElapsed;
+        countdown.Begin();
+        Next();
     }
 
     private void OnCountDownElapsed() {
@@ -64,18 +60,19 @@ public class Game : MonoBehaviour {
         }
 
         if (Input.touchCount > 0 && InputUtility.HasTouchMoved(slidingSensibility)) {
+            countdown.Stop();
             Touch touch = Input.GetTouch(0);
 
-            SlideDirection inputDirection = DirectionUtility.VectorToDirection(touch.deltaPosition);
+            Direction inputDirection = DirectionUtility.VectorToDirection(touch.deltaPosition);
             bool hasScored = IsMovementValid(inputDirection);
             UpdateScore(hasScored);
 
-            if (!hasScored) {
-                Lives--;
-                if (Lives <= 0) {
-                    GameOver();
-                    return;
-                }
+            if (OnInputValidationEvent != null) {
+                OnInputValidationEvent(hasScored);
+            }
+            if (!hasScored && Lives <= 0) {
+                GameOver();
+                return;
             }
 
             checkInput = false;
@@ -83,14 +80,8 @@ public class Game : MonoBehaviour {
         }
     }
 
-    private bool IsMovementValid(SlideDirection inputDirection) {
-        bool isValidated = inputDirection == CurrentDirection;
-
-        if (OnInputValidationEvent != null) {
-            OnInputValidationEvent(isValidated);
-        }
-
-        return isValidated;
+    private bool IsMovementValid(Direction inputDirection) {
+        return inputDirection == CurrentDirection;
     }
 
     private void UpdateScore(bool hasScored) {
@@ -98,19 +89,24 @@ public class Game : MonoBehaviour {
             TotalScore += CalculateScore();
         } else {
             TotalScore -= CurrentArrow.ScoreValue;
+            Lives--;
         }
     }
 
     private void Next() {
-        CurrentDirection = DirectionUtility.DirectionValues[Random.Range(0, DirectionUtility.DirectionCount)];
-        CurrentArrow = Instantiate(arrowPrefabs[Random.Range(0, arrowPrefabs.Length)]);
+        CurrentDirection = RandomUtility.PickRandomItemInArray(DirectionUtility.DirectionValues);
+        CurrentArrow = Instantiate(RandomUtility.PickRandomItemInArray(arrowPrefabs));
 
-        stayDuration = CurrentArrow.StayDuration;
-        nextDelay = CurrentArrow.NextDelay;
+        UpdateDurationsAndDelays();
         countdown.WaitTime = stayDuration;
-        countdown.ResetCountdown();
+        countdown.Restart();
 
         checkInput = true;
+    }
+
+    private void UpdateDurationsAndDelays() {
+        stayDuration = CurrentArrow.StayDuration;
+        nextDelay = CurrentArrow.NextDelay;
     }
 
     private void Skip() {
@@ -123,7 +119,7 @@ public class Game : MonoBehaviour {
     }
 
     private int CalculateScore() {
-        return Mathf.RoundToInt((CurrentArrow.ScoreValue * countdown.WaitTime) / stayDuration);
+        return Mathf.RoundToInt((CurrentArrow.ScoreValue * countdown.ElapsedTime) / stayDuration);
     }
 
     private void GameOver() {

@@ -11,6 +11,9 @@ public class Game : MonoBehaviour {
     [Header("")]
     [SerializeField] private Arrow[] arrowPrefabs;
 
+    private static GameState gameState = new GameState();
+    private static string gameStatePath;
+
     private float stayDuration;
     private float nextDelay;
     private float initialAcceleration;
@@ -25,7 +28,8 @@ public class Game : MonoBehaviour {
     public static Game Instance { get; private set; }
     public static Direction CurrentDirection { get; private set; }
     public static Arrow CurrentArrow { get; private set; }
-    public static int TotalScore { get; private set; }
+    public static int PlayerScore { get; private set; }
+    public static int HighScore { get { return gameState.highScore; } }
 
     public int Lives { get; private set; }
 
@@ -46,6 +50,11 @@ public class Game : MonoBehaviour {
 
         countdown = GetComponent<Countdown>();
         countdown.Elapsed += OnCountDownElapsed;
+
+        gameStatePath = Application.persistentDataPath + "/gameState.sav";
+        if (StateSaver.StateExists(gameStatePath)) {
+             StateSaver.RetrieveStateFromJson(gameStatePath, gameState);
+        }
     }
 
     private void OnEnable() {
@@ -92,10 +101,14 @@ public class Game : MonoBehaviour {
 
     private void UpdateScore(bool hasScored) {
         if (hasScored) {
-            TotalScore += CalculateScore();
+            PlayerScore += CalculateScore();
         } else {
-            TotalScore -= CurrentArrow.ScoreValue;
+            PlayerScore -= CurrentArrow.ScoreValue;
             Lives--;
+
+            if (PlayerScore < 0) {
+                PlayerScore = 0;
+            }
         }
     }
 
@@ -131,6 +144,11 @@ public class Game : MonoBehaviour {
     }
 
     private void GameOver() {
+        if (PlayerScore > gameState.highScore) {
+            gameState.highScore = PlayerScore;
+            StateSaver.SaveStateAsJson(gameStatePath, gameState);
+        }
+
         if (OnGameOverEvent != null) {
             OnGameOverEvent();
         }
@@ -140,7 +158,7 @@ public class Game : MonoBehaviour {
 
     public void ResetGame() {
         Lives = maxLives;
-        TotalScore = 0;
+        PlayerScore = 0;
 
         if (OnGameResetEvent != null) {
             OnGameResetEvent();

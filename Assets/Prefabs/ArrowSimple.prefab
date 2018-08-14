@@ -74,7 +74,7 @@ MonoBehaviour:
   directionBinder: {fileID: 11400000, guid: 65958c1fbe866e64f870ea9479c6c6d9, type: 2}
   scoreValue: 50
   stayDuration: 1
-  nextDelay: 0.5
+  nextDelay: 0.4
   skipDelay: 0.5
   successColor: {r: 0, g: 1, b: 0, a: 1}
   failColor: {r: 1, g: 0, b: 0, a: 1}

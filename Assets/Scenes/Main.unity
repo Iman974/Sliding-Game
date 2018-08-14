@@ -1091,8 +1091,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slidingSensibility: 0.25
   maxLives: 3
+  accelerationFactor: 1.005
+  maxAcceleration: 3.33
   arrowPrefabs:
-  - {fileID: 114879173421589942, guid: c7af62a062bcb5842a0d7dffc8122168, type: 2}
+  - {fileID: 114772171678987794, guid: 495a8ae89bebef042ba49cc3a2668dad, type: 2}
 --- !u!4 &1284931421
 Transform:
   m_ObjectHideFlags: 0

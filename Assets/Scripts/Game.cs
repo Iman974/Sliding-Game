@@ -1,17 +1,19 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Game : MonoBehaviour {
 
     [Tooltip("The threshold that need to be reached in order to consider the sliding.")]
     [SerializeField] private float slidingSensibility = 0.25f;
     [SerializeField] private int maxLives = 3;
+    [SerializeField] private float accelerationFactor = 1.03f;
+    [SerializeField] private float maxAcceleration = 1.75f;
 
     [Header("")]
     [SerializeField] private Arrow[] arrowPrefabs;
 
-    private float stayDuration = 1.5f;
-    private float nextDelay = 0.4f;
+    private float stayDuration;
+    private float nextDelay;
+    private float initialAcceleration;
     private bool checkInput;
     private Countdown countdown;
 
@@ -38,13 +40,17 @@ public class Game : MonoBehaviour {
         #endregion
 
         slidingSensibility *= slidingSensibility;
+        accelerationFactor = 1f / accelerationFactor;
+        initialAcceleration = accelerationFactor;
+        maxAcceleration = 1f / maxAcceleration;
+
+        countdown = GetComponent<Countdown>();
+        countdown.Elapsed += OnCountDownElapsed;
     }
 
     private void OnEnable() {
         Lives = maxLives;
 
-        countdown = GetComponent<Countdown>();
-        countdown.Elapsed += OnCountDownElapsed;
         countdown.Begin();
         Next();
     }
@@ -98,8 +104,11 @@ public class Game : MonoBehaviour {
         CurrentArrow = Instantiate(RandomUtility.PickRandomItemInArray(arrowPrefabs));
 
         UpdateDurationsAndDelays();
-        countdown.WaitTime = stayDuration;
+        countdown.WaitTime = stayDuration * accelerationFactor;
         countdown.Restart();
+        if (accelerationFactor > maxAcceleration) {
+            accelerationFactor *= initialAcceleration;
+        }
 
         checkInput = true;
     }
@@ -110,8 +119,7 @@ public class Game : MonoBehaviour {
     }
 
     private void Skip() {
-        nextDelay = CurrentArrow.SkipDelay;
-        Invoke("Next", nextDelay);
+        Invoke("Next", CurrentArrow.SkipDelay);
 
         if (OnMissedEvent != null) {
             OnMissedEvent();

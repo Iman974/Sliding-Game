@@ -5,39 +5,36 @@ public static class DirectionUtility {
 
     public static Direction[] DirectionValues { get; private set; }
 
-    public static int DirectionCount { get; private set; }
-
     static DirectionUtility() {
         DirectionValues = (Direction[])Enum.GetValues(typeof(Direction));
-        DirectionCount = DirectionValues.Length;
     }
 
     public static Vector2 DirectionToVector(Direction direction) {
-        Vector2 convertedDirection;
+        Vector2 matchingVector;
 
         if (direction == Direction.Up) {
-            convertedDirection = Vector2.up;
+            matchingVector = Vector2.up;
         } else if (direction == Direction.Right) {
-            convertedDirection = Vector2.right;
+            matchingVector = Vector2.right;
         } else if (direction == Direction.Down) {
-            convertedDirection = -Vector2.up;
+            matchingVector = -Vector2.up;
         } else {
-            convertedDirection = -Vector2.right;
+            matchingVector = -Vector2.right;
         }
 
-        return convertedDirection;
+        return matchingVector;
     }
 
-    public static Direction VectorToDirection(Vector2 direction) {
-        Direction convertedVector;
+    public static Direction VectorToDirection(Vector2 vector) {
+        Direction matchingDirection;
 
-        if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y)) {
-            convertedVector = Mathf.Sign(direction.x) == 1f ? Direction.Right : Direction.Left;
+        if (Mathf.Abs(vector.x) > Mathf.Abs(vector.y)) {
+            matchingDirection = Mathf.Sign(vector.x) == 1f ? Direction.Right : Direction.Left;
         } else {
-            convertedVector = Mathf.Sign(direction.y) == 1f ? Direction.Up : Direction.Down;
+            matchingDirection = Mathf.Sign(vector.y) == 1f ? Direction.Up : Direction.Down;
         }
 
-        return convertedVector;
+        return matchingDirection;
     }
 
     public static float GetRotationFromDirection(Direction direction) {
@@ -53,12 +50,4 @@ public static class DirectionUtility {
 
         return 90f - rotation;
     }
-}
-
-[Serializable]
-public enum Direction {
-    Left,
-    Right,
-    Up,
-    Down
 }

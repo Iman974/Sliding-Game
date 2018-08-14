@@ -2,7 +2,7 @@
 
 public class Arrow : MonoBehaviour {
 
-    [SerializeField] private SerializableDictionary_SlideDirection directionBinder;
+    [SerializeField] private SerializableDictionary_Direction directionBinder;
 
     [SerializeField] private int scoreValue = 50;
     public int ScoreValue {
@@ -13,6 +13,7 @@ public class Arrow : MonoBehaviour {
     [SerializeField] private float stayDuration = 1.25f;
     public float StayDuration {
         get { return stayDuration; }
+        set { stayDuration = value; }
     }
 
     [SerializeField] private float nextDelay = 0.5f;
@@ -50,9 +51,9 @@ public class Arrow : MonoBehaviour {
             spriteRenderer.color = successColor;
 
             animator.SetTrigger(currentDirection.ToString());
-            Vector2 movement = DirectionUtility.DirectionToVector(currentDirection);
-            animator.SetFloat("moveX", movement.x);
-            animator.SetFloat("moveY", movement.y);
+            Vector2 direction = DirectionUtility.DirectionToVector(currentDirection);
+            animator.SetFloat("moveX", direction.x);
+            animator.SetFloat("moveY", direction.y);
         } else {
             spriteRenderer.color = failColor;
             animator.SetTrigger("failed");

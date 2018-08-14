@@ -12,13 +12,13 @@ using System;
 //    }
 //}
 
-[CustomEditor(typeof(SerializableDictionary_SlideDirection))]
+[CustomEditor(typeof(SerializableDictionary_Direction))]
 public class SerializableDictionary_SlideDirectionEditor : Editor {
 
-    private SerializableDictionary_SlideDirection dictionary;
+    private SerializableDictionary_Direction dictionary;
 
     private void OnEnable() {
-        dictionary = (SerializableDictionary_SlideDirection)target;
+        dictionary = (SerializableDictionary_Direction)target;
     }
 
     public override void OnInspectorGUI() {

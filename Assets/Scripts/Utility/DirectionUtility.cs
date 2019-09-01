@@ -27,13 +27,11 @@ public static class DirectionUtility {
 
     public static Direction VectorToDirection(Vector2 vector) {
         Direction matchingDirection;
-
         if (Mathf.Abs(vector.x) > Mathf.Abs(vector.y)) {
-            matchingDirection = Mathf.Sign(vector.x) == 1f ? Direction.Right : Direction.Left;
+            matchingDirection = vector.x >= 0f ? Direction.Right : Direction.Left;
         } else {
-            matchingDirection = Mathf.Sign(vector.y) == 1f ? Direction.Up : Direction.Down;
+            matchingDirection = vector.y >= 0f ? Direction.Up : Direction.Down;
         }
-
         return matchingDirection;
     }
 

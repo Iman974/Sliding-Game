@@ -19,6 +19,6 @@ public class StartCountdown : MonoBehaviour {
         }
 
         gameObject.SetActive(false);
-        Game.Instance.enabled = true;
+        GameManager.Instance.enabled = true;
     }
 }

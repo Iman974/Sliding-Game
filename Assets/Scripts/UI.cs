@@ -9,11 +9,7 @@ public class UI : MonoBehaviour {
     [SerializeField] private GameObject gameoverUIElementsContainer;
 
     private void Start() {
-        Game.OnInputValidationEvent += OnMovementValidation;
-        Game.OnGameOverEvent += OnGameOver;
-        Game.OnGameResetEvent += OnGameReset;
-
-        highScoreText.text = "Highscore: " + Game.HighScore;
+        //highScoreText.text = "Highscore: " + GameManager.HighScore;
     }
 
     private void OnMovementValidation(bool isValidated) {
@@ -21,22 +17,16 @@ public class UI : MonoBehaviour {
     }
 
     private void UpdateStatsText() {
-        scoreText.text = "Score: " + Game.PlayerScore;
-        livesText.text = "Lives: " + Game.Instance.Lives;
+        scoreText.text = "Score: " + GameManager.PlayerScore;
+        livesText.text = "Lives: " + GameManager.Instance.Lives;
     }
 
     private void OnGameOver() {
         gameoverUIElementsContainer.SetActive(true);
-        highScoreText.text = "Highscore: " + Game.HighScore;
+        //highScoreText.text = "Highscore: " + GameManager.HighScore;
     }
 
     private void OnGameReset() {
         UpdateStatsText();
-    }
-
-    private void OnDestroy() {
-        Game.OnInputValidationEvent -= OnMovementValidation;
-        Game.OnGameOverEvent -= OnGameOver;
-        Game.OnGameResetEvent -= OnGameReset;
     }
 }

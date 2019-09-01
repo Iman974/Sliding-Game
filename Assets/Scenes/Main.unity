@@ -894,7 +894,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 989476194}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 37b91c0e0acc94a428c287b0e8ca76c4, type: 3}
   m_Name: 
@@ -1136,6 +1136,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1284931421}
   - component: {fileID: 1284931420}
+  - component: {fileID: 1284931422}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1157,8 +1158,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slidingSensibility: 0.25
   maxLives: 3
-  accelerationFactor: 1.005
-  maxAcceleration: 3.33
 --- !u!4 &1284931421
 Transform:
   m_ObjectHideFlags: 0
@@ -1173,6 +1172,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1284931422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1284931419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09e20bd660178c44f92ab8e0d51d78be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  arrows:
+  - instance: {fileID: 1595133263568500, guid: 495a8ae89bebef042ba49cc3a2668dad, type: 3}
+    probability: 1
+    duration: 1.25
+  - instance: {fileID: 1678105645422108, guid: a94a4bda71242a442815779c9e5b6e14, type: 3}
+    probability: 0
+    duration: 1
 --- !u!1 &1378696559
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,20 +2,20 @@
 
 public class GameManager : MonoBehaviour {
 
-    [Tooltip("The threshold that need to be reached in order to consider the sliding.")]
+    // The threshold indicating when to consider the sliding.
     [SerializeField] float slidingSensibility = 0.25f;
     [SerializeField] int maxLives = 3;
-    [SerializeField] float accelerationFactor = 1.03f;
-    [SerializeField] float maxAcceleration = 1.75f;
 
     public static GameManager Instance { get; private set; }
     public static Direction CurrentDirection { get; private set; }
     public static int PlayerScore { get; private set; }
 
-    public int Lives { get; set; }
+    public int Lives { get; private set; }
 
     Direction inputDirection;
     Direction desiredDirection;
+    Direction displayedDirection;
+    float countdown;
 
     void Awake() {
         #region Singleton
@@ -26,7 +26,6 @@ public class GameManager : MonoBehaviour {
             return;
         }
         #endregion
-
     }
 
     void Update() {
@@ -43,5 +42,22 @@ public class GameManager : MonoBehaviour {
                 }
             }
         }
+    }
+
+    void NextArrow() {
+        desiredDirection = DirectionUtility.GetRandomDirection();
+        float randomValue = Random.value;
+        Arrow[] arrows = ArrowSpawner.Instance.Arrows;
+
+        int i = 0;
+        foreach (Arrow arrow in arrows) {
+            if (randomValue < arrow.Probability) {
+                break;
+            }
+            i++;
+        }
+
+        //displayedDirection = Random.value < ;
+        //countdown = ;
     }
 }

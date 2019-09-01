@@ -1,27 +1,29 @@
 ﻿using UnityEngine;
-using System;
 
 public static class DirectionUtility {
 
     public static Direction[] DirectionValues { get; private set; }
 
     static DirectionUtility() {
-        DirectionValues = (Direction[])Enum.GetValues(typeof(Direction));
+        DirectionValues = (Direction[])System.Enum.GetValues(typeof(Direction));
     }
 
     public static Vector2 DirectionToVector(Direction direction) {
         Vector2 matchingVector;
-
-        if (direction == Direction.Up) {
-            matchingVector = Vector2.up;
-        } else if (direction == Direction.Right) {
-            matchingVector = Vector2.right;
-        } else if (direction == Direction.Down) {
-            matchingVector = -Vector2.up;
-        } else {
-            matchingVector = -Vector2.right;
+        switch (direction) {
+            case Direction.Left:
+                matchingVector = Vector2.left;
+                break;
+            case Direction.Right:
+                matchingVector = Vector2.right;
+                break;
+            case Direction.Up:
+                matchingVector = Vector2.up;
+                break;
+            default:
+                matchingVector = Vector2.down;
+                break;
         }
-
         return matchingVector;
     }
 
@@ -45,7 +47,10 @@ public static class DirectionUtility {
         } else if (direction == Direction.Left) {
             rotation = 270f;
         }
-
         return 90f - rotation;
+    }
+
+    public static Direction GetRandomDirection() {
+        return (Direction)Random.Range(0, 4);
     }
 }

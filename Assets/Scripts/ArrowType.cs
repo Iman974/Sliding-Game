@@ -1,4 +1,4 @@
 ﻿public enum ArrowId {
     Simple,
-    Rotator180
+    Rotator90
 }

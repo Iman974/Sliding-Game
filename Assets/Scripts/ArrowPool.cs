@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 
-public class ArrowSpawner : MonoBehaviour {
+public class ArrowPool : MonoBehaviour {
 
     [SerializeField] Arrow[] arrows = null;
 
     public Arrow[] Arrows => arrows;
 
-    public static ArrowSpawner Instance { get; private set; }
+    public static ArrowPool Instance { get; private set; }
 
     void Awake() {
         #region Singleton
@@ -24,10 +24,9 @@ public class ArrowSpawner : MonoBehaviour {
         // This loop will sort the copy so the indexes match the arrow type 
         // defined by the enum. It also instantiates the arrow in the scene.
         for (int i = 0; i < arrows.Length; i++) {
-            int id = (int)System.Enum.Parse(typeof(ArrowId),
-                arrows[i].Instance.name);
+            int id = (int)System.Enum.Parse(typeof(ArrowId), arrows[i].Instance.name);
             arrowsCopy[id] = arrows[i];
-            arrowsCopy[id].InstantiateArrow();
+            arrowsCopy[id].Init();
         }
         arrows = arrowsCopy;
     }

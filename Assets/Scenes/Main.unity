@@ -1186,10 +1186,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   arrows:
   - instance: {fileID: 1595133263568500, guid: 495a8ae89bebef042ba49cc3a2668dad, type: 3}
-    probability: 1
+    weight: 1
     duration: 1.25
-  - instance: {fileID: 1678105645422108, guid: a94a4bda71242a442815779c9e5b6e14, type: 3}
-    probability: 0
+  - instance: {fileID: 1430627173504980, guid: c7af62a062bcb5842a0d7dffc8122168, type: 3}
+    weight: 1
     duration: 1
 --- !u!1 &1378696559
 GameObject:

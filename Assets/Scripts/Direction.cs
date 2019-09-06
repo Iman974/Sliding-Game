@@ -3,7 +3,7 @@
 [Serializable]
 public enum Direction {
     Left,
-    Right,
     Up,
+    Right,
     Down
 }

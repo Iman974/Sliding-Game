@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Linq;
 
 public class GameManager : MonoBehaviour {
 
@@ -16,6 +17,7 @@ public class GameManager : MonoBehaviour {
     Direction desiredDirection;
     Direction displayedDirection;
     float countdown;
+    Arrow selectedArrow;
 
     void Awake() {
         #region Singleton
@@ -28,36 +30,54 @@ public class GameManager : MonoBehaviour {
         #endregion
     }
 
+    void Start() {
+        NextArrow();
+    }
+
     void Update() {
-        if (Input.touchCount != 0) {
-            Touch touch = Input.GetTouch(0);
-            Vector2 deltaPos = touch.deltaPosition;
+        HandleInput();
 
-            float sqrSensibility = slidingSensibility * slidingSensibility;
-            if (deltaPos.sqrMagnitude >= sqrSensibility) {
-                inputDirection = DirectionUtility.VectorToDirection(deltaPos);
+        countdown -= Time.deltaTime;
+        if (countdown <= 0f) {
+            NextArrow();
+        }
+    }
 
-                if (inputDirection == desiredDirection) {
+    void HandleInput() {
+        if (Input.touchCount == 0) {
+            return;
+        }
 
-                }
+        Touch touch = Input.GetTouch(0);
+        Vector2 deltaPos = touch.deltaPosition;
+
+        float sqrSensibility = slidingSensibility * slidingSensibility;
+        if (deltaPos.sqrMagnitude >= sqrSensibility) {
+            inputDirection = DirectionUtility.VectorToDirection(deltaPos);
+
+            if (inputDirection == desiredDirection) {
+                // Movement is validated
             }
         }
     }
 
     void NextArrow() {
         desiredDirection = DirectionUtility.GetRandomDirection();
-        float randomValue = Random.value;
-        Arrow[] arrows = ArrowSpawner.Instance.Arrows;
+        Arrow[] arrows = ArrowPool.Instance.Arrows;
 
-        int i = 0;
-        foreach (Arrow arrow in arrows) {
-            if (randomValue < arrow.Probability) {
+        int weightSum = arrows.Sum(a => a.Weight);
+        for (int i = 0; i < arrows.Length; i++) {
+            if (Random.Range(0, weightSum) < arrows[i].Weight) {
+                //selectedArrow = arrows[];
                 break;
             }
-            i++;
+            weightSum -= arrows[i].Weight;
         }
 
-        //displayedDirection = Random.value < ;
-        //countdown = ;
+        int arrowId = selectedArrow.Id;
+
+        displayedDirection = (Direction)(((int)desiredDirection + arrowId) % 4);
+        countdown = selectedArrow.Duration;
+        selectedArrow.SetVisibility(true);
     }
 }

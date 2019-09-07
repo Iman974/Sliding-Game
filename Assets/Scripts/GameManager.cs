@@ -30,10 +30,6 @@ public class GameManager : MonoBehaviour {
         #endregion
     }
 
-    void Start() {
-        NextArrow();
-    }
-
     void Update() {
         HandleInput();
 
@@ -61,23 +57,48 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    // Hide the previous arrow, randomly select a new one and show it.
     void NextArrow() {
+        if (selectedArrow != null) {
+            selectedArrow.Instance.SetActive(false);
+        }
+
         desiredDirection = DirectionUtility.GetRandomDirection();
         Arrow[] arrows = ArrowPool.Instance.Arrows;
 
         int weightSum = arrows.Sum(a => a.Weight);
         for (int i = 0; i < arrows.Length; i++) {
             if (Random.Range(0, weightSum) < arrows[i].Weight) {
-                //selectedArrow = arrows[];
+                selectedArrow = arrows[i];
                 break;
             }
             weightSum -= arrows[i].Weight;
         }
 
-        int arrowId = selectedArrow.Id;
+        displayedDirection = (Direction)(((int)desiredDirection +
+            selectedArrow.DirectionModifier) % DirectionUtility.kDirectionCount);
 
-        displayedDirection = (Direction)(((int)desiredDirection + arrowId) % 4);
+        GameObject selectedArrowObj = selectedArrow.Instance;
+        Vector2 orientation = DirectionUtility.DirectionToVector(displayedDirection);
+        selectedArrowObj.transform.right = orientation;
+        selectedArrowObj.SetActive(true);
         countdown = selectedArrow.Duration;
-        selectedArrow.SetVisibility(true);
+    }
+
+    Rect rect = new Rect(5f, 10f, 300f, 75f);
+    void OnGUI() {
+        GUI.Label(rect, "DisplayDir: " + displayedDirection.ToString() + ", DesiredDir: " +
+            desiredDirection.ToString());
+    }
+
+    int SelectRandomWeightedIndex(int[] weights) {
+        int weightSum = weights.Sum();
+        for (int i = 0; i < weights.Length - 1; i++) {
+            if (Random.Range(0, weightSum) < weights[i]) {
+                return i;
+            }
+            weightSum -= weights[i];
+        }
+        return weights.Length - 1;
     }
 }

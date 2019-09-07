@@ -2,10 +2,10 @@
 
 public static class DirectionUtility {
 
-    public static Direction[] DirectionValues { get; private set; }
+    public static readonly int kDirectionCount;
 
     static DirectionUtility() {
-        DirectionValues = (Direction[])System.Enum.GetValues(typeof(Direction));
+        kDirectionCount = System.Enum.GetValues(typeof(Direction)).Length;
     }
 
     public static Vector2 DirectionToVector(Direction direction) {
@@ -51,6 +51,6 @@ public static class DirectionUtility {
     }
 
     public static Direction GetRandomDirection() {
-        return (Direction)Random.Range(0, 4);
+        return (Direction)Random.Range(0, kDirectionCount);
     }
 }

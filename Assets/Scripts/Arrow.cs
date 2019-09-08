@@ -4,25 +4,39 @@
 public class Arrow {
 
     [SerializeField] GameObject instance = null;
-    [SerializeField] [Min(0f)] int weight = 1;
+    [SerializeField] int weight = 1;
     [SerializeField] float duration = 1f;
-    [SerializeField] [Range(0, 3)] int directionModifier = 0;
+    [SerializeField] [Range(0, 3)] int displayedDirectionModifier = 0;
+    // The moves required to correctly orient the arrow (relative to the displayed direction)
+    [SerializeField] [Range(0, 3)] int[] moves = null;
 
-    public GameObject Instance => instance;
     public int Weight => weight;
     public float Duration => duration;
-    public int Id { get; private set; }
-    public int DirectionModifier => directionModifier;
+    public int DisplayedDirectionModifier => displayedDirectionModifier;
+    public int MoveCount => moves.Length;
+    public bool IsActive { set { instance.SetActive(value); } }
+    public Direction Orientation {
+        set {
+            instance.transform.right = DirectionUtility.DirectionToVector(value);
+        }
+    }
 
-    bool isInitialized;
+    Animator animator;
 
     public void Init() {
-        if (isInitialized) {
-            return;
-        }
-        Id = (int)System.Enum.Parse(typeof(ArrowId), instance.name);
-        instance = Object.Instantiate(instance);
-        instance.SetActive(false);
-        isInitialized = true;
+        animator = instance.GetComponent<Animator>();
+    }
+
+    public int GetMove(int index) {
+        return moves[index];
+    }
+
+    public void TriggerAnimation(Animation animation) {
+        animator.SetTrigger(animation.ToString());
+    }
+
+    public enum Animation {
+        Rotate,
+        Move
     }
 }

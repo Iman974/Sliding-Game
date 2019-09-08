@@ -3,8 +3,7 @@ using System.Linq;
 
 public class GameManager : MonoBehaviour {
 
-    // The threshold indicating when to consider the sliding.
-    [SerializeField] float slidingSensibility = 0.25f;
+    [SerializeField] float swipingSensibility = 0.25f;
     [SerializeField] int maxLives = 3;
 
     public static GameManager Instance { get; private set; }
@@ -18,6 +17,7 @@ public class GameManager : MonoBehaviour {
     Direction displayedDirection;
     float countdown;
     Arrow selectedArrow;
+    int currentMoveIndex;
 
     void Awake() {
         #region Singleton
@@ -31,12 +31,12 @@ public class GameManager : MonoBehaviour {
     }
 
     void Update() {
-        HandleInput();
-
         countdown -= Time.deltaTime;
         if (countdown <= 0f) {
             NextArrow();
         }
+
+        HandleInput();
     }
 
     void HandleInput() {
@@ -46,21 +46,34 @@ public class GameManager : MonoBehaviour {
 
         Touch touch = Input.GetTouch(0);
         Vector2 deltaPos = touch.deltaPosition;
+        float sqrSensibility = swipingSensibility * swipingSensibility;
+        if (deltaPos.sqrMagnitude < sqrSensibility) {
+            return;
+        }
 
-        float sqrSensibility = slidingSensibility * slidingSensibility;
-        if (deltaPos.sqrMagnitude >= sqrSensibility) {
-            inputDirection = DirectionUtility.VectorToDirection(deltaPos);
-
-            if (inputDirection == desiredDirection) {
-                // Movement is validated
+        inputDirection = DirectionUtility.VectorToDirection(deltaPos);
+        if (currentMoveIndex < selectedArrow.MoveCount) {
+            int move = selectedArrow.GetMove(currentMoveIndex);
+            if ((int)inputDirection == (move + (int)displayedDirection) %
+                    DirectionUtility.kDirectionCount) {
+                // The input matches the move
+                currentMoveIndex++;
+            } else {
+                
             }
+        } else if (inputDirection == desiredDirection) {
+            // The arrow has been oriented successfully and the final move is right
+            selectedArrow.TriggerAnimation(Arrow.Animation.Move);
+            currentMoveIndex = 0;
+        } else {
+            // Wrong input on the scoring/final move
         }
     }
 
-    // Hide the previous arrow, randomly select a new one and show it.
+    // Hide the previous arrow, randomly select a new one, rotate it and show it.
     void NextArrow() {
         if (selectedArrow != null) {
-            selectedArrow.Instance.SetActive(false);
+            selectedArrow.IsActive = false;
         }
 
         desiredDirection = DirectionUtility.GetRandomDirection();
@@ -76,21 +89,16 @@ public class GameManager : MonoBehaviour {
         }
 
         displayedDirection = (Direction)(((int)desiredDirection +
-            selectedArrow.DirectionModifier) % DirectionUtility.kDirectionCount);
+            selectedArrow.DisplayedDirectionModifier) % DirectionUtility.kDirectionCount);
 
-        GameObject selectedArrowObj = selectedArrow.Instance;
-        Vector2 orientation = DirectionUtility.DirectionToVector(displayedDirection);
-        selectedArrowObj.transform.right = orientation;
-        selectedArrowObj.SetActive(true);
+        selectedArrow.Orientation = displayedDirection;
+        selectedArrow.IsActive = true;
         countdown = selectedArrow.Duration;
     }
 
-    Rect rect = new Rect(5f, 10f, 300f, 75f);
-    void OnGUI() {
-        GUI.Label(rect, "DisplayDir: " + displayedDirection.ToString() + ", DesiredDir: " +
-            desiredDirection.ToString());
-    }
-
+    // While or for loop ? make a choice. Algorithm (to be improved by
+    // using random function only once) from the website
+    // https://forum.unity.com/threads/random-numbers-with-a-weighted-chance.442190/
     int SelectRandomWeightedIndex(int[] weights) {
         int weightSum = weights.Sum();
         for (int i = 0; i < weights.Length - 1; i++) {

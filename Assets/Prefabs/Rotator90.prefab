@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 212196248566377532}
   - component: {fileID: 95023879109896484}
   - component: {fileID: 2681866080703930429}
+  - component: {fileID: -8707306784518058709}
   m_Layer: 5
   m_Name: Rotator90
   m_TagString: Untagged
@@ -127,3 +128,15 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.9868851, y: 0.97344136}
   m_EdgeRadius: 0
+--- !u!114 &-8707306784518058709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1430627173504980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71b37d3a476849d44a9562acf3045470, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

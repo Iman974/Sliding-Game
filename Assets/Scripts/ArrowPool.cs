@@ -17,10 +17,4 @@ public class ArrowPool : MonoBehaviour {
         }
         #endregion
     }
-
-    private void Start() {
-        foreach (Arrow arrow in arrows) {
-            arrow.Init();
-        }
-    }
 }

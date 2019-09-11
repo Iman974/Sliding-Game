@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
-[System.Serializable]
-public class Arrow {
+[CreateAssetMenu(menuName = "Arrow", fileName = "New arrow")]
+public class Arrow : ScriptableObject {
 
     [SerializeField] GameObject instance = null;
     [SerializeField] int weight = 1;
@@ -23,9 +23,28 @@ public class Arrow {
 
     Animator animator;
 
-    public void Init() {
+    //[RuntimeInitializeOnLoadMethod]
+    void Awake() {
+        Transform arrowPoolTransform = GameObject.FindWithTag("ArrowPool")?.transform;
+        if (arrowPoolTransform == null) {
+            Debug.LogWarning("Could not find the arrow pool.");
+            return;
+        }
+        instance = arrowPoolTransform.Find(name).gameObject;
+        if (instance == null) {
+            Debug.LogError("Could not find the arrow with name: " + name);
+            return;
+        }
         animator = instance.GetComponent<Animator>();
     }
+
+#if UNITY_EDITOR
+    void OnEnable() {
+        if (Application.isEditor) {
+            Awake();
+        }
+    }
+#endif
 
     public int GetMove(int index) {
         return moves[index];

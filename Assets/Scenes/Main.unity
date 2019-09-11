@@ -133,7 +133,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1595133263568500, guid: 495a8ae89bebef042ba49cc3a2668dad, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4875203889817708, guid: 495a8ae89bebef042ba49cc3a2668dad, type: 3}
       propertyPath: m_LocalPosition.x
@@ -184,12 +184,6 @@ PrefabInstance:
 --- !u!4 &120311429 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4875203889817708, guid: 495a8ae89bebef042ba49cc3a2668dad,
-    type: 3}
-  m_PrefabInstance: {fileID: 120311428}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &120311430 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1595133263568500, guid: 495a8ae89bebef042ba49cc3a2668dad,
     type: 3}
   m_PrefabInstance: {fileID: 120311428}
   m_PrefabAsset: {fileID: 0}
@@ -1357,7 +1351,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1284931419}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d6b506cf1ed8c2b419fba03282d45a2f, type: 3}
   m_Name: 
@@ -1662,7 +1656,7 @@ GameObject:
   - component: {fileID: 1800567048}
   m_Layer: 0
   m_Name: Arrow Pool
-  m_TagString: Untagged
+  m_TagString: ArrowPool
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1697,11 +1691,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   arrows:
-  - instance: {fileID: 120311430}
-    weight: 5
-    duration: 1
-    displayedDirectionModifier: 0
-    moves: 
+  - {fileID: 11400000, guid: 93b537b9f6538bf40a6645f153575159, type: 2}
 --- !u!1 &1876796421
 GameObject:
   m_ObjectHideFlags: 0

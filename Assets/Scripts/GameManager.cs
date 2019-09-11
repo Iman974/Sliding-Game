@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour {
     float countdown;
     Arrow selectedArrow;
     int currentMoveIndex;
+    Vector2 previousMousePos;
+    bool animationPhase;
 
     void Awake() {
         #region Singleton
@@ -31,7 +33,9 @@ public class GameManager : MonoBehaviour {
     }
 
     void Update() {
-        countdown -= Time.deltaTime;
+        if (!animationPhase) {
+            countdown -= Time.deltaTime;
+        }
         if (countdown <= 0f) {
             NextArrow();
         }
@@ -40,18 +44,10 @@ public class GameManager : MonoBehaviour {
     }
 
     void HandleInput() {
-        if (Input.touchCount == 0) {
+        if (!CheckInput(ref inputDirection)) {
             return;
         }
 
-        Touch touch = Input.GetTouch(0);
-        Vector2 deltaPos = touch.deltaPosition;
-        float sqrSensibility = swipingSensibility * swipingSensibility;
-        if (deltaPos.sqrMagnitude < sqrSensibility) {
-            return;
-        }
-
-        inputDirection = DirectionUtility.VectorToDirection(deltaPos);
         if (currentMoveIndex < selectedArrow.MoveCount) {
             int move = selectedArrow.GetMove(currentMoveIndex);
             if ((int)inputDirection == (move + (int)displayedDirection) %
@@ -65,9 +61,42 @@ public class GameManager : MonoBehaviour {
             // The arrow has been oriented successfully and the final move is right
             selectedArrow.TriggerAnimation(Arrow.Animation.Move);
             currentMoveIndex = 0;
+            animationPhase = true;
         } else {
             // Wrong input on the scoring/final move
         }
+    }
+
+    bool CheckInput(ref Direction input) {
+#if UNITY_EDITOR
+        if (!Input.GetMouseButton(0)) {
+            return false;
+        }
+
+        //Touch touch = Input.GetTouch(0);
+        Vector2 deltaPos = previousMousePos - (Vector2)Input.mousePosition;
+        previousMousePos = Input.mousePosition;
+        float sqrSensibility = swipingSensibility * swipingSensibility;
+        if (deltaPos.sqrMagnitude < sqrSensibility) {
+            return false;
+        }
+        Debug.Log("Input Write");
+        input = DirectionUtility.VectorToDirection(deltaPos);
+        return true;
+#elif UNITY_ANDROID
+        if (Input.touchCount == 0) {
+            return false;
+        }
+
+        Touch touch = Input.GetTouch(0);
+        Vector2 deltaPos = touch.deltaPosition;
+        float sqrSensibility = swipingSensibility * swipingSensibility;
+        if (deltaPos.sqrMagnitude < sqrSensibility) {
+            return false;
+        }
+        input = DirectionUtility.VectorToDirection(deltaPos);
+        return true;
+#endif
     }
 
     // Hide the previous arrow, randomly select a new one, rotate it and show it.
@@ -94,6 +123,12 @@ public class GameManager : MonoBehaviour {
         selectedArrow.Orientation = displayedDirection;
         selectedArrow.IsActive = true;
         countdown = selectedArrow.Duration;
+        animationPhase = false;
+    }
+
+    public void OnAnimationEnd() {
+        animationPhase = false;
+        NextArrow();
     }
 
     // While or for loop ? make a choice. Algorithm (to be improved by

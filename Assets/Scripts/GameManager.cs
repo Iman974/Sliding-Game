@@ -3,23 +3,23 @@ using System.Linq;
 
 public class GameManager : MonoBehaviour {
 
-    [SerializeField] float swipingSensibility = 0.25f;
     [SerializeField] int maxLives = 3;
 
     public static GameManager Instance { get; private set; }
     public static Direction CurrentDirection { get; private set; }
     public static int PlayerScore { get; private set; }
+    public static Arrow SelectedArrow { get; private set; }
 
     public int Lives { get; private set; }
 
-    Direction inputDirection;
-    Direction desiredDirection;
-    Direction displayedDirection;
-    float countdown;
-    Arrow selectedArrow;
-    int currentMoveIndex;
-    Vector2 previousMousePos;
-    bool animationPhase;
+    public static event System.Action OnCorrectFinalInputEvent;
+
+    static Direction inputDirection;
+    static Direction desiredDirection;
+    static Direction displayedDirection;
+    static float countdown;
+    static int currentMoveIndex;
+    static Vector2 previousMousePos;
 
     void Awake() {
         #region Singleton
@@ -33,23 +33,27 @@ public class GameManager : MonoBehaviour {
     }
 
     void Update() {
-        if (!animationPhase) {
+        if (!AnimationManager.IsAnimating) {
             countdown -= Time.deltaTime;
+            if (countdown <= 0f) {
+                NextArrow();
+            }
         }
-        if (countdown <= 0f) {
-            NextArrow();
+        if (!AnimationManager.IsAnimating) {
+            HandleInput();
         }
-
-        HandleInput();
     }
 
     void HandleInput() {
-        if (!CheckInput(ref inputDirection)) {
+        if (Input.touchCount == 0) {
+            return;
+        }
+        if (!InputManager.GetInput(ref inputDirection)) {
             return;
         }
 
-        if (currentMoveIndex < selectedArrow.MoveCount) {
-            int move = selectedArrow.GetMove(currentMoveIndex);
+        if (currentMoveIndex < SelectedArrow.MoveCount) {
+            int move = SelectedArrow.GetMove(currentMoveIndex);
             if ((int)inputDirection == (move + (int)displayedDirection) %
                     DirectionUtility.kDirectionCount) {
                 // The input matches the move
@@ -59,50 +63,19 @@ public class GameManager : MonoBehaviour {
             }
         } else if (inputDirection == desiredDirection) {
             // The arrow has been oriented successfully and the final move is right
-            selectedArrow.TriggerAnimation(Arrow.Animation.Move);
+            OnCorrectFinalInputEvent?.Invoke();
+            countdown = AnimationManager.NextDelay;
             currentMoveIndex = 0;
-            animationPhase = true;
         } else {
             // Wrong input on the scoring/final move
         }
     }
 
-    bool CheckInput(ref Direction input) {
-#if UNITY_EDITOR
-        if (!Input.GetMouseButton(0)) {
-            return false;
-        }
-
-        //Touch touch = Input.GetTouch(0);
-        Vector2 deltaPos = previousMousePos - (Vector2)Input.mousePosition;
-        previousMousePos = Input.mousePosition;
-        float sqrSensibility = swipingSensibility * swipingSensibility;
-        if (deltaPos.sqrMagnitude < sqrSensibility) {
-            return false;
-        }
-        Debug.Log("Input Write");
-        input = DirectionUtility.VectorToDirection(deltaPos);
-        return true;
-#elif UNITY_ANDROID
-        if (Input.touchCount == 0) {
-            return false;
-        }
-
-        Touch touch = Input.GetTouch(0);
-        Vector2 deltaPos = touch.deltaPosition;
-        float sqrSensibility = swipingSensibility * swipingSensibility;
-        if (deltaPos.sqrMagnitude < sqrSensibility) {
-            return false;
-        }
-        input = DirectionUtility.VectorToDirection(deltaPos);
-        return true;
-#endif
-    }
-
     // Hide the previous arrow, randomly select a new one, rotate it and show it.
     void NextArrow() {
-        if (selectedArrow != null) {
-            selectedArrow.IsActive = false;
+        if (SelectedArrow != null) {
+            SelectedArrow.IsActive = false;
+            SelectedArrow.Reset();
         }
 
         desiredDirection = DirectionUtility.GetRandomDirection();
@@ -111,24 +84,18 @@ public class GameManager : MonoBehaviour {
         int weightSum = arrows.Sum(a => a.Weight);
         for (int i = 0; i < arrows.Length; i++) {
             if (Random.Range(0, weightSum) < arrows[i].Weight) {
-                selectedArrow = arrows[i];
+                SelectedArrow = arrows[i];
                 break;
             }
             weightSum -= arrows[i].Weight;
         }
 
         displayedDirection = (Direction)(((int)desiredDirection +
-            selectedArrow.DisplayedDirectionModifier) % DirectionUtility.kDirectionCount);
+            SelectedArrow.DisplayedDirectionModifier) % DirectionUtility.kDirectionCount);
 
-        selectedArrow.Orientation = displayedDirection;
-        selectedArrow.IsActive = true;
-        countdown = selectedArrow.Duration;
-        animationPhase = false;
-    }
-
-    public void OnAnimationEnd() {
-        animationPhase = false;
-        NextArrow();
+        SelectedArrow.Orientation = displayedDirection;
+        SelectedArrow.IsActive = true;
+        countdown = SelectedArrow.Duration;
     }
 
     // While or for loop ? make a choice. Algorithm (to be improved by

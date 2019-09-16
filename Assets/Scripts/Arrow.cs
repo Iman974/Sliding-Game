@@ -22,6 +22,7 @@ public class Arrow : ScriptableObject {
     }
 
     Animator animator;
+    SpriteRenderer spr;
 
     //[RuntimeInitializeOnLoadMethod]
     void Awake() {
@@ -35,7 +36,9 @@ public class Arrow : ScriptableObject {
             Debug.LogError("Could not find the arrow with name: " + name);
             return;
         }
+
         animator = instance.GetComponent<Animator>();
+        spr = instance.GetComponent<SpriteRenderer>();
     }
 
 #if UNITY_EDITOR
@@ -52,6 +55,11 @@ public class Arrow : ScriptableObject {
 
     public void TriggerAnimation(Animation animation) {
         animator.SetTrigger(animation.ToString());
+    }
+
+    public void Reset() {
+        instance.transform.position = Vector3.zero;
+        spr.color = spr.color + Color.black;
     }
 
     public enum Animation {

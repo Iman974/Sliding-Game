@@ -6,9 +6,11 @@ public class Arrow : ScriptableObject {
     [SerializeField] GameObject instance = null;
     [SerializeField] int weight = 1;
     [SerializeField] float duration = 1f;
+    [SerializeField] int scoreValue = 10;
     [SerializeField] [Range(0, 3)] int displayedDirectionModifier = 0;
     // The moves required to correctly orient the arrow (relative to the displayed direction)
     [SerializeField] [Range(0, 3)] int[] moves = null;
+    [SerializeField] string[] animationNames = null;
 
     public int Weight => weight;
     public float Duration => duration;
@@ -20,9 +22,10 @@ public class Arrow : ScriptableObject {
             instance.transform.right = DirectionUtility.DirectionToVector(value);
         }
     }
+    public int ScoreValue => scoreValue;
 
     Animator animator;
-    SpriteRenderer spr;
+    Transform transform;
 
     //[RuntimeInitializeOnLoadMethod]
     void Awake() {
@@ -38,7 +41,7 @@ public class Arrow : ScriptableObject {
         }
 
         animator = instance.GetComponent<Animator>();
-        spr = instance.GetComponent<SpriteRenderer>();
+        transform = instance.transform;
     }
 
 #if UNITY_EDITOR
@@ -53,17 +56,25 @@ public class Arrow : ScriptableObject {
         return moves[index];
     }
 
+    public string GetAnimationName(int index) {
+        return animationNames[index];
+    }
+
     public void TriggerAnimation(Animation animation) {
         animator.SetTrigger(animation.ToString());
     }
 
-    public void Reset() {
-        instance.transform.position = Vector3.zero;
-        spr.color = spr.color + Color.black;
+    public void TriggerAnimation(string animation) {
+        animator.SetTrigger(animation);
+    }
+
+    public void ResetTransform() {
+        transform.position = Vector3.zero;
+        transform.localScale = Vector3.one;
     }
 
     public enum Animation {
-        Rotate,
-        Move
+        Success,
+        Fail
     }
 }

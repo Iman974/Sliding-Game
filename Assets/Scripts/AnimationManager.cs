@@ -21,20 +21,38 @@ public class AnimationManager : MonoBehaviour {
         NextDelay = nextDelay;
     }
 
-    private void Start() {
-        GameManager.OnCorrectFinalInputEvent += OnFinalInputRight;
+    void Start() {
+        GameManager.OnFinalInputEvent += OnFinalInput;
+        GameManager.OnMissingInputAndTimeElapsed += OnMissingInputAndTimeElapsed;
+        GameManager.OnMoveSuccess += OnMoveSuccess;
     }
 
-    public static void OnFinalInputRight() {
-        GameManager.SelectedArrow.TriggerAnimation(Arrow.Animation.Move);
+    void OnFinalInput(bool isSuccess) {
+        Arrow.Animation animation = isSuccess ?
+            Arrow.Animation.Success : Arrow.Animation.Fail;
+        GameManager.SelectedArrow.TriggerAnimation(animation);
         IsAnimating = true;
     }
 
-    public static void OnFinalAnimationEnd() {
+    void OnMissingInputAndTimeElapsed() {
+        GameManager.SelectedArrow.TriggerAnimation(Arrow.Animation.Fail);
+        IsAnimating = true;
+    }
+
+    void OnMoveSuccess(int moveIndex) {
+        Arrow arrow = GameManager.SelectedArrow;
+        string animationName = arrow.GetAnimationName(moveIndex);
+        arrow.TriggerAnimation(animationName);
+        IsAnimating = true;
+    }
+
+    public static void OnAnimationEnd() {
         IsAnimating = false;
     }
 
     void OnDestroy() {
-        GameManager.OnCorrectFinalInputEvent -= OnFinalInputRight;
+        GameManager.OnFinalInputEvent -= OnFinalInput;
+        GameManager.OnMissingInputAndTimeElapsed -= OnMissingInputAndTimeElapsed;
+        GameManager.OnMoveSuccess -= OnMoveSuccess;
     }
 }

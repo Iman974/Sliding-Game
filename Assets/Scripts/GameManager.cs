@@ -4,6 +4,7 @@ using System.Linq;
 public class GameManager : MonoBehaviour {
 
     [SerializeField] int maxLives = 3;
+    [SerializeField] Arrow[] arrows = null;
 
     public static GameManager Instance { get; private set; }
     public static Direction CurrentDirection { get; private set; }
@@ -12,14 +13,18 @@ public class GameManager : MonoBehaviour {
 
     public int Lives { get; private set; }
 
-    public static event System.Action OnCorrectFinalInputEvent;
+    public static event System.Action<bool> OnFinalInputEvent;
+    //public static event System.Action OnTimeElapsed; // For NextArrow() call
+    public static event System.Action OnMissingInputAndTimeElapsed;
+    public static event System.Action<int> OnMoveSuccess;
 
-    static Direction inputDirection;
-    static Direction desiredDirection;
-    static Direction displayedDirection;
-    static float countdown;
-    static int currentMoveIndex;
-    static Vector2 previousMousePos;
+    Direction inputDirection;
+    Direction desiredDirection;
+    Direction displayedDirection;
+    int currentMoveIndex;
+    Vector2 previousMousePos;
+    float countdown;
+    bool countdownDelaySet = true;
 
     void Awake() {
         #region Singleton
@@ -36,19 +41,23 @@ public class GameManager : MonoBehaviour {
         if (!AnimationManager.IsAnimating) {
             countdown -= Time.deltaTime;
             if (countdown <= 0f) {
-                NextArrow();
+                if (!countdownDelaySet) {
+                    countdown = AnimationManager.NextDelay;
+                    OnMissingInputAndTimeElapsed?.Invoke();
+                    countdownDelaySet = true;
+                } else {
+                    NextArrow();
+                    countdownDelaySet = false;
+                }
+                return;
             }
-        }
-        if (!AnimationManager.IsAnimating) {
+
             HandleInput();
         }
     }
 
     void HandleInput() {
-        if (Input.touchCount == 0) {
-            return;
-        }
-        if (!InputManager.GetInput(ref inputDirection)) {
+        if (Input.touchCount == 0 || !InputManager.GetInput(ref inputDirection)) {
             return;
         }
 
@@ -57,17 +66,24 @@ public class GameManager : MonoBehaviour {
             if ((int)inputDirection == (move + (int)displayedDirection) %
                     DirectionUtility.kDirectionCount) {
                 // The input matches the move
+                OnMoveSuccess?.Invoke(currentMoveIndex);
                 currentMoveIndex++;
             } else {
                 
             }
         } else if (inputDirection == desiredDirection) {
             // The arrow has been oriented successfully and the final move is right
-            OnCorrectFinalInputEvent?.Invoke();
             countdown = AnimationManager.NextDelay;
+            PlayerScore += SelectedArrow.ScoreValue;
             currentMoveIndex = 0;
+            countdownDelaySet = true;
+            OnFinalInputEvent?.Invoke(true); // same instructions as input != desired, refactoring ?
         } else {
             // Wrong input on the scoring/final move
+            PlayerScore -= SelectedArrow.ScoreValue / 2;
+            countdown = AnimationManager.NextDelay;
+            OnFinalInputEvent?.Invoke(false);
+            countdownDelaySet = true;
         }
     }
 
@@ -75,20 +91,12 @@ public class GameManager : MonoBehaviour {
     void NextArrow() {
         if (SelectedArrow != null) {
             SelectedArrow.IsActive = false;
-            SelectedArrow.Reset();
+            SelectedArrow.ResetTransform();
         }
 
         desiredDirection = DirectionUtility.GetRandomDirection();
-        Arrow[] arrows = ArrowPool.Instance.Arrows;
 
-        int weightSum = arrows.Sum(a => a.Weight);
-        for (int i = 0; i < arrows.Length; i++) {
-            if (Random.Range(0, weightSum) < arrows[i].Weight) {
-                SelectedArrow = arrows[i];
-                break;
-            }
-            weightSum -= arrows[i].Weight;
-        }
+        SelectedArrow = arrows[SelectRandomWeightedIndex()];
 
         displayedDirection = (Direction)(((int)desiredDirection +
             SelectedArrow.DisplayedDirectionModifier) % DirectionUtility.kDirectionCount);
@@ -101,14 +109,14 @@ public class GameManager : MonoBehaviour {
     // While or for loop ? make a choice. Algorithm (to be improved by
     // using random function only once) from the website
     // https://forum.unity.com/threads/random-numbers-with-a-weighted-chance.442190/
-    int SelectRandomWeightedIndex(int[] weights) {
-        int weightSum = weights.Sum();
-        for (int i = 0; i < weights.Length - 1; i++) {
-            if (Random.Range(0, weightSum) < weights[i]) {
+    int SelectRandomWeightedIndex() {
+        int weightSum = arrows.Sum(a => a.Weight);
+        for (int i = 0; i < arrows.Length - 1; i++) {
+            if (Random.Range(0, weightSum) < arrows[i].Weight) {
                 return i;
             }
-            weightSum -= weights[i];
+            weightSum -= arrows[i].Weight;
         }
-        return weights.Length - 1;
+        return arrows.Length - 1;
     }
 }

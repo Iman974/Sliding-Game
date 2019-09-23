@@ -2,11 +2,8 @@
 
 public class AnimationManager : MonoBehaviour {
 
-    [SerializeField] float nextDelay = 0.1f;
-
     public static AnimationManager Instance { get; private set; }
     public static bool IsAnimating { get; private set; }
-    public static float NextDelay { get; private set; }
 
     void Awake() {
         #region Singleton
@@ -17,33 +14,38 @@ public class AnimationManager : MonoBehaviour {
             return;
         }
         #endregion
-
-        NextDelay = nextDelay;
     }
 
     void Start() {
         GameManager.OnFinalInputEvent += OnFinalInput;
         GameManager.OnMissingInputAndTimeElapsed += OnMissingInputAndTimeElapsed;
         GameManager.OnMoveSuccess += OnMoveSuccess;
+        GameManager.OnMoveFail += OnMoveFail;
     }
 
     void OnFinalInput(bool isSuccess) {
-        Arrow.Animation animation = isSuccess ?
-            Arrow.Animation.Success : Arrow.Animation.Fail;
-        GameManager.SelectedArrow.TriggerAnimation(animation);
+        Animation animation = isSuccess ?
+            Animation.Success : Animation.Fail;
+        GameManager.SelectedArrow.PlayAnimation(animation.ToString());
         IsAnimating = true;
     }
 
     void OnMissingInputAndTimeElapsed() {
-        GameManager.SelectedArrow.TriggerAnimation(Arrow.Animation.Fail);
+        //OnFinalInput(isSuccess: false)
+        GameManager.SelectedArrow.PlayAnimation(Animation.Fail.ToString());
         IsAnimating = true;
     }
 
     void OnMoveSuccess(int moveIndex) {
         Arrow arrow = GameManager.SelectedArrow;
-        string animationName = arrow.GetAnimationName(moveIndex);
-        arrow.TriggerAnimation(animationName);
+        string animationTriggerName = arrow.GetAnimationTriggerName(moveIndex);
+        // Same as OnFinalInput, but string & enum
+        arrow.PlayAnimation(animationTriggerName);
         IsAnimating = true;
+    }
+
+    void OnMoveFail() {
+        OnFinalInput(isSuccess: false);
     }
 
     public static void OnAnimationEnd() {
@@ -54,5 +56,11 @@ public class AnimationManager : MonoBehaviour {
         GameManager.OnFinalInputEvent -= OnFinalInput;
         GameManager.OnMissingInputAndTimeElapsed -= OnMissingInputAndTimeElapsed;
         GameManager.OnMoveSuccess -= OnMoveSuccess;
+        GameManager.OnMoveFail -= OnMoveFail;
+    }
+
+    enum Animation {
+        Success,
+        Fail
     }
 }

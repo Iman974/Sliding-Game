@@ -10,7 +10,7 @@ public class Arrow : ScriptableObject {
     [SerializeField] [Range(0, 3)] int displayedDirectionModifier = 0;
     // The moves required to correctly orient the arrow (relative to the displayed direction)
     [SerializeField] [Range(0, 3)] int[] moves = null;
-    [SerializeField] string[] animationNames = null;
+    [SerializeField] string[] animationTriggerNames = null;
 
     public int Weight => weight;
     public float Duration => duration;
@@ -36,7 +36,7 @@ public class Arrow : ScriptableObject {
         }
         instance = arrowPoolTransform.Find(name).gameObject;
         if (instance == null) {
-            Debug.LogError("Could not find the arrow with name: " + name);
+            Debug.LogError("Could not find the " + name + " arrow");
             return;
         }
 
@@ -56,25 +56,16 @@ public class Arrow : ScriptableObject {
         return moves[index];
     }
 
-    public string GetAnimationName(int index) {
-        return animationNames[index];
+    public string GetAnimationTriggerName(int index) {
+        return animationTriggerNames[index];
     }
 
-    public void TriggerAnimation(Animation animation) {
-        animator.SetTrigger(animation.ToString());
-    }
-
-    public void TriggerAnimation(string animation) {
-        animator.SetTrigger(animation);
+    public void PlayAnimation(string animationTriggerName) {
+        animator.SetTrigger(animationTriggerName);
     }
 
     public void ResetTransform() {
         transform.position = Vector3.zero;
         transform.localScale = Vector3.one;
-    }
-
-    public enum Animation {
-        Success,
-        Fail
     }
 }

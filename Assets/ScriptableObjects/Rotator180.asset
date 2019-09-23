@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   instance: {fileID: 0}
   weight: 1
-  duration: 1.4
+  duration: 2
   scoreValue: 30
   displayedDirectionModifier: 2
-  moves: 02000000
-  animationNames:
+  moves: 00000000
+  animationTriggerNames:
   - Rotate

@@ -19,7 +19,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: {x: 0, y: 2.8125, z: 0}
+        value: {x: 0, y: 0, z: 0}
         inSlope: {x: 0, y: 914.73364, z: 0}
         outSlope: {x: 0, y: 914.73364, z: 0}
         tangentMode: 0
@@ -28,7 +28,7 @@ AnimationClip:
         outWeight: {x: 0.33333334, y: 0.13022113, z: 0.33333334}
       - serializedVersion: 3
         time: 0.28333333
-        value: {x: 0, y: 182.8125, z: 0}
+        value: {x: 0, y: 180, z: 0}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
         tangentMode: 0
@@ -112,7 +112,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 2.8125
+        value: 0
         inSlope: 914.73364
         outSlope: 914.73364
         tangentMode: 0
@@ -121,7 +121,7 @@ AnimationClip:
         outWeight: 0.13022113
       - serializedVersion: 3
         time: 0.28333333
-        value: 182.8125
+        value: 180
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -196,4 +196,11 @@ AnimationClip:
     script: {fileID: 0}
   m_HasGenericRootTransform: 1
   m_HasMotionFloatCurves: 0
-  m_Events: []
+  m_Events:
+  - time: 0.28333333
+    functionName: OnAnimationEnd
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0

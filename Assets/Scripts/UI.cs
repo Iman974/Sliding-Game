@@ -3,30 +3,33 @@ using UnityEngine.UI;
 
 public class UI : MonoBehaviour {
 
-    [SerializeField] private Text scoreText;
-    [SerializeField] private Text livesText;
-    [SerializeField] private Text highScoreText;
-    [SerializeField] private GameObject gameoverUIElementsContainer;
+    [SerializeField] Text scoreText;
+    [SerializeField] Text livesText;
+    [SerializeField] Text highScoreText;
+    [SerializeField] GameObject gameoverUIElementsContainer;
 
-    private void Start() {
+    void Start() {
+        GameManager.OnFinalInputEvent += UpdateStatsText;
+        //GameManager.OnMoveFail += UpdateStatsText;
         //highScoreText.text = "Highscore: " + GameManager.HighScore;
     }
 
-    private void OnMovementValidation(bool isValidated) {
-        UpdateStatsText();
-    }
 
-    private void UpdateStatsText() {
+    void UpdateStatsText(bool isSuccess) {
         scoreText.text = "Score: " + GameManager.PlayerScore;
-        livesText.text = "Lives: " + GameManager.Instance.Lives;
+        //livesText.text = "Lives: " + GameManager.Instance.Lives;
     }
 
-    private void OnGameOver() {
+    void OnGameOver() {
         gameoverUIElementsContainer.SetActive(true);
         //highScoreText.text = "Highscore: " + GameManager.HighScore;
     }
 
-    private void OnGameReset() {
-        UpdateStatsText();
+    void OnGameReset() {
+        //UpdateStatsText();
+    }
+
+    void OnDestroy() {
+        GameManager.OnFinalInputEvent -= UpdateStatsText;
     }
 }

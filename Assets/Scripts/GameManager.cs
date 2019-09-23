@@ -5,6 +5,7 @@ public class GameManager : MonoBehaviour {
 
     [SerializeField] int maxLives = 3;
     [SerializeField] Arrow[] arrows = null;
+    [SerializeField] float nextDelay = 0.1f;
 
     public static GameManager Instance { get; private set; }
     public static Direction CurrentDirection { get; private set; }
@@ -17,6 +18,7 @@ public class GameManager : MonoBehaviour {
     //public static event System.Action OnTimeElapsed; // For NextArrow() call
     public static event System.Action OnMissingInputAndTimeElapsed;
     public static event System.Action<int> OnMoveSuccess;
+    public static event System.Action OnMoveFail;
 
     Direction inputDirection;
     Direction desiredDirection;
@@ -41,10 +43,13 @@ public class GameManager : MonoBehaviour {
         if (!AnimationManager.IsAnimating) {
             countdown -= Time.deltaTime;
             if (countdown <= 0f) {
+                // Check if the delay of the countdown has been set, that is
+                // if an input was detected
                 if (!countdownDelaySet) {
-                    countdown = AnimationManager.NextDelay;
+                    countdown = nextDelay;
                     OnMissingInputAndTimeElapsed?.Invoke();
                     countdownDelaySet = true;
+                    //Debug.LogWarning("Missed");
                 } else {
                     NextArrow();
                     countdownDelaySet = false;
@@ -56,48 +61,18 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    void HandleInput() {
-        if (Input.touchCount == 0 || !InputManager.GetInput(ref inputDirection)) {
-            return;
-        }
-
-        if (currentMoveIndex < SelectedArrow.MoveCount) {
-            int move = SelectedArrow.GetMove(currentMoveIndex);
-            if ((int)inputDirection == (move + (int)displayedDirection) %
-                    DirectionUtility.kDirectionCount) {
-                // The input matches the move
-                OnMoveSuccess?.Invoke(currentMoveIndex);
-                currentMoveIndex++;
-            } else {
-                
-            }
-        } else if (inputDirection == desiredDirection) {
-            // The arrow has been oriented successfully and the final move is right
-            countdown = AnimationManager.NextDelay;
-            PlayerScore += SelectedArrow.ScoreValue;
-            currentMoveIndex = 0;
-            countdownDelaySet = true;
-            OnFinalInputEvent?.Invoke(true); // same instructions as input != desired, refactoring ?
-        } else {
-            // Wrong input on the scoring/final move
-            PlayerScore -= SelectedArrow.ScoreValue / 2;
-            countdown = AnimationManager.NextDelay;
-            OnFinalInputEvent?.Invoke(false);
-            countdownDelaySet = true;
-        }
-    }
-
-    // Hide the previous arrow, randomly select a new one, rotate it and show it.
     void NextArrow() {
+        // Hide the previous arrow and reset it
         if (SelectedArrow != null) {
             SelectedArrow.IsActive = false;
             SelectedArrow.ResetTransform();
         }
 
-        desiredDirection = DirectionUtility.GetRandomDirection();
-
+        // Randomly select an arrow based randomly on the weights
         SelectedArrow = arrows[SelectRandomWeightedIndex()];
 
+        // Randomly choose a direction and set display direction based on the arrow modifier
+        desiredDirection = DirectionUtility.GetRandomDirection();
         displayedDirection = (Direction)(((int)desiredDirection +
             SelectedArrow.DisplayedDirectionModifier) % DirectionUtility.kDirectionCount);
 
@@ -118,5 +93,46 @@ public class GameManager : MonoBehaviour {
             weightSum -= arrows[i].Weight;
         }
         return arrows.Length - 1;
+    }
+
+    void HandleInput() {
+        if (Input.touchCount == 0 || !InputManager.GetInput(ref inputDirection)) {
+            return;
+        }
+
+        // Check if the move list has been entirely iterated through
+        if (currentMoveIndex < SelectedArrow.MoveCount) {
+            int move = SelectedArrow.GetMove(currentMoveIndex);
+            if ((int)inputDirection == (move + (int)displayedDirection) %
+                    DirectionUtility.kDirectionCount) {
+                // The input matches the move
+                OnMoveSuccess?.Invoke(currentMoveIndex);
+                currentMoveIndex++;
+                //Debug.Log("Move success");
+            } else {
+                countdown = nextDelay;
+                PlayerScore -= SelectedArrow.ScoreValue / 2;
+                countdownDelaySet = true;
+                OnMoveFail?.Invoke();
+                currentMoveIndex = 0;
+                //Debug.Log("Move fail");
+            }
+        } else if (inputDirection == desiredDirection) {
+            // The arrow has been oriented successfully and the final move is right
+            countdown = nextDelay;
+            PlayerScore += SelectedArrow.ScoreValue;
+            currentMoveIndex = 0;
+            countdownDelaySet = true;
+            OnFinalInputEvent?.Invoke(true); // same instructions as input != desired, refactoring ?
+            //Debug.Log("Fina move success");
+        } else {
+            // Wrong input on the scoring/final move
+            PlayerScore -= SelectedArrow.ScoreValue / 2;
+            countdown = nextDelay;
+            countdownDelaySet = true;
+            currentMoveIndex = 0;
+            OnFinalInputEvent?.Invoke(false);
+            //Debug.Log("Fina move fail");
+        }
     }
 }

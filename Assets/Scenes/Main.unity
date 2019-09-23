@@ -1081,7 +1081,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 989476194}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 37b91c0e0acc94a428c287b0e8ca76c4, type: 3}
   m_Name: 
@@ -1341,6 +1341,7 @@ MonoBehaviour:
   maxLives: 3
   arrows:
   - {fileID: 11400000, guid: 7deccdddd79928646815e9201a917893, type: 2}
+  nextDelay: 0.2
 --- !u!4 &1284931421
 Transform:
   m_ObjectHideFlags: 0
@@ -1367,7 +1368,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8903f7ee6e6ea3640beb57a7f3b2e64f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextDelay: 0.2
 --- !u!114 &1284931423
 MonoBehaviour:
   m_ObjectHideFlags: 0

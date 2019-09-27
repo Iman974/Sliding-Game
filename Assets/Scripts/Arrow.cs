@@ -19,7 +19,8 @@ public class Arrow : ScriptableObject {
     public bool IsActive { set { instance.SetActive(value); } }
     public Direction Orientation {
         set {
-            instance.transform.right = DirectionUtility.DirectionToVector(value);
+            transform.eulerAngles = Vector3.forward *
+                DirectionUtility.DirectionToRotation(value);
         }
     }
     public int ScoreValue => scoreValue;
@@ -27,7 +28,6 @@ public class Arrow : ScriptableObject {
     Animator animator;
     Transform transform;
 
-    //[RuntimeInitializeOnLoadMethod]
     void Awake() {
         Transform arrowPoolTransform = GameObject.FindWithTag("ArrowPool")?.transform;
         if (arrowPoolTransform == null) {

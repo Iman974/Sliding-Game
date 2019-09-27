@@ -37,7 +37,7 @@ public static class DirectionUtility {
         return matchingDirection;
     }
 
-    public static float GetRotationFromDirection(Direction direction) {
+    public static float DirectionToRotation(Direction direction) {
         float rotation = 0f;
 
         if (direction == Direction.Right) {

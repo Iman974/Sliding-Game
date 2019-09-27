@@ -890,7 +890,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1430627173504980, guid: c7af62a062bcb5842a0d7dffc8122168, type: 3}
       propertyPath: m_Name
-      value: Rotator90
+      value: Rotator90Aclockwise
       objectReference: {fileID: 0}
     - target: {fileID: 1430627173504980, guid: c7af62a062bcb5842a0d7dffc8122168, type: 3}
       propertyPath: m_IsActive
@@ -918,11 +918,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4065358601855360, guid: c7af62a062bcb5842a0d7dffc8122168, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4065358601855360, guid: c7af62a062bcb5842a0d7dffc8122168, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4065358601855360, guid: c7af62a062bcb5842a0d7dffc8122168, type: 3}
       propertyPath: m_RootOrder
@@ -938,7 +938,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4065358601855360, guid: c7af62a062bcb5842a0d7dffc8122168, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 180
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c7af62a062bcb5842a0d7dffc8122168, type: 3}
@@ -1340,8 +1340,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxLives: 3
   arrows:
+  - {fileID: 11400000, guid: 93b537b9f6538bf40a6645f153575159, type: 2}
+  - {fileID: 11400000, guid: 9690fd271d38c0a47a7a1b4b63f0fda5, type: 2}
   - {fileID: 11400000, guid: 7deccdddd79928646815e9201a917893, type: 2}
-  nextDelay: 0.2
+  nextDelay: 0.3
 --- !u!4 &1284931421
 Transform:
   m_ObjectHideFlags: 0

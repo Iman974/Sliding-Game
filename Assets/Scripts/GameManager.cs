@@ -24,9 +24,8 @@ public class GameManager : MonoBehaviour {
     Direction desiredDirection;
     Direction displayedDirection;
     int currentMoveIndex;
-    Vector2 previousMousePos;
     float countdown;
-    bool countdownDelaySet = true;
+    bool doInputCheck;
 
     void Awake() {
         #region Singleton
@@ -43,21 +42,23 @@ public class GameManager : MonoBehaviour {
         if (!AnimationManager.IsAnimating) {
             countdown -= Time.deltaTime;
             if (countdown <= 0f) {
-                // Check if the delay of the countdown has been set, that is
-                // if an input was detected
-                if (!countdownDelaySet) {
+                // Check if we're still handling input. If so, it means
+                // no input was received so the player didn't do anything
+                if (doInputCheck) {
                     countdown = nextDelay;
+                    doInputCheck = false;
+                    currentMoveIndex = 0;
                     OnMissingInputAndTimeElapsed?.Invoke();
-                    countdownDelaySet = true;
-                    //Debug.LogWarning("Missed");
                 } else {
                     NextArrow();
-                    countdownDelaySet = false;
+                    doInputCheck = true;
                 }
                 return;
             }
 
-            HandleInput();
+            if (doInputCheck) {
+                HandleInput();
+            }
         }
     }
 
@@ -108,31 +109,27 @@ public class GameManager : MonoBehaviour {
                 // The input matches the move
                 OnMoveSuccess?.Invoke(currentMoveIndex);
                 currentMoveIndex++;
-                //Debug.Log("Move success");
             } else {
                 countdown = nextDelay;
                 PlayerScore -= SelectedArrow.ScoreValue / 2;
-                countdownDelaySet = true;
+                doInputCheck = false;
                 OnMoveFail?.Invoke();
                 currentMoveIndex = 0;
-                //Debug.Log("Move fail");
             }
         } else if (inputDirection == desiredDirection) {
             // The arrow has been oriented successfully and the final move is right
             countdown = nextDelay;
             PlayerScore += SelectedArrow.ScoreValue;
             currentMoveIndex = 0;
-            countdownDelaySet = true;
+            doInputCheck = false;
             OnFinalInputEvent?.Invoke(true); // same instructions as input != desired, refactoring ?
-            //Debug.Log("Fina move success");
         } else {
             // Wrong input on the scoring/final move
             PlayerScore -= SelectedArrow.ScoreValue / 2;
             countdown = nextDelay;
-            countdownDelaySet = true;
+            doInputCheck = false;
             currentMoveIndex = 0;
             OnFinalInputEvent?.Invoke(false);
-            //Debug.Log("Fina move fail");
         }
     }
 }

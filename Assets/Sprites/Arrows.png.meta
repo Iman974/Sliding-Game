@@ -20,6 +20,12 @@ TextureImporter:
   - first:
       213: 3318904089994504119
     second: Arrow_Simple
+  - first:
+      213: 1254045686837716011
+    second: Arrow_Rotator90
+  - first:
+      213: 8240296178972090289
+    second: Arrow_Rotator180
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -63,7 +69,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 125
+  spritePixelsToUnits: 190
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -116,7 +122,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Arrow_Rotater90
+      name: Arrow_Rotator90
       rect:
         serializedVersion: 2
         x: 24
@@ -124,20 +130,20 @@ TextureImporter:
         width: 626
         height: 408
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: aa23e57453139f54a9ae40c945b45b9b
-      internalID: -1033766676993296678
+      spriteID: ed114190b5ce1254290c968dc5da6c46
+      internalID: 1254045686837716011
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Arrow_Rotater180
+      name: Arrow_Rotator180
       rect:
         serializedVersion: 2
         x: 24
@@ -145,14 +151,14 @@ TextureImporter:
         width: 626
         height: 408
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 323e901a5a490004e9817046e5c0cc09
-      internalID: 5287939958834139383
+      spriteID: 5e131c75163dbfc48ab88e73976665b0
+      internalID: 8240296178972090289
       vertices: []
       indices: 
       edges: []
@@ -166,14 +172,14 @@ TextureImporter:
         width: 626
         height: 408
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c3139e55da9b8494c9dc0cdd550dc602
-      internalID: 3318904089994504119
+      spriteID: 8b74f171ccdcad641a0a3e48fd12de8c
+      internalID: 4511783045003877710
       vertices: []
       indices: 
       edges: []

@@ -3,29 +3,23 @@ using System.Linq;
 
 public class GameManager : MonoBehaviour {
 
-    [SerializeField] int maxLives = 3;
     [SerializeField] Arrow[] arrows = null;
-    [SerializeField] float nextDelay = 0.1f;
+    [SerializeField] float nextDelay = 0.3f;
 
     public static GameManager Instance { get; private set; }
     public static Direction CurrentDirection { get; private set; }
     public static int PlayerScore { get; private set; }
     public static Arrow SelectedArrow { get; private set; }
 
-    public int Lives { get; private set; }
-
-    public static event System.Action<bool> OnFinalInputEvent;
-    //public static event System.Action OnTimeElapsed; // For NextArrow() call
-    public static event System.Action OnMissingInputAndTimeElapsed;
-    public static event System.Action<int> OnMoveSuccess;
-    public static event System.Action OnMoveFail;
+    public static event System.Action<BeforeNextArrowEventArgs> BeforeNextArrow;
+    public static event System.Action<OnMoveSuccessEventArgs> OnMoveSuccess;
 
     Direction inputDirection;
     Direction desiredDirection;
     Direction displayedDirection;
-    int currentMoveIndex;
     float countdown;
     bool doInputCheck;
+    int currentMoveIndex;
 
     void Awake() {
         #region Singleton
@@ -45,10 +39,10 @@ public class GameManager : MonoBehaviour {
                 // Check if we're still handling input. If so, it means
                 // no input was received so the player didn't do anything
                 if (doInputCheck) {
-                    countdown = nextDelay;
-                    doInputCheck = false;
-                    currentMoveIndex = 0;
-                    OnMissingInputAndTimeElapsed?.Invoke();
+                    var eventArgs = new BeforeNextArrowEventArgs(false);
+                    PlayerScore -= SelectedArrow.ScoreValue;
+                    BeforeNextArrow?.Invoke(eventArgs);
+                    ResetValues();
                 } else {
                     NextArrow();
                     doInputCheck = true;
@@ -107,29 +101,29 @@ public class GameManager : MonoBehaviour {
             if ((int)inputDirection == (move + (int)displayedDirection) %
                     DirectionUtility.kDirectionCount) {
                 // The input matches the move
-                OnMoveSuccess?.Invoke(currentMoveIndex);
+                var eventArgs = new OnMoveSuccessEventArgs(currentMoveIndex);
+                OnMoveSuccess?.Invoke(eventArgs);
                 currentMoveIndex++;
             } else {
-                countdown = nextDelay;
-                PlayerScore -= SelectedArrow.ScoreValue / 2;
-                doInputCheck = false;
-                OnMoveFail?.Invoke();
-                currentMoveIndex = 0;
+                PlayerScore -= (int)(SelectedArrow.ScoreValue * 1.5f);
+                var eventArgs = new BeforeNextArrowEventArgs(false);
+                BeforeNextArrow?.Invoke(eventArgs);
+                ResetValues();
             }
-        } else if (inputDirection == desiredDirection) {
-            // The arrow has been oriented successfully and the final move is right
-            countdown = nextDelay;
-            PlayerScore += SelectedArrow.ScoreValue;
-            currentMoveIndex = 0;
-            doInputCheck = false;
-            OnFinalInputEvent?.Invoke(true); // same instructions as input != desired, refactoring ?
         } else {
-            // Wrong input on the scoring/final move
-            PlayerScore -= SelectedArrow.ScoreValue / 2;
-            countdown = nextDelay;
-            doInputCheck = false;
-            currentMoveIndex = 0;
-            OnFinalInputEvent?.Invoke(false);
+            // The arrow has been oriented successfully (no moves are left)
+            bool isSuccess = inputDirection == desiredDirection;
+            PlayerScore += isSuccess ? SelectedArrow.ScoreValue :
+                -(int)(SelectedArrow.ScoreValue * 1.5f);
+            var beforeNextArrowEventArgs = new BeforeNextArrowEventArgs(isSuccess);
+            BeforeNextArrow?.Invoke(beforeNextArrowEventArgs);
+            ResetValues();
         }
+    }
+
+    void ResetValues() {
+        countdown = nextDelay;
+        currentMoveIndex = 0;
+        doInputCheck = false;
     }
 }

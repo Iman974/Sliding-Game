@@ -17,35 +17,23 @@ public class AnimationManager : MonoBehaviour {
     }
 
     void Start() {
-        GameManager.OnFinalInputEvent += OnFinalInput;
-        GameManager.OnMissingInputAndTimeElapsed += OnMissingInputAndTimeElapsed;
+        GameManager.BeforeNextArrow += BeforeNextArrow;
         GameManager.OnMoveSuccess += OnMoveSuccess;
-        GameManager.OnMoveFail += OnMoveFail;
     }
 
-    void OnFinalInput(bool isSuccess) {
-        Animation animation = isSuccess ?
+    void BeforeNextArrow(BeforeNextArrowEventArgs args) {
+        Animation animation = args.IsSuccess ?
             Animation.Success : Animation.Fail;
         GameManager.SelectedArrow.PlayAnimation(animation.ToString());
         IsAnimating = true;
     }
 
-    void OnMissingInputAndTimeElapsed() {
-        //OnFinalInput(isSuccess: false)
-        GameManager.SelectedArrow.PlayAnimation(Animation.Fail.ToString());
-        IsAnimating = true;
-    }
-
-    void OnMoveSuccess(int moveIndex) {
+    void OnMoveSuccess(OnMoveSuccessEventArgs args) {
         Arrow arrow = GameManager.SelectedArrow;
-        string animationTriggerName = arrow.GetAnimationTriggerName(moveIndex);
+        string animationTriggerName = arrow.GetAnimationTriggerName(args.MoveIndex);
         // Same as OnFinalInput, but string & enum
         arrow.PlayAnimation(animationTriggerName);
         IsAnimating = true;
-    }
-
-    void OnMoveFail() {
-        OnFinalInput(isSuccess: false);
     }
 
     public static void OnAnimationEnd() {
@@ -53,10 +41,8 @@ public class AnimationManager : MonoBehaviour {
     }
 
     void OnDestroy() {
-        GameManager.OnFinalInputEvent -= OnFinalInput;
-        GameManager.OnMissingInputAndTimeElapsed -= OnMissingInputAndTimeElapsed;
+        GameManager.BeforeNextArrow -= BeforeNextArrow;
         GameManager.OnMoveSuccess -= OnMoveSuccess;
-        GameManager.OnMoveFail -= OnMoveFail;
     }
 
     enum Animation {

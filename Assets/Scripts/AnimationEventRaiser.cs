@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class AnimationEvent : MonoBehaviour {
+public class AnimationEventRaiser : MonoBehaviour {
 
     public void OnAnimationEnd() {
         AnimationManager.OnAnimationEnd();

@@ -76,16 +76,17 @@ public class GameManager : MonoBehaviour {
         countdown = SelectedArrow.Duration;
     }
 
-    // While or for loop ? make a choice. Algorithm (to be improved by
-    // using random function only once) from the website
+    // Algorithm found on the Unity forum:
     // https://forum.unity.com/threads/random-numbers-with-a-weighted-chance.442190/
     int SelectRandomWeightedIndex() {
         int weightSum = arrows.Sum(a => a.Weight);
+        int p = 0;
+        int randomValue = Random.Range(0, weightSum);
         for (int i = 0; i < arrows.Length - 1; i++) {
-            if (Random.Range(0, weightSum) < arrows[i].Weight) {
+            p += arrows[i].Weight;
+            if (randomValue < p) {
                 return i;
             }
-            weightSum -= arrows[i].Weight;
         }
         return arrows.Length - 1;
     }

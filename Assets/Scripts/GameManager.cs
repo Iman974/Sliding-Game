@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour {
     Direction displayedDirection;
     float countdown;
     bool doInputCheck;
+    bool doInputProcessing;
     int currentMoveIndex;
 
     void Awake() {
@@ -40,7 +41,7 @@ public class GameManager : MonoBehaviour {
                 // no input was received so the player didn't do anything
                 if (doInputCheck) {
                     var eventArgs = new BeforeNextArrowEventArgs(false);
-                    PlayerScore -= SelectedArrow.ScoreValue;
+                    PlayerScore -= (int)(SelectedArrow.ScoreValue * 1.5f);
                     BeforeNextArrow?.Invoke(eventArgs);
                     ResetValues();
                 } else {
@@ -50,9 +51,10 @@ public class GameManager : MonoBehaviour {
                 return;
             }
 
-            if (doInputCheck) {
+            if (doInputCheck && InputManager.GetInput(ref inputDirection)) {
                 HandleInput();
             }
+
         }
     }
 
@@ -92,10 +94,6 @@ public class GameManager : MonoBehaviour {
     }
 
     void HandleInput() {
-        if (Input.touchCount == 0 || !InputManager.GetInput(ref inputDirection)) {
-            return;
-        }
-
         // Check if the move list has been entirely iterated through
         if (currentMoveIndex < SelectedArrow.MoveCount) {
             int move = SelectedArrow.GetMove(currentMoveIndex);
@@ -106,7 +104,7 @@ public class GameManager : MonoBehaviour {
                 OnMoveSuccess?.Invoke(eventArgs);
                 currentMoveIndex++;
             } else {
-                PlayerScore -= (int)(SelectedArrow.ScoreValue * 1.5f);
+                PlayerScore -= SelectedArrow.ScoreValue;
                 var eventArgs = new BeforeNextArrowEventArgs(false);
                 BeforeNextArrow?.Invoke(eventArgs);
                 ResetValues();
@@ -114,8 +112,10 @@ public class GameManager : MonoBehaviour {
         } else {
             // The arrow has been oriented successfully (no moves are left)
             bool isSuccess = inputDirection == desiredDirection;
-            PlayerScore += isSuccess ? SelectedArrow.ScoreValue :
-                -(int)(SelectedArrow.ScoreValue * 1.5f);
+            float percentage = countdown / SelectedArrow.Duration;
+            PlayerScore += isSuccess ? (int)(SelectedArrow.ScoreValue * percentage):
+                -(int)(SelectedArrow.ScoreValue * percentage);
+
             var beforeNextArrowEventArgs = new BeforeNextArrowEventArgs(isSuccess);
             BeforeNextArrow?.Invoke(beforeNextArrowEventArgs);
             ResetValues();

@@ -2,6 +2,8 @@
 
 public class AnimationManager : MonoBehaviour {
 
+    [SerializeField] ParticleSystem backgroudParticles = null;
+
     public static AnimationManager Instance { get; private set; }
     public static bool IsAnimating { get; private set; }
 
@@ -21,10 +23,11 @@ public class AnimationManager : MonoBehaviour {
         GameManager.OnMoveSuccess += OnMoveSuccess;
     }
 
-    void BeforeNextArrow(BeforeNextArrowEventArgs args) {
-        Animation animation = args.IsSuccess ?
+    void BeforeNextArrow(BeforeNextArrowEventArgs arg) {
+        Animation animation = arg.IsSuccess ?
             Animation.Success : Animation.Fail;
         GameManager.SelectedArrow.PlayAnimation(animation.ToString());
+
         IsAnimating = true;
     }
 

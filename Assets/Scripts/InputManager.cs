@@ -24,6 +24,9 @@ public class InputManager : MonoBehaviour {
 
     // Writes the input into the input parameter if there is one (returns this info)
     public static bool GetInput(ref Direction input) {
+        if (Input.touchCount == 0) {
+            return false;
+        }
         Touch touch = Input.GetTouch(0);
         Vector2 deltaPos = touch.deltaPosition;
         if (deltaPos.sqrMagnitude < sqrSwipingSensibility) {

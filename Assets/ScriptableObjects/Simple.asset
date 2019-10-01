@@ -15,7 +15,7 @@ MonoBehaviour:
   instance: {fileID: 0}
   weight: 50
   duration: 1
-  scoreValue: 10
+  scoreValue: 30
   displayedDirectionModifier: 0
   moves: 
   animationTriggerNames: []

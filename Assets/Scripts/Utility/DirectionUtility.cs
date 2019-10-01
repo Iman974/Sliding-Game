@@ -50,6 +50,13 @@ public static class DirectionUtility {
         return 90f - rotation;
     }
 
+    public static float DirectionToFloat(Direction direction) {
+        if (direction == Direction.Right || direction == Direction.Up) {
+            return 1f;
+        }
+        return -1f;
+    }
+
     public static Direction GetRandomDirection() {
         return (Direction)Random.Range(0, kDirectionCount);
     }

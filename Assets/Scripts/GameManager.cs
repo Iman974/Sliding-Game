@@ -5,11 +5,13 @@ public class GameManager : MonoBehaviour {
 
     [SerializeField] Arrow[] arrows = null;
     [SerializeField] float nextDelay = 0.3f;
+    [SerializeField] float speedGainOverProgression = 0.002f;
 
     public static GameManager Instance { get; private set; }
     public static Direction CurrentDirection { get; private set; }
     public static int PlayerScore { get; private set; }
     public static Arrow SelectedArrow { get; private set; }
+    public static float SpeedGainOverProgression => SpeedGainOverProgression;
 
     public static event System.Action<BeforeNextArrowEventArgs> BeforeNextArrow;
     public static event System.Action<OnMoveSuccessEventArgs> OnMoveSuccess;
@@ -21,6 +23,7 @@ public class GameManager : MonoBehaviour {
     bool doInputCheck;
     bool doInputProcessing;
     int currentMoveIndex;
+    float playbackSpeed = 1f;
 
     void Awake() {
         #region Singleton
@@ -35,7 +38,7 @@ public class GameManager : MonoBehaviour {
 
     void Update() {
         if (!AnimationManager.IsAnimating) {
-            countdown -= Time.deltaTime;
+            countdown -= Time.deltaTime * playbackSpeed;
             if (countdown <= 0f) {
                 // Check if we're still handling input. If so, it means
                 // no input was received so the player didn't do anything
@@ -113,9 +116,13 @@ public class GameManager : MonoBehaviour {
             // The arrow has been oriented successfully (no moves are left)
             bool isSuccess = inputDirection == desiredDirection;
             float percentage = countdown / SelectedArrow.Duration;
-            PlayerScore += isSuccess ? (int)(SelectedArrow.ScoreValue * percentage):
-                -(int)(SelectedArrow.ScoreValue * percentage);
-
+            if (isSuccess) {
+                PlayerScore += (int)(SelectedArrow.ScoreValue * percentage);
+                playbackSpeed += speedGainOverProgression;
+            } else {
+                PlayerScore -= (int)(SelectedArrow.ScoreValue * percentage);
+            }
+             
             var beforeNextArrowEventArgs = new BeforeNextArrowEventArgs(isSuccess);
             BeforeNextArrow?.Invoke(beforeNextArrowEventArgs);
             ResetValues();

@@ -2079,7 +2079,7 @@ ParticleSystem:
     startFrame:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.9999
+      scalar: 0.7
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -2679,7 +2679,7 @@ ParticleSystem:
     speedModifier:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 2
+      scalar: 1
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -5401,6 +5401,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9690fd271d38c0a47a7a1b4b63f0fda5, type: 2}
   - {fileID: 11400000, guid: 7deccdddd79928646815e9201a917893, type: 2}
   nextDelay: 0.3
+  speedGainOverProgression: 0.005
 --- !u!4 &1284931421
 Transform:
   m_ObjectHideFlags: 0
@@ -5428,6 +5429,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backgroudParticles: {fileID: 1182429306}
+  particleSpeedGainOverProgression: 0.04
 --- !u!114 &1284931423
 MonoBehaviour:
   m_ObjectHideFlags: 0

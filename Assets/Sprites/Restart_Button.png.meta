@@ -1,21 +1,18 @@
 fileFormatVersion: 2
-guid: 1affcd45c1903a14aabe5c18ba3cf2c8
+guid: f007117dd367d9941b7a6cf6bbf8cc5e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1637320240669089884
-    second: Triangle
+      213: 2504170125896549414
+    second: Background
   - first:
-      213: 2838681010091129302
-    second: Square
-  - first:
-      213: 7186223825358793108
-    second: Circle
+      213: 5177442919031206620
+    second: Restart_Arrow
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
@@ -40,9 +37,9 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
-    aniso: 1
-    mipBias: 0
+    filterMode: -1
+    aniso: -1
+    mipBias: -100
     wrapU: 1
     wrapV: 1
     wrapW: 1
@@ -58,7 +55,7 @@ TextureImporter:
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
-  alphaIsTransparency: 0
+  alphaIsTransparency: 1
   spriteTessellationDetail: -1
   textureType: 8
   textureShape: 1
@@ -71,7 +68,7 @@ TextureImporter:
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
     resizeAlgorithm: 0
-    textureFormat: 4
+    textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
@@ -83,7 +80,7 @@ TextureImporter:
     buildTarget: Standalone
     maxTextureSize: 2048
     resizeAlgorithm: 0
-    textureFormat: 4
+    textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
@@ -95,7 +92,7 @@ TextureImporter:
     buildTarget: Android
     maxTextureSize: 2048
     resizeAlgorithm: 0
-    textureFormat: 4
+    textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
@@ -107,13 +104,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Triangle
+      name: Background
       rect:
         serializedVersion: 2
-        x: 13
-        y: 400
-        width: 166
-        height: 144
+        x: 0
+        y: 256
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -121,20 +118,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 35dcc21d5ea9b174d80eb8803b3f7d37
-      internalID: 1637320240669089884
+      spriteID: a3799cbc604c562479095bd37fbcdec7
+      internalID: 2504170125896549414
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Square
+      name: Restart_Arrow
       rect:
         serializedVersion: 2
-        x: 13
-        y: 208
-        width: 166
-        height: 166
+        x: 0
+        y: 0
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -142,41 +139,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 912ebf501c3edfc4f8cb12882caf6a83
-      internalID: 2838681010091129302
+      spriteID: 94980561cddd24a4eb8755196e00c548
+      internalID: 5177442919031206620
       vertices: []
       indices: 
       edges: []
       weights: []
-    - serializedVersion: 2
-      name: Circle
-      rect:
-        serializedVersion: 2
-        x: 13
-        y: 16
-        width: 166
-        height: 166
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f31158e1cd9df784eb27eac1c593cab8
-      internalID: 7186223825358793108
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    outline:
-    - - {x: 0, y: 2}
-      - {x: -1.7320508, y: -1.0000001}
-      - {x: 1.7320509, y: -0.9999998}
-    physicsShape:
-    - - {x: 0, y: 2}
-      - {x: -1.7320508, y: -1.0000001}
-      - {x: 1.7320509, y: -0.9999998}
+    outline: []
+    physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
     internalID: 0

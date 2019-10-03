@@ -4,6 +4,7 @@ public class AnimationManager : MonoBehaviour {
 
     [SerializeField] ParticleSystem backgroudParticles = null;
     [SerializeField] float particleSpeedGainOverProgression = 0.004f;
+    [SerializeField] float onGameOverGravityModifier = 1f;
 
     public static AnimationManager Instance { get; private set; }
     public static bool IsAnimating { get; private set; }
@@ -11,6 +12,7 @@ public class AnimationManager : MonoBehaviour {
     float playbackSpeed = 1f;
 
     ParticleSystem.VelocityOverLifetimeModule particleVelocityModule;
+    ParticleSystem.MainModule particlesMainModule;
 
     void Awake() {
         #region Singleton
@@ -26,8 +28,10 @@ public class AnimationManager : MonoBehaviour {
     void Start() {
         GameManager.BeforeNextArrow += BeforeNextArrow;
         GameManager.OnMoveSuccess += OnMoveSuccess;
+        GameManager.OnGameOver += OnGameOver;
 
         particleVelocityModule = backgroudParticles.velocityOverLifetime;
+        particlesMainModule = backgroudParticles.main;
     }
 
     void BeforeNextArrow(BeforeNextArrowEventArgs arg) {
@@ -57,9 +61,14 @@ public class AnimationManager : MonoBehaviour {
         IsAnimating = false;
     }
 
+    void OnGameOver() {
+        particlesMainModule.gravityModifierMultiplier = onGameOverGravityModifier;
+    }
+
     void OnDestroy() {
         GameManager.BeforeNextArrow -= BeforeNextArrow;
         GameManager.OnMoveSuccess -= OnMoveSuccess;
+        GameManager.OnGameOver -= OnGameOver;
     }
 
     enum Animation {

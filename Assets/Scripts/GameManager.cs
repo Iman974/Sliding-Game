@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour {
     [SerializeField] Arrow[] arrows = null;
     [SerializeField] float nextDelay = 0.3f;
     [SerializeField] float speedGainOverProgression = 0.002f;
+    [SerializeField] int maxLives = 3;
+    [SerializeField] int successCountToRegenerateLife = 10;
 
     public static GameManager Instance { get; private set; }
     public static Direction CurrentDirection { get; private set; }
@@ -15,6 +17,7 @@ public class GameManager : MonoBehaviour {
 
     public static event System.Action<BeforeNextArrowEventArgs> BeforeNextArrow;
     public static event System.Action<OnMoveSuccessEventArgs> OnMoveSuccess;
+    public static event System.Action OnGameOver;
 
     Direction inputDirection;
     Direction desiredDirection;
@@ -24,6 +27,9 @@ public class GameManager : MonoBehaviour {
     bool doInputProcessing;
     int currentMoveIndex;
     float playbackSpeed = 1f;
+    int lives;
+    int successiveSuccessCount;
+    bool isGameOver;
 
     void Awake() {
         #region Singleton
@@ -36,28 +42,33 @@ public class GameManager : MonoBehaviour {
         #endregion
     }
 
+    void Start() {
+        lives = maxLives;
+    }
+
     void Update() {
-        if (!AnimationManager.IsAnimating) {
-            countdown -= Time.deltaTime * playbackSpeed;
-            if (countdown <= 0f) {
-                // Check if we're still handling input. If so, it means
-                // no input was received so the player didn't do anything
-                if (doInputCheck) {
-                    var eventArgs = new BeforeNextArrowEventArgs(false);
-                    PlayerScore -= (int)(SelectedArrow.ScoreValue * 1.5f);
-                    BeforeNextArrow?.Invoke(eventArgs);
-                    ResetValues();
-                } else {
-                    NextArrow();
-                    doInputCheck = true;
-                }
-                return;
-            }
+        if (AnimationManager.IsAnimating || isGameOver) {
+            return;
+        }
 
-            if (doInputCheck && InputManager.GetInput(ref inputDirection)) {
-                HandleInput();
+        countdown -= Time.deltaTime * playbackSpeed;
+        if (countdown <= 0f) {
+            // Check if we're still handling input. If so, it means
+            // no input was received so the player didn't do anything
+            if (doInputCheck) {
+                var eventArgs = new BeforeNextArrowEventArgs(false);
+                OnFail((int)(SelectedArrow.ScoreValue * 1.5f));
+                BeforeNextArrow?.Invoke(eventArgs);
+                ResetValues();
+            } else {
+                NextArrow();
+                doInputCheck = true;
             }
+            return;
+        }
 
+        if (doInputCheck && InputManager.GetInput(ref inputDirection)) {
+            HandleInput();
         }
     }
 
@@ -107,7 +118,7 @@ public class GameManager : MonoBehaviour {
                 OnMoveSuccess?.Invoke(eventArgs);
                 currentMoveIndex++;
             } else {
-                PlayerScore -= SelectedArrow.ScoreValue;
+                OnFail((int)(SelectedArrow.ScoreValue * 0.6f));
                 var eventArgs = new BeforeNextArrowEventArgs(false);
                 BeforeNextArrow?.Invoke(eventArgs);
                 ResetValues();
@@ -119,8 +130,15 @@ public class GameManager : MonoBehaviour {
             if (isSuccess) {
                 PlayerScore += (int)(SelectedArrow.ScoreValue * percentage);
                 playbackSpeed += speedGainOverProgression;
+                successiveSuccessCount++;
+                if (successiveSuccessCount >= successCountToRegenerateLife) {
+                    if (lives < maxLives) {
+                        lives++;
+                    }
+                    successiveSuccessCount = 0;
+                }
             } else {
-                PlayerScore -= (int)(SelectedArrow.ScoreValue * percentage);
+                OnFail((int)(SelectedArrow.ScoreValue * percentage));
             }
              
             var beforeNextArrowEventArgs = new BeforeNextArrowEventArgs(isSuccess);
@@ -133,5 +151,20 @@ public class GameManager : MonoBehaviour {
         countdown = nextDelay;
         currentMoveIndex = 0;
         doInputCheck = false;
+    }
+
+    void OnFail(int scoreLoss) {
+        PlayerScore = Mathf.Max(0, PlayerScore - scoreLoss);
+        successiveSuccessCount = 0;
+        lives -= 1;
+
+        if (lives <= 0) {
+            GameOver();
+        }
+    }
+
+    void GameOver() {
+        OnGameOver?.Invoke();
+        isGameOver = true;
     }
 }

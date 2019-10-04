@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour {
     [SerializeField] float speedGainOverProgression = 0.002f;
     [SerializeField] int maxLives = 3;
     [SerializeField] int successCountToRegenerateLife = 10;
+    [SerializeField] float restartGameDelay = 1.5f;
 
     public static GameManager Instance { get; private set; }
     public static Direction CurrentDirection { get; private set; }
@@ -18,18 +19,18 @@ public class GameManager : MonoBehaviour {
     public static event System.Action<BeforeNextArrowEventArgs> BeforeNextArrow;
     public static event System.Action<OnMoveSuccessEventArgs> OnMoveSuccess;
     public static event System.Action OnGameOver;
+    public static event System.Action OnGameRestart;
 
     Direction inputDirection;
     Direction desiredDirection;
     Direction displayedDirection;
     float countdown;
     bool doInputCheck;
-    bool doInputProcessing;
     int currentMoveIndex;
     float playbackSpeed = 1f;
     int lives;
     int successiveSuccessCount;
-    bool isGameOver;
+    bool isPlaying = true;
 
     void Awake() {
         #region Singleton
@@ -47,7 +48,7 @@ public class GameManager : MonoBehaviour {
     }
 
     void Update() {
-        if (AnimationManager.IsAnimating || isGameOver) {
+        if (AnimationManager.IsAnimating || !isPlaying) {
             return;
         }
 
@@ -117,11 +118,11 @@ public class GameManager : MonoBehaviour {
                 var eventArgs = new OnMoveSuccessEventArgs(currentMoveIndex);
                 OnMoveSuccess?.Invoke(eventArgs);
                 currentMoveIndex++;
+                return;
             } else {
                 OnFail((int)(SelectedArrow.ScoreValue * 0.6f));
                 var eventArgs = new BeforeNextArrowEventArgs(false);
                 BeforeNextArrow?.Invoke(eventArgs);
-                ResetValues();
             }
         } else {
             // The arrow has been oriented successfully (no moves are left)
@@ -143,8 +144,8 @@ public class GameManager : MonoBehaviour {
              
             var beforeNextArrowEventArgs = new BeforeNextArrowEventArgs(isSuccess);
             BeforeNextArrow?.Invoke(beforeNextArrowEventArgs);
-            ResetValues();
         }
+        ResetValues();
     }
 
     void ResetValues() {
@@ -165,6 +166,15 @@ public class GameManager : MonoBehaviour {
 
     void GameOver() {
         OnGameOver?.Invoke();
-        isGameOver = true;
+        isPlaying = false;
+    }
+
+    public void RestartGame() {
+        countdown = restartGameDelay;
+        PlayerScore = 0;
+        isPlaying = true;
+        lives = maxLives;
+        playbackSpeed = 1f;
+        OnGameRestart?.Invoke();
     }
 }

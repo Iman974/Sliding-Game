@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class AnimationManager : MonoBehaviour {
 
     [SerializeField] ParticleSystem backgroudParticles = null;
     [SerializeField] float particleSpeedGainOverProgression = 0.004f;
-    [SerializeField] float onGameOverGravityModifier = 1f;
+    [SerializeField] float onGameOverGravityModifier = 0.8f;
 
     public static AnimationManager Instance { get; private set; }
     public static bool IsAnimating { get; private set; }
@@ -29,6 +30,7 @@ public class AnimationManager : MonoBehaviour {
         GameManager.BeforeNextArrow += BeforeNextArrow;
         GameManager.OnMoveSuccess += OnMoveSuccess;
         GameManager.OnGameOver += OnGameOver;
+        GameManager.OnGameRestart += OnGameRestart;
 
         particleVelocityModule = backgroudParticles.velocityOverLifetime;
         particlesMainModule = backgroudParticles.main;
@@ -65,10 +67,15 @@ public class AnimationManager : MonoBehaviour {
         particlesMainModule.gravityModifierMultiplier = onGameOverGravityModifier;
     }
 
+    void OnGameRestart() {
+        particlesMainModule.gravityModifierMultiplier = 0f;
+    }
+
     void OnDestroy() {
         GameManager.BeforeNextArrow -= BeforeNextArrow;
         GameManager.OnMoveSuccess -= OnMoveSuccess;
         GameManager.OnGameOver -= OnGameOver;
+        GameManager.OnGameRestart -= OnGameRestart;
     }
 
     enum Animation {

@@ -14,10 +14,9 @@ public class GameManager : MonoBehaviour {
     public static Direction CurrentDirection { get; private set; }
     public static int PlayerScore { get; private set; }
     public static Arrow SelectedArrow { get; private set; }
-    public static float SpeedGainOverProgression => SpeedGainOverProgression;
 
-    public static event System.Action<BeforeNextArrowEventArgs> BeforeNextArrow;
-    public static event System.Action<OnMoveSuccessEventArgs> OnMoveSuccess;
+    public static event System.Action<bool> BeforeNextArrow;
+    public static event System.Action OnMoveSuccess;
     public static event System.Action OnGameOver;
     public static event System.Action OnGameRestart;
 
@@ -26,11 +25,11 @@ public class GameManager : MonoBehaviour {
     Direction displayedDirection;
     float countdown;
     bool doInputCheck;
-    int currentMoveIndex;
     float playbackSpeed = 1f;
     int lives;
     int successiveSuccessCount;
     bool isPlaying = true;
+    bool isMoveDone;
 
     void Awake() {
         #region Singleton
@@ -57,9 +56,8 @@ public class GameManager : MonoBehaviour {
             // Check if we're still handling input. If so, it means
             // no input was received so the player didn't do anything
             if (doInputCheck) {
-                var eventArgs = new BeforeNextArrowEventArgs(false);
-                OnFail((int)(SelectedArrow.ScoreValue * 1.5f));
-                BeforeNextArrow?.Invoke(eventArgs);
+                OnWrongInput((int)(SelectedArrow.ScoreValue * 1.5f));
+                BeforeNextArrow?.Invoke(false);
                 ResetValues();
             } else {
                 NextArrow();
@@ -109,23 +107,20 @@ public class GameManager : MonoBehaviour {
     }
 
     void HandleInput() {
-        // Check if the move list has been entirely iterated through
-        if (currentMoveIndex < SelectedArrow.MoveCount) {
-            int move = SelectedArrow.GetMove(currentMoveIndex);
-            if ((int)inputDirection == (move + (int)displayedDirection) %
+        if (!isMoveDone) {
+            int moveModifier = SelectedArrow.MoveDirectionModifier;
+            if ((int)inputDirection == (moveModifier + (int)displayedDirection) %
                     DirectionUtility.kDirectionCount) {
-                // The input matches the move
-                var eventArgs = new OnMoveSuccessEventArgs(currentMoveIndex);
-                OnMoveSuccess?.Invoke(eventArgs);
-                currentMoveIndex++;
+                // The input matches the move direction
+                OnMoveSuccess?.Invoke();
                 return;
             } else {
-                OnFail((int)(SelectedArrow.ScoreValue * 0.6f));
-                var eventArgs = new BeforeNextArrowEventArgs(false);
-                BeforeNextArrow?.Invoke(eventArgs);
+                int scoreLoss = (int)(SelectedArrow.ScoreValue * 0.6f);
+                OnWrongInput(scoreLoss);
+                BeforeNextArrow?.Invoke(false);
             }
         } else {
-            // The arrow has been oriented successfully (no moves are left)
+            // The arrow has been oriented successfully
             bool isSuccess = inputDirection == desiredDirection;
             float percentage = countdown / SelectedArrow.Duration;
             if (isSuccess) {
@@ -139,22 +134,20 @@ public class GameManager : MonoBehaviour {
                     successiveSuccessCount = 0;
                 }
             } else {
-                OnFail((int)(SelectedArrow.ScoreValue * percentage));
+                int scoreLoss = (int)(SelectedArrow.ScoreValue * percentage);
+                OnWrongInput(scoreLoss);
             }
-             
-            var beforeNextArrowEventArgs = new BeforeNextArrowEventArgs(isSuccess);
-            BeforeNextArrow?.Invoke(beforeNextArrowEventArgs);
+            BeforeNextArrow?.Invoke(isSuccess);
         }
         ResetValues();
     }
 
     void ResetValues() {
         countdown = nextDelay;
-        currentMoveIndex = 0;
         doInputCheck = false;
     }
 
-    void OnFail(int scoreLoss) {
+    void OnWrongInput(int scoreLoss) {
         PlayerScore = Mathf.Max(0, PlayerScore - scoreLoss);
         successiveSuccessCount = 0;
         lives -= 1;

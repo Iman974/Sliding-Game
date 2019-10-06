@@ -16,7 +16,7 @@ public class UiManager : MonoBehaviour {
         animator = GetComponent<Animator>();
     }
 
-    void UpdateStatsText(IEventArgs args) {
+    void UpdateStatsText(bool isSuccess) {
         scoreText.text = "Score: " + GameManager.PlayerScore;
     }
 
@@ -29,7 +29,7 @@ public class UiManager : MonoBehaviour {
     }
 
     void OnGameRestart() {
-        UpdateStatsText(null);
+        UpdateStatsText(false);
     }
 
     void OnDestroy() {

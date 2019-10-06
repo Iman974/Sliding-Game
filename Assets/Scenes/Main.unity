@@ -1916,7 +1916,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 5
+      scalar: 3
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -5825,8 +5825,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backgroudParticles: {fileID: 1182429306}
-  particleSpeedGainOverProgression: 0.04
+  particleSpeedGainOverProgression: 0.005
   onGameOverGravityModifier: 0.8
+  playbackSpeedFastLevel: 6
+  particlePlaybackSpeedRestoreDuration: 0.7
+  particlePlaybackSpeedFastDuration: 3
 --- !u!114 &1284931423
 MonoBehaviour:
   m_ObjectHideFlags: 0

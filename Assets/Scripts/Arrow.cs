@@ -9,13 +9,12 @@ public class Arrow : ScriptableObject {
     [SerializeField] int scoreValue = 10;
     [SerializeField] [Range(0, 3)] int displayedDirectionModifier = 0;
     // The moves required to correctly orient the arrow (relative to the displayed direction)
-    [SerializeField] [Range(0, 3)] int[] moves = null;
-    [SerializeField] string[] animationTriggerNames = null;
+    [SerializeField] [Range(0, 3)] int moveDirectionModifier = 0;
+    [SerializeField] string animationTriggerName = null;
 
     public int Weight => weight;
     public float Duration => duration;
     public int DisplayedDirectionModifier => displayedDirectionModifier;
-    public int MoveCount => moves.Length;
     public bool IsActive { set { instance.SetActive(value); } }
     public Direction Orientation {
         set {
@@ -24,9 +23,19 @@ public class Arrow : ScriptableObject {
         }
     }
     public int ScoreValue => scoreValue;
+    public string MoveAnimationTriggerName => animationTriggerName;
+    public int MoveDirectionModifier => moveDirectionModifier;
 
     Animator animator;
     Transform transform;
+
+#if UNITY_EDITOR
+    void OnEnable() {
+        if (Application.isEditor) {
+            Awake();
+        }
+    }
+#endif
 
     void Awake() {
         Transform arrowPoolTransform = GameObject.FindWithTag("ArrowPool")?.transform;
@@ -42,22 +51,6 @@ public class Arrow : ScriptableObject {
 
         animator = instance.GetComponent<Animator>();
         transform = instance.transform;
-    }
-
-#if UNITY_EDITOR
-    void OnEnable() {
-        if (Application.isEditor) {
-            Awake();
-        }
-    }
-#endif
-
-    public int GetMove(int index) {
-        return moves[index];
-    }
-
-    public string GetAnimationTriggerName(int index) {
-        return animationTriggerNames[index];
     }
 
     public void PlayAnimation(string animationTriggerName) {

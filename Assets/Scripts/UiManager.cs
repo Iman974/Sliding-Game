@@ -1,14 +1,16 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class UiManager : MonoBehaviour {
 
-    [SerializeField] Text scoreText = null;
+    [SerializeField] TMP_Text scoreText = null;
+    [SerializeField] TMP_Text highscoreText = null;
     [SerializeField] RectTransform lifeIconsContainer = null;
     [SerializeField] float restartPanelAppearanceDelay = 2.25f;
 
     Animator animator;
-    GameObject[] lifeIconObjects;
+    Image[] lifeIconImages;
     int lifeIconIndex;
 
     void Start() {
@@ -18,28 +20,32 @@ public class UiManager : MonoBehaviour {
         GameManager.OnGameRestart += OnGameRestart;
 
         animator = GetComponent<Animator>();
-        lifeIconObjects = new GameObject[lifeIconsContainer.childCount];
-        for (int i = 0; i < lifeIconObjects.Length; i++) {
-            lifeIconObjects[i] = lifeIconsContainer.GetChild(i).gameObject;
-        }
+        lifeIconImages = lifeIconsContainer.GetComponentsInChildren<Image>();
     }
 
-    void UpdateScoreText() {
-        scoreText.text = "Score: " + GameManager.PlayerScore;
+    void UpdateScoreText(int previousScore) {
+        int currentScore = GameManager.PlayerScore;
+        scoreText.text = "Score : " + currentScore;
+        if (currentScore > previousScore) {
+            animator.SetTrigger("ScorePulsation");
+        } else if (previousScore < currentScore) {
+            animator.SetTrigger("ScoreColor");
+        }
     }
 
     void UpdateLifeIcons() {
         for (int i = 0; i < GameManager.kMaxLives; i++) {
             if (i < GameManager.Lives) {
-                lifeIconObjects[i].SetActive(true);
+                lifeIconImages[i].enabled = true;
             } else {
-                lifeIconObjects[i].SetActive(false);
+                lifeIconImages[i].enabled = false;
             }
         }
     }
 
     void OnGameOver() {
         Invoke("PlayGameOverAnimation", restartPanelAppearanceDelay);
+        highscoreText.text = "Meilleur score : " + GameManager.Highscore;
     }
 
     void PlayGameOverAnimation() {
@@ -47,7 +53,7 @@ public class UiManager : MonoBehaviour {
     }
 
     void OnGameRestart() {
-        UpdateScoreText();
+        scoreText.text = "Score: " + GameManager.PlayerScore;
     }
 
     void OnDestroy() {

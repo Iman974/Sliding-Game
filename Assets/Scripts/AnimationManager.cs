@@ -5,6 +5,7 @@ public class AnimationManager : MonoBehaviour {
 
     [SerializeField] ParticleSystem backgroudParticles = null;
     [SerializeField] float particleSpeedGainOverProgression = 0.004f;
+    [SerializeField] float maxParticlePlaybackSpeed = 6f;
     [SerializeField] float onGameOverGravityModifier = 0.8f;
     [SerializeField] float playbackSpeedFastLevel = 6f;
     [SerializeField] float particlePlaybackSpeedRestoreDuration = 0.7f;
@@ -12,8 +13,6 @@ public class AnimationManager : MonoBehaviour {
 
     public static AnimationManager Instance { get; private set; }
     public static bool IsAnimating { get; private set; }
-
-    float playbackSpeed = 1f;
 
     ParticleSystem.MainModule particlesMainModule;
 
@@ -39,7 +38,9 @@ public class AnimationManager : MonoBehaviour {
     void OnArrowEnd(bool isSuccess) {
         AnimationTrigger animationTrigger;
         if (isSuccess) {
-            particlesMainModule.simulationSpeed += particleSpeedGainOverProgression;
+            float newPlaybackSpeed = Mathf.Min(maxParticlePlaybackSpeed,
+                particlesMainModule.simulationSpeed + particleSpeedGainOverProgression);
+            particlesMainModule.simulationSpeed = newPlaybackSpeed;
             animationTrigger = AnimationTrigger.Success;
         } else {
             animationTrigger = AnimationTrigger.Fail;

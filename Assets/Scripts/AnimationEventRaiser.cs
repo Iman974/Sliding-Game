@@ -2,7 +2,7 @@
 
 public class AnimationEventRaiser : MonoBehaviour {
 
-    public void OnAnimationEnd() {
+    void OnAnimationEnd() {
         AnimationManager.OnAnimationEnd();
     }
 }

@@ -9,7 +9,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1595133263568500, guid: 495a8ae89bebef042ba49cc3a2668dad, type: 3}
       propertyPath: m_Name
-      value: Rotator90Aclockwise
+      value: Rotator90AClockwise
+      objectReference: {fileID: 0}
+    - target: {fileID: 1595133263568500, guid: 495a8ae89bebef042ba49cc3a2668dad, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4875203889817708, guid: 495a8ae89bebef042ba49cc3a2668dad, type: 3}
       propertyPath: m_LocalPosition.x

@@ -15,5 +15,5 @@ MonoBehaviour:
   instance: {fileID: 0}
   weight: 15
   duration: 1.25
-  scoreValue: 100
-  directionToShowModifier: 1
+  scoreValue: 180
+  directionToShowModifier: 3

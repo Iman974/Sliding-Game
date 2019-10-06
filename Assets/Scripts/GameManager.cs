@@ -8,14 +8,16 @@ public class GameManager : MonoBehaviour {
     [SerializeField] float speedGainOverProgression = 0.002f;
     [SerializeField] int successCountToRegenerateLife = 10;
     [SerializeField] float restartGameDelay = 1.5f;
+    [SerializeField] float maxPlaybackSpeed = 2f;
 
     public static GameManager Instance { get; private set; }
     public static Direction CurrentDirection { get; private set; }
     public static int PlayerScore {
         get => playerScore;
         private set {
+            int previousScore = playerScore;
             playerScore = value;
-            OnScoreUpdated?.Invoke();
+            OnScoreUpdated?.Invoke(previousScore);
         }
     }
     public static Arrow SelectedArrow { get; private set; }
@@ -26,19 +28,21 @@ public class GameManager : MonoBehaviour {
             OnLivesUpdated?.Invoke();
         }
     }
+    public static int Highscore { get; private set; }
 
     public static event System.Action<bool> OnArrowEnd;
     public static event System.Action OnGameOver;
     public static event System.Action OnGameRestart;
-    public static event System.Action OnScoreUpdated;
+    public static event System.Action<int> OnScoreUpdated;
     public static event System.Action OnLivesUpdated;
 
     public const int kMaxLives = 3;
+    const float kFirstStartDelay = 1f;
 
     Direction inputDirection;
     Direction desiredDirection;
     Direction shownDirection;
-    float countdown;
+    float countdown = kFirstStartDelay;
     bool doInputCheck;
     float playbackSpeed = 1f;
     int successiveSuccessCount;
@@ -55,6 +59,8 @@ public class GameManager : MonoBehaviour {
             return;
         }
         #endregion
+
+        Highscore = ProgressSaver.LoadHighscore();
     }
 
     void Update() {
@@ -122,7 +128,8 @@ public class GameManager : MonoBehaviour {
         bool isInputCorrect = inputDirection == desiredDirection;
         if (isInputCorrect) {
             PlayerScore += (int)(SelectedArrow.ScoreValue * percentage);
-            playbackSpeed += speedGainOverProgression;
+            playbackSpeed = Mathf.Min(maxPlaybackSpeed, playbackSpeed +
+                speedGainOverProgression);
             successiveSuccessCount++;
             if (successiveSuccessCount >= successCountToRegenerateLife) {
                 if (Lives < kMaxLives) {
@@ -154,8 +161,10 @@ public class GameManager : MonoBehaviour {
     }
 
     void GameOver() {
-        OnGameOver?.Invoke();
+        Highscore = PlayerScore;
+        ProgressSaver.SaveHighscore(Highscore);
         isPlaying = false;
+        OnGameOver?.Invoke();
     }
 
     public void RestartGame() {

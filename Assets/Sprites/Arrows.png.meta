@@ -26,6 +26,18 @@ TextureImporter:
   - first:
       213: 8240296178972090289
     second: Arrow_Rotator180
+  - first:
+      213: -3522015543101279274
+    second: Arrow_Purple
+  - first:
+      213: 860963609760573987
+    second: Arrow_Yellow
+  - first:
+      213: -6065751022713089823
+    second: Arrow_White
+  - first:
+      213: -7950617451540245883
+    second: Arrow_Green
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -69,7 +81,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 190
+  spritePixelsToUnits: 200
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -122,13 +134,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Arrow_Rotator90
+      name: Arrow_Purple
       rect:
         serializedVersion: 2
-        x: 24
-        y: 1028
-        width: 626
-        height: 408
+        x: 156
+        y: 1574
+        width: 714
+        height: 466
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -136,20 +148,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ed114190b5ce1254290c968dc5da6c46
-      internalID: 1254045686837716011
+      spriteID: 14fc8074295d1bf4ab19b36c4094ae16
+      internalID: -3522015543101279274
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Arrow_Rotator180
+      name: Arrow_Yellow
       rect:
         serializedVersion: 2
-        x: 24
-        y: 521
-        width: 626
-        height: 408
+        x: 156
+        y: 1057
+        width: 714
+        height: 466
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -157,20 +169,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5e131c75163dbfc48ab88e73976665b0
-      internalID: 8240296178972090289
+      spriteID: 715b62741a387434683e6be501e90e55
+      internalID: 860963609760573987
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Arrow_Simple
+      name: Arrow_White
       rect:
         serializedVersion: 2
-        x: 24
-        y: 11
-        width: 626
-        height: 408
+        x: 156
+        y: 523
+        width: 714
+        height: 467
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -178,8 +190,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8b74f171ccdcad641a0a3e48fd12de8c
-      internalID: 4511783045003877710
+      spriteID: ccb653fb405bdd744877ab27c2782328
+      internalID: -6065751022713089823
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Arrow_Green
+      rect:
+        serializedVersion: 2
+        x: 156
+        y: 6
+        width: 714
+        height: 466
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0e1a82541af57594f90381462de4e883
+      internalID: -7950617451540245883
       vertices: []
       indices: 
       edges: []

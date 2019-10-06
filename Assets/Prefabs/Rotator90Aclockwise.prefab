@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &2492044656095130637
+--- !u!1001 &8412806923593001219
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -9,7 +9,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1595133263568500, guid: 495a8ae89bebef042ba49cc3a2668dad, type: 3}
       propertyPath: m_Name
-      value: Rotator180_
+      value: Rotator90Aclockwise
       objectReference: {fileID: 0}
     - target: {fileID: 4875203889817708, guid: 495a8ae89bebef042ba49cc3a2668dad, type: 3}
       propertyPath: m_LocalPosition.x
@@ -59,7 +59,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 860963609760573987, guid: 6d3ab62782911ff4d80fdf4409c53c4f,
+      objectReference: {fileID: -3522015543101279274, guid: 6d3ab62782911ff4d80fdf4409c53c4f,
         type: 3}
     - target: {fileID: 212271262845071950, guid: 495a8ae89bebef042ba49cc3a2668dad,
         type: 3}
@@ -80,6 +80,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 11313e0e60b0fb64db323efac92e9159, type: 2}
+      objectReference: {fileID: 9100000, guid: d13c095cc88be8c4d9ea87e477842e1c, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 495a8ae89bebef042ba49cc3a2668dad, type: 3}

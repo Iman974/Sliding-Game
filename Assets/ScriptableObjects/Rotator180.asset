@@ -13,10 +13,7 @@ MonoBehaviour:
   m_Name: Rotator180
   m_EditorClassIdentifier: 
   instance: {fileID: 0}
-  weight: 30
-  duration: 2
-  scoreValue: 70
-  displayedDirectionModifier: 2
-  moves: 02000000
-  animationTriggerNames:
-  - Rotate
+  weight: 20
+  duration: 1.15
+  scoreValue: 80
+  directionToShowModifier: 2

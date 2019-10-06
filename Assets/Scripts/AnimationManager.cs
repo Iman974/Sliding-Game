@@ -29,33 +29,22 @@ public class AnimationManager : MonoBehaviour {
     }
 
     void Start() {
-        GameManager.BeforeNextArrow += BeforeNextArrow;
-        GameManager.OnMoveSuccess += OnMoveSuccess;
+        GameManager.OnArrowEnd += OnArrowEnd;
         GameManager.OnGameOver += OnGameOver;
         GameManager.OnGameRestart += OnGameRestart;
 
         particlesMainModule = backgroudParticles.main;
     }
 
-    void BeforeNextArrow(bool isSuccess) {
-        Animation animation;
+    void OnArrowEnd(bool isSuccess) {
+        AnimationTrigger animationTrigger;
         if (isSuccess) {
-            animation = Animation.Success;
-            playbackSpeed += particleSpeedGainOverProgression;
-            particlesMainModule.simulationSpeed = playbackSpeed;
+            particlesMainModule.simulationSpeed += particleSpeedGainOverProgression;
+            animationTrigger = AnimationTrigger.Success;
         } else {
-            animation = Animation.Fail;
+            animationTrigger = AnimationTrigger.Fail;
         }
-        GameManager.SelectedArrow.PlayAnimation(animation.ToString());
-
-        IsAnimating = true;
-    }
-
-    void OnMoveSuccess() {
-        Arrow arrow = GameManager.SelectedArrow;
-        string animationTriggerName = arrow.MoveAnimationTriggerName;
-        // Same as OnFinalInput, but string & enum
-        arrow.PlayAnimation(animationTriggerName);
+        GameManager.SelectedArrow.PlayAnimation(animationTrigger.ToString());
         IsAnimating = true;
     }
 
@@ -65,11 +54,11 @@ public class AnimationManager : MonoBehaviour {
 
     void OnGameOver() {
         particlesMainModule.gravityModifierMultiplier = onGameOverGravityModifier;
+        particlesMainModule.simulationSpeed = 1f;
     }
 
     void OnGameRestart() {
         particlesMainModule.gravityModifierMultiplier = 0f;
-        playbackSpeed = 1f;
         particlesMainModule.simulationSpeed = playbackSpeedFastLevel;
         StartCoroutine(RestoreInitialParticlesPlaybackSpeed());
     }
@@ -86,13 +75,12 @@ public class AnimationManager : MonoBehaviour {
     }
 
     void OnDestroy() {
-        GameManager.BeforeNextArrow -= BeforeNextArrow;
-        GameManager.OnMoveSuccess -= OnMoveSuccess;
+        GameManager.OnArrowEnd -= OnArrowEnd;
         GameManager.OnGameOver -= OnGameOver;
         GameManager.OnGameRestart -= OnGameRestart;
     }
 
-    enum Animation {
+    enum AnimationTrigger {
         Success,
         Fail
     }

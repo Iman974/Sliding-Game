@@ -6,30 +6,45 @@ public class GameManager : MonoBehaviour {
     [SerializeField] Arrow[] arrows = null;
     [SerializeField] float nextDelay = 0.3f;
     [SerializeField] float speedGainOverProgression = 0.002f;
-    [SerializeField] int maxLives = 3;
     [SerializeField] int successCountToRegenerateLife = 10;
     [SerializeField] float restartGameDelay = 1.5f;
 
     public static GameManager Instance { get; private set; }
     public static Direction CurrentDirection { get; private set; }
-    public static int PlayerScore { get; private set; }
+    public static int PlayerScore {
+        get => playerScore;
+        private set {
+            playerScore = value;
+            OnScoreUpdated?.Invoke();
+        }
+    }
     public static Arrow SelectedArrow { get; private set; }
+    public static int Lives {
+        get => lives;
+        set {
+            lives = value;
+            OnLivesUpdated?.Invoke();
+        }
+    }
 
-    public static event System.Action<bool> BeforeNextArrow;
-    public static event System.Action OnMoveSuccess;
+    public static event System.Action<bool> OnArrowEnd;
     public static event System.Action OnGameOver;
     public static event System.Action OnGameRestart;
+    public static event System.Action OnScoreUpdated;
+    public static event System.Action OnLivesUpdated;
+
+    public const int kMaxLives = 3;
 
     Direction inputDirection;
     Direction desiredDirection;
-    Direction displayedDirection;
+    Direction shownDirection;
     float countdown;
     bool doInputCheck;
     float playbackSpeed = 1f;
-    int lives;
     int successiveSuccessCount;
     bool isPlaying = true;
-    bool isMoveDone;
+    static int playerScore;
+    static int lives = kMaxLives;
 
     void Awake() {
         #region Singleton
@@ -42,10 +57,6 @@ public class GameManager : MonoBehaviour {
         #endregion
     }
 
-    void Start() {
-        lives = maxLives;
-    }
-
     void Update() {
         if (AnimationManager.IsAnimating || !isPlaying) {
             return;
@@ -56,8 +67,9 @@ public class GameManager : MonoBehaviour {
             // Check if we're still handling input. If so, it means
             // no input was received so the player didn't do anything
             if (doInputCheck) {
-                OnWrongInput((int)(SelectedArrow.ScoreValue * 1.5f));
-                BeforeNextArrow?.Invoke(false);
+                int scoreLoss = (int)(SelectedArrow.ScoreValue * 1.5f);
+                OnWrongInput(scoreLoss);
+                OnArrowEnd?.Invoke(false);
                 ResetValues();
             } else {
                 NextArrow();
@@ -83,10 +95,9 @@ public class GameManager : MonoBehaviour {
 
         // Randomly choose a direction and set display direction based on the arrow modifier
         desiredDirection = DirectionUtility.GetRandomDirection();
-        displayedDirection = (Direction)(((int)desiredDirection +
-            SelectedArrow.DisplayedDirectionModifier) % DirectionUtility.kDirectionCount);
+        shownDirection = SelectedArrow.GetDirectionToShow(desiredDirection);
 
-        SelectedArrow.Orientation = displayedDirection;
+        SelectedArrow.CurrentOrientation = shownDirection;
         SelectedArrow.IsActive = true;
         countdown = SelectedArrow.Duration;
     }
@@ -107,38 +118,23 @@ public class GameManager : MonoBehaviour {
     }
 
     void HandleInput() {
-        if (!isMoveDone) {
-            int moveModifier = SelectedArrow.MoveDirectionModifier;
-            if ((int)inputDirection == (moveModifier + (int)displayedDirection) %
-                    DirectionUtility.kDirectionCount) {
-                // The input matches the move direction
-                OnMoveSuccess?.Invoke();
-                return;
-            } else {
-                int scoreLoss = (int)(SelectedArrow.ScoreValue * 0.6f);
-                OnWrongInput(scoreLoss);
-                BeforeNextArrow?.Invoke(false);
+        float percentage = countdown / SelectedArrow.Duration;
+        bool isInputCorrect = inputDirection == desiredDirection;
+        if (isInputCorrect) {
+            PlayerScore += (int)(SelectedArrow.ScoreValue * percentage);
+            playbackSpeed += speedGainOverProgression;
+            successiveSuccessCount++;
+            if (successiveSuccessCount >= successCountToRegenerateLife) {
+                if (Lives < kMaxLives) {
+                    Lives++;
+                }
+                successiveSuccessCount = 0;
             }
         } else {
-            // The arrow has been oriented successfully
-            bool isSuccess = inputDirection == desiredDirection;
-            float percentage = countdown / SelectedArrow.Duration;
-            if (isSuccess) {
-                PlayerScore += (int)(SelectedArrow.ScoreValue * percentage);
-                playbackSpeed += speedGainOverProgression;
-                successiveSuccessCount++;
-                if (successiveSuccessCount >= successCountToRegenerateLife) {
-                    if (lives < maxLives) {
-                        lives++;
-                    }
-                    successiveSuccessCount = 0;
-                }
-            } else {
-                int scoreLoss = (int)(SelectedArrow.ScoreValue * percentage);
-                OnWrongInput(scoreLoss);
-            }
-            BeforeNextArrow?.Invoke(isSuccess);
+            int scoreLoss = (int)(SelectedArrow.ScoreValue * percentage);
+            OnWrongInput(scoreLoss);
         }
+        OnArrowEnd?.Invoke(isInputCorrect);
         ResetValues();
     }
 
@@ -150,9 +146,9 @@ public class GameManager : MonoBehaviour {
     void OnWrongInput(int scoreLoss) {
         PlayerScore = Mathf.Max(0, PlayerScore - scoreLoss);
         successiveSuccessCount = 0;
-        lives -= 1;
+        Lives -= 1;
 
-        if (lives <= 0) {
+        if (Lives <= 0) {
             GameOver();
         }
     }
@@ -166,7 +162,7 @@ public class GameManager : MonoBehaviour {
         countdown = restartGameDelay;
         PlayerScore = 0;
         isPlaying = true;
-        lives = maxLives;
+        Lives = kMaxLives;
         playbackSpeed = 1f;
         OnGameRestart?.Invoke();
     }

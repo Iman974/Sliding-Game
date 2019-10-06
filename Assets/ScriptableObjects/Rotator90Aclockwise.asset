@@ -13,10 +13,7 @@ MonoBehaviour:
   m_Name: Rotator90Aclockwise
   m_EditorClassIdentifier: 
   instance: {fileID: 0}
-  weight: 20
-  duration: 1.4
-  scoreValue: 120
-  displayedDirectionModifier: 3
-  moves: 01000000
-  animationTriggerNames:
-  - Rotate
+  weight: 10
+  duration: 1.25
+  scoreValue: 100
+  directionToShowModifier: 3

@@ -13,9 +13,7 @@ MonoBehaviour:
   m_Name: Simple
   m_EditorClassIdentifier: 
   instance: {fileID: 0}
-  weight: 50
+  weight: 80
   duration: 1
   scoreValue: 30
-  displayedDirectionModifier: 0
-  moves: 
-  animationTriggerNames: []
+  directionToShowModifier: 0

@@ -7,25 +7,24 @@ public class Arrow : ScriptableObject {
     [SerializeField] int weight = 1;
     [SerializeField] float duration = 1f;
     [SerializeField] int scoreValue = 10;
-    [SerializeField] [Range(0, 3)] int displayedDirectionModifier = 0;
-    // The moves required to correctly orient the arrow (relative to the displayed direction)
-    [SerializeField] [Range(0, 3)] int moveDirectionModifier = 0;
-    [SerializeField] string animationTriggerName = null;
+    [SerializeField] [Range(0, 3)] int directionToShowModifier = 0;
 
     public int Weight => weight;
     public float Duration => duration;
-    public int DisplayedDirectionModifier => displayedDirectionModifier;
     public bool IsActive { set { instance.SetActive(value); } }
-    public Direction Orientation {
+    public Direction CurrentOrientation {
+        get {
+            return orientation;
+        }
         set {
+            orientation = value;
             transform.eulerAngles = Vector3.forward *
                 DirectionUtility.DirectionToRotation(value);
         }
     }
     public int ScoreValue => scoreValue;
-    public string MoveAnimationTriggerName => animationTriggerName;
-    public int MoveDirectionModifier => moveDirectionModifier;
 
+    Direction orientation;
     Animator animator;
     Transform transform;
 
@@ -51,6 +50,11 @@ public class Arrow : ScriptableObject {
 
         animator = instance.GetComponent<Animator>();
         transform = instance.transform;
+    }
+
+    public Direction GetDirectionToShow(Direction initialDir) {
+        return (Direction)(((int)initialDir + directionToShowModifier) %
+            DirectionUtility.kDirectionCount);
     }
 
     public void PlayAnimation(string animationTriggerName) {

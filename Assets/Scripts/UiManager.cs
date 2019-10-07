@@ -18,10 +18,10 @@ public class UiManager : MonoBehaviour {
         GameManager.OnLivesUpdated += UpdateLifeIcons;
         GameManager.OnGameOver += OnGameOver;
         GameManager.OnGameRestart += OnGameRestart;
-        GameManager.OnHighscoreUpdated += UpdateHighscoreText;
 
         animator = GetComponent<Animator>();
         lifeIconImages = lifeIconsContainer.GetComponentsInChildren<Image>();
+        UpdateHighscoreText();
     }
 
     void UpdateScoreText(int previousScore) {
@@ -50,6 +50,7 @@ public class UiManager : MonoBehaviour {
 
     void OnGameOver() {
         Invoke("PlayGameOverAnimation", restartPanelAppearanceDelay);
+        UpdateHighscoreText();
     }
 
     void PlayGameOverAnimation() {
@@ -65,6 +66,5 @@ public class UiManager : MonoBehaviour {
         GameManager.OnGameOver -= OnGameOver;
         GameManager.OnGameRestart -= OnGameRestart;
         GameManager.OnLivesUpdated -= UpdateLifeIcons;
-        GameManager.OnHighscoreUpdated -= UpdateHighscoreText;
     }
 }

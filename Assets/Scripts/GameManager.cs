@@ -28,20 +28,13 @@ public class GameManager : MonoBehaviour {
             OnLivesUpdated?.Invoke();
         }
     }
-    public static int Highscore {
-        get => highscore;
-        set {
-            highscore = value;
-            OnHighscoreUpdated?.Invoke();
-        }
-    }
+    public static int Highscore { get; private set; }
 
     public static event System.Action<bool> OnArrowEnd;
     public static event System.Action OnGameOver;
     public static event System.Action OnGameRestart;
     public static event System.Action<int> OnScoreUpdated;
     public static event System.Action OnLivesUpdated;
-    public static event System.Action OnHighscoreUpdated;
 
     public const int kMaxLives = 3;
     const float kFirstStartDelay = 1f;
@@ -56,7 +49,6 @@ public class GameManager : MonoBehaviour {
     bool isPlaying = true;
     static int playerScore;
     static int lives = kMaxLives;
-    static int highscore;
 
     void Awake() {
         #region Singleton
@@ -146,7 +138,7 @@ public class GameManager : MonoBehaviour {
                 successiveSuccessCount = 0;
             }
         } else {
-            int scoreLoss = (int)(SelectedArrow.ScoreValue * percentage);
+            int scoreLoss = SelectedArrow.ScoreValue;
             OnWrongInput(scoreLoss);
         }
         OnArrowEnd?.Invoke(isInputCorrect);

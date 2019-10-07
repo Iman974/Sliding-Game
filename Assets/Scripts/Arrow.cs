@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "Arrow", fileName = "New arrow")]
-public class Arrow : ScriptableObject {
+public class Arrow : MonoBehaviour {
 
-    [SerializeField] GameObject instance = null;
     [SerializeField] int weight = 1;
     [SerializeField] float duration = 1f;
     [SerializeField] int scoreValue = 10;
@@ -11,7 +9,7 @@ public class Arrow : ScriptableObject {
 
     public int Weight => weight;
     public float Duration => duration;
-    public bool IsActive { set { instance.SetActive(value); } }
+    public bool IsActive { set { gameObject.SetActive(value); } }
     public Direction CurrentOrientation {
         get {
             return orientation;
@@ -26,30 +24,9 @@ public class Arrow : ScriptableObject {
 
     Direction orientation;
     Animator animator;
-    Transform transform;
 
-#if UNITY_EDITOR
-    void OnEnable() {
-        if (Application.isEditor) {
-            Awake();
-        }
-    }
-#endif
-
-    void Awake() {
-        Transform arrowPoolTransform = GameObject.FindWithTag("ArrowPool")?.transform;
-        if (arrowPoolTransform == null) {
-            Debug.LogWarning("Could not find the arrow pool.");
-            return;
-        }
-        instance = arrowPoolTransform.Find(name).gameObject;
-        if (instance == null) {
-            Debug.LogError("Could not find the " + name + " arrow");
-            return;
-        }
-
-        animator = instance.GetComponent<Animator>();
-        transform = instance.transform;
+    void Start() {
+        animator = GetComponent<Animator>();
     }
 
     public Direction GetDirectionToShow(Direction initialDir) {

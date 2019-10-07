@@ -18,6 +18,7 @@ public class UiManager : MonoBehaviour {
         GameManager.OnLivesUpdated += UpdateLifeIcons;
         GameManager.OnGameOver += OnGameOver;
         GameManager.OnGameRestart += OnGameRestart;
+        GameManager.OnHighscoreUpdated += UpdateHighscoreText;
 
         animator = GetComponent<Animator>();
         lifeIconImages = lifeIconsContainer.GetComponentsInChildren<Image>();
@@ -33,6 +34,10 @@ public class UiManager : MonoBehaviour {
         }
     }
 
+    void UpdateHighscoreText() {
+        highscoreText.text = "Meilleur score : " + GameManager.Highscore;
+    }
+
     void UpdateLifeIcons() {
         for (int i = 0; i < GameManager.kMaxLives; i++) {
             if (i < GameManager.Lives) {
@@ -45,7 +50,6 @@ public class UiManager : MonoBehaviour {
 
     void OnGameOver() {
         Invoke("PlayGameOverAnimation", restartPanelAppearanceDelay);
-        highscoreText.text = "Meilleur score : " + GameManager.Highscore;
     }
 
     void PlayGameOverAnimation() {
@@ -61,5 +65,6 @@ public class UiManager : MonoBehaviour {
         GameManager.OnGameOver -= OnGameOver;
         GameManager.OnGameRestart -= OnGameRestart;
         GameManager.OnLivesUpdated -= UpdateLifeIcons;
+        GameManager.OnHighscoreUpdated -= UpdateHighscoreText;
     }
 }

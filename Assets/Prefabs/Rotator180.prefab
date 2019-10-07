@@ -7,9 +7,29 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -5954641990629451639, guid: 495a8ae89bebef042ba49cc3a2668dad,
+        type: 3}
+      propertyPath: directionToShowModifier
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -5954641990629451639, guid: 495a8ae89bebef042ba49cc3a2668dad,
+        type: 3}
+      propertyPath: scoreValue
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: -5954641990629451639, guid: 495a8ae89bebef042ba49cc3a2668dad,
+        type: 3}
+      propertyPath: duration
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: -5954641990629451639, guid: 495a8ae89bebef042ba49cc3a2668dad,
+        type: 3}
+      propertyPath: weight
+      value: 40
+      objectReference: {fileID: 0}
     - target: {fileID: 1595133263568500, guid: 495a8ae89bebef042ba49cc3a2668dad, type: 3}
       propertyPath: m_Name
-      value: Rotator180_
+      value: Rotator180
       objectReference: {fileID: 0}
     - target: {fileID: 4875203889817708, guid: 495a8ae89bebef042ba49cc3a2668dad, type: 3}
       propertyPath: m_LocalPosition.x

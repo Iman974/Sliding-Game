@@ -41,12 +41,10 @@ public class GameManager : MonoBehaviour {
 
     Direction inputDirection;
     Direction desiredDirection;
-    Direction shownDirection;
     float countdown = kFirstStartDelay;
     bool doInputCheck;
     float playbackSpeed = 1f;
     int successiveSuccessCount;
-    bool isPlaying = true;
     static int playerScore;
     static int lives = kMaxLives;
 
@@ -60,11 +58,15 @@ public class GameManager : MonoBehaviour {
         }
         #endregion
 
+        for (int i = 0; i < arrows.Length; i++) {
+            UnityEngine.Assertions.Assert.IsNotNull(arrows[i], "Missing arrow!");
+        }
         Highscore = ProgressSaver.LoadHighscore();
+        enabled = false;
     }
 
     void Update() {
-        if (AnimationManager.IsAnimating || !isPlaying) {
+        if (Arrow.IsAnimating) {
             return;
         }
 
@@ -99,11 +101,8 @@ public class GameManager : MonoBehaviour {
         // Randomly select an arrow based randomly on the weights
         SelectedArrow = arrows[SelectRandomWeightedIndex()];
 
-        // Randomly choose a direction and set display direction based on the arrow modifier
         desiredDirection = DirectionUtility.GetRandomDirection();
-        shownDirection = SelectedArrow.GetDirectionToShow(desiredDirection);
-
-        SelectedArrow.CurrentOrientation = shownDirection;
+        SelectedArrow.SetOrientation(desiredDirection);
         SelectedArrow.IsActive = true;
         countdown = SelectedArrow.Duration;
     }
@@ -128,8 +127,7 @@ public class GameManager : MonoBehaviour {
         bool isInputCorrect = inputDirection == desiredDirection;
         if (isInputCorrect) {
             PlayerScore += (int)(SelectedArrow.ScoreValue * percentage);
-            playbackSpeed = Mathf.Min(maxPlaybackSpeed, playbackSpeed +
-                speedGainOverProgression);
+            playbackSpeed = Mathf.Min(maxPlaybackSpeed, playbackSpeed + speedGainOverProgression);
             successiveSuccessCount++;
             if (successiveSuccessCount >= successCountToRegenerateLife) {
                 if (Lives < kMaxLives) {
@@ -165,14 +163,14 @@ public class GameManager : MonoBehaviour {
             Highscore = PlayerScore;
             ProgressSaver.SaveHighscore(Highscore);
         }
-        isPlaying = false;
+        enabled = false;
         OnGameOver?.Invoke();
     }
 
     public void RestartGame() {
+        enabled = true;
         countdown = restartGameDelay;
         PlayerScore = 0;
-        isPlaying = true;
         Lives = kMaxLives;
         playbackSpeed = 1f;
         OnGameRestart?.Invoke();

@@ -7,7 +7,7 @@ AnimatorOverrideController:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ArrowRotator90Clockwise
-  m_Controller: {fileID: 9100000, guid: d13c095cc88be8c4d9ea87e477842e1c, type: 2}
+  m_Controller: {fileID: 9100000, guid: 11313e0e60b0fb64db323efac92e9159, type: 2}
   m_Clips:
-  - m_OriginalClip: {fileID: 7400000, guid: a1665de6dcc87cf498ddfc2337b3b2c5, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 6bf95d7fe04af6449970ebac89a99c23, type: 2}
     m_OverrideClip: {fileID: 7400000, guid: d2ffdd8cd526618489bf4f933db52801, type: 2}

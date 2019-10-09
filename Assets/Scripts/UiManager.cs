@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using TMPro;
 
+[RequireComponent(typeof(Animator))]
 public class UiManager : MonoBehaviour {
 
     [SerializeField] TMP_Text scoreText = null;

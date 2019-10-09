@@ -37,17 +37,19 @@ public static class DirectionUtility {
         return matchingDirection;
     }
 
-    public static float DirectionToRotation(Direction direction) {
-        float rotation = 0f;
-
-        if (direction == Direction.Right) {
-            rotation = 90f;
-        } else if (direction == Direction.Down) {
-            rotation = 180f;
-        } else if (direction == Direction.Left) {
-            rotation = 270f;
+    public static float DirectionToAngle(Direction direction) {
+        switch (direction) {
+            case Direction.Right:
+                return 0f;
+            case Direction.Down:
+                return -90f;
+            case Direction.Left:
+                return 180f;
+            case Direction.Up:
+                return 90f;
+            default:
+                throw new System.ArgumentException("Could not convert direction to angle.");
         }
-        return 90f - rotation;
     }
 
     public static float DirectionToFloat(Direction direction) {

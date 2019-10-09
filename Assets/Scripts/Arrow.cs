@@ -7,39 +7,44 @@ public class Arrow : MonoBehaviour {
     [SerializeField] int scoreValue = 10;
     [SerializeField] [Range(0, 3)] int directionToShowModifier = 0;
 
+    public static bool IsAnimating { get; private set; }
+
     public int Weight => weight;
     public float Duration => duration;
     public bool IsActive { set { gameObject.SetActive(value); } }
-    public Direction CurrentOrientation {
-        get {
-            return orientation;
-        }
-        set {
-            orientation = value;
-            transform.eulerAngles = Vector3.forward *
-                DirectionUtility.DirectionToRotation(value);
-        }
-    }
     public int ScoreValue => scoreValue;
 
     Direction orientation;
     Animator animator;
 
     void Start() {
+        GameManager.OnArrowEnd += PlayAnimation;
+
         animator = GetComponent<Animator>();
     }
 
-    public Direction GetDirectionToShow(Direction initialDir) {
-        return (Direction)(((int)initialDir + directionToShowModifier) %
+    public void SetOrientation(Direction direction) {
+        Direction modifiedDirection = (Direction)(((int)direction + directionToShowModifier) %
             DirectionUtility.kDirectionCount);
+
+        transform.eulerAngles = Vector3.forward * DirectionUtility.DirectionToAngle(modifiedDirection);
     }
 
-    public void PlayAnimation(string animationTriggerName) {
-        animator.SetTrigger(animationTriggerName);
+    void PlayAnimation(bool isSuccess) {
+        animator.SetTrigger(isSuccess ? "Success" : "Fail");
+        IsAnimating = true;
+    }
+
+    void OnAnimationEnd() {
+        IsAnimating = false;
     }
 
     public void ResetTransform() {
         transform.position = Vector3.zero;
         transform.localScale = Vector3.one;
+    }
+
+    void OnDestroy() {
+        GameManager.OnArrowEnd -= PlayAnimation;
     }
 }

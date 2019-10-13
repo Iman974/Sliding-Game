@@ -8,7 +8,7 @@ public class UiManager : MonoBehaviour {
     [SerializeField] TMP_Text scoreText = null;
     [SerializeField] TMP_Text highscoreText = null;
     [SerializeField] RectTransform lifeIconsContainer = null;
-    [SerializeField] float restartPanelAppearanceDelay = 2.25f;
+    [SerializeField] float restartPanelFadeInDelay = 2.25f;
 
     Animator animator;
     Image[] lifeIconImages;
@@ -50,7 +50,7 @@ public class UiManager : MonoBehaviour {
     }
 
     void OnGameOver() {
-        Invoke("PlayGameOverAnimation", restartPanelAppearanceDelay);
+        Invoke("PlayGameOverAnimation", restartPanelFadeInDelay);
         UpdateHighscoreText();
     }
 

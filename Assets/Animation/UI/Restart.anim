@@ -271,12 +271,12 @@ AnimationClip:
       - serializedVersion: 3
         time: 0
         value: 1
-        inSlope: -2.4243748
-        outSlope: -2.4243748
+        inSlope: -2.5447652
+        outSlope: -2.5447652
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
-        outWeight: 0.16241302
+        outWeight: 0.07843136
       - serializedVersion: 3
         time: 0.8333333
         value: 0
@@ -289,22 +289,13 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: m_fontColor.a
-    path: GameCanvas/HighscoreText
-    classID: 114
-    script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+    attribute: m_Alpha
+    path: GameCanvas/MainMenu/HighscoreText
+    classID: 225
+    script: {fileID: 0}
   - curve:
       serializedVersion: 2
       m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: Infinity
-        outSlope: Infinity
-        tangentMode: 103
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
       - serializedVersion: 3
         time: 0.8333333
         value: 0
@@ -317,9 +308,9 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: m_IsActive
-    path: GameCanvas/HighscoreText
-    classID: 1
+    attribute: m_IgnoreParentGroups
+    path: GameCanvas/MainMenu/HighscoreText
+    classID: 225
     script: {fileID: 0}
   m_PPtrCurves: []
   m_SampleRate: 60
@@ -386,17 +377,17 @@ AnimationClip:
       customType: 28
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 3627186071
-      attribute: 4185109675
-      script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-      typeID: 114
+      path: 3269927422
+      attribute: 1574349066
+      script: {fileID: 0}
+      typeID: 225
       customType: 0
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 3627186071
-      attribute: 2086281974
+      path: 3269927422
+      attribute: 1596511488
       script: {fileID: 0}
-      typeID: 1
+      typeID: 225
       customType: 0
       isPPtrCurve: 0
     pptrCurveMapping: []
@@ -734,12 +725,12 @@ AnimationClip:
       - serializedVersion: 3
         time: 0
         value: 1
-        inSlope: -2.4243748
-        outSlope: -2.4243748
+        inSlope: -2.5447652
+        outSlope: -2.5447652
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
-        outWeight: 0.16241302
+        outWeight: 0.07843136
       - serializedVersion: 3
         time: 0.8333333
         value: 0
@@ -752,22 +743,13 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: m_fontColor.a
-    path: GameCanvas/HighscoreText
-    classID: 114
-    script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+    attribute: m_Alpha
+    path: GameCanvas/MainMenu/HighscoreText
+    classID: 225
+    script: {fileID: 0}
   - curve:
       serializedVersion: 2
       m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: Infinity
-        outSlope: Infinity
-        tangentMode: 103
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
       - serializedVersion: 3
         time: 0.8333333
         value: 0
@@ -780,9 +762,9 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: m_IsActive
-    path: GameCanvas/HighscoreText
-    classID: 1
+    attribute: m_IgnoreParentGroups
+    path: GameCanvas/MainMenu/HighscoreText
+    classID: 225
     script: {fileID: 0}
   m_EulerEditorCurves:
   - curve:

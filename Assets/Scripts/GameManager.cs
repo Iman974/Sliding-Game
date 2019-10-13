@@ -37,11 +37,10 @@ public class GameManager : MonoBehaviour {
     public static event System.Action OnLivesUpdated;
 
     public const int kMaxLives = 3;
-    const float kFirstStartDelay = 1f;
 
     Direction inputDirection;
     Direction desiredDirection;
-    float countdown = kFirstStartDelay;
+    float countdown;
     bool doInputCheck;
     float playbackSpeed = 1f;
     int successiveSuccessCount;

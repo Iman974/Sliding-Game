@@ -11399,6 +11399,7 @@ GameObject:
   - component: {fileID: 1284931420}
   - component: {fileID: 1284931422}
   - component: {fileID: 1284931423}
+  - component: {fileID: 1284931424}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -11449,11 +11450,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1284931419}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d0f0f0d0ae9499b49ae8d5b681870475, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  requiredConsecutiveSuccess: 8
 --- !u!114 &1284931423
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11467,6 +11469,60 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   swipingSensibility: 10
+--- !u!114 &1284931424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1284931419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c927036ce02fe14282478da448145c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speedReward:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: Infinity
+      outSlope: Infinity
+      tangentMode: 103
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.15
+      value: 0.5
+      inSlope: Infinity
+      outSlope: Infinity
+      tangentMode: 103
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.6
+      value: 0.2
+      inSlope: Infinity
+      outSlope: Infinity
+      tangentMode: 103
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.8
+      value: 0
+      inSlope: Infinity
+      outSlope: Infinity
+      tangentMode: 103
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!4 &1300359028 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2487346615983709281, guid: 7788ce36480ba464ca4724153ab34e74,
@@ -11710,11 +11766,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 269965307}
     m_Modifications:
-    - target: {fileID: 2945651376681050555, guid: 2a1495206bf156e42a632dc03a8c92ee,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 134.9
-      objectReference: {fileID: 0}
     - target: {fileID: 8203211817790537651, guid: 2a1495206bf156e42a632dc03a8c92ee,
         type: 3}
       propertyPath: m_Name
@@ -11799,6 +11850,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 56.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2945651376681050555, guid: 2a1495206bf156e42a632dc03a8c92ee,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 134.9
       objectReference: {fileID: 0}
     - target: {fileID: 8203211817790537645, guid: 2a1495206bf156e42a632dc03a8c92ee,
         type: 3}
@@ -12397,11 +12453,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 269965307}
     m_Modifications:
-    - target: {fileID: 2945651376681050555, guid: 2a1495206bf156e42a632dc03a8c92ee,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 101.2
-      objectReference: {fileID: 0}
     - target: {fileID: 8203211817790537651, guid: 2a1495206bf156e42a632dc03a8c92ee,
         type: 3}
       propertyPath: m_Name
@@ -12481,6 +12532,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2945651376681050555, guid: 2a1495206bf156e42a632dc03a8c92ee,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 101.2
       objectReference: {fileID: 0}
     - target: {fileID: 8203211817790537645, guid: 2a1495206bf156e42a632dc03a8c92ee,
         type: 3}

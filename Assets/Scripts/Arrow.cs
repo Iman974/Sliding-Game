@@ -5,6 +5,7 @@ public class Arrow : MonoBehaviour {
     [SerializeField] int weight = 1;
     [SerializeField] float duration = 1f;
     [SerializeField] int scoreValue = 10;
+    [SerializeField] float scoreLossMultiplier = 1f;
     [SerializeField] [Range(0, 3)] int directionToShowModifier = 0;
 
     public static bool IsAnimating { get; private set; }
@@ -13,6 +14,7 @@ public class Arrow : MonoBehaviour {
     public float Duration => duration;
     public bool IsActive { set { gameObject.SetActive(value); } }
     public int ScoreValue => scoreValue;
+    public float ScoreLossMultiplier => scoreLossMultiplier;
 
     Direction orientation;
     Animator animator;

@@ -4,6 +4,8 @@ public class Tutorial : MonoBehaviour {
 
     [SerializeField] int requiredConsecutiveSuccess = 8;
 
+    public static event System.Action Sth;
+
     Countdown countdown;
     ProgressStep tutorialStep;
     GameManager gameManager;
@@ -12,6 +14,7 @@ public class Tutorial : MonoBehaviour {
         countdown = GameManager.Countdown;
         gameManager = GetComponent<GameManager>();
         UnityEngine.Assertions.Assert.IsNotNull(gameManager, "GameManager not found!");
+        Sth?.Invoke();
     }
 
     public void StartTutorial() {

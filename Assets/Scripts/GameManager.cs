@@ -12,14 +12,6 @@ public class GameManager : MonoBehaviour {
 
     public static GameManager Instance { get; private set; }
     public static Direction CurrentDirection { get; private set; }
-    public static int PlayerScore {
-        get => playerScore;
-        private set {
-            int previousScore = playerScore;
-            playerScore = value;
-            OnScoreUpdated?.Invoke(previousScore);
-        }
-    }
     public static Arrow SelectedArrow { get; private set; }
     public static int Lives {
         get => lives;
@@ -34,7 +26,6 @@ public class GameManager : MonoBehaviour {
     public static event System.Action<bool> OnArrowEnd;
     public static event System.Action OnGameOver;
     public static event System.Action OnGameRestart;
-    public static event System.Action<int> OnScoreUpdated;
     public static event System.Action OnLivesUpdated;
 
     public const int kMaxLives = 3;
@@ -44,7 +35,6 @@ public class GameManager : MonoBehaviour {
     bool doInputCheck;
     float playbackSpeed = 1f;
     int successiveSuccessCount;
-    static int playerScore;
     static int lives = kMaxLives;
 
     void Awake() {
@@ -84,8 +74,7 @@ public class GameManager : MonoBehaviour {
         // Check if we're still handling input. If so, it means
         // no input was received so the player didn't do anything
         if (doInputCheck) {
-            int scoreLoss = (int)(SelectedArrow.ScoreValue * 1.5f);
-            OnWrongInput(scoreLoss);
+            OnWrongInput();
             OnArrowEnd?.Invoke(false);
             ResetValues();
         } else {
@@ -129,7 +118,6 @@ public class GameManager : MonoBehaviour {
         float percentage = Countdown.Time / SelectedArrow.Duration;
         bool isInputCorrect = inputDirection == desiredDirection;
         if (isInputCorrect) {
-            PlayerScore += (int)(SelectedArrow.ScoreValue * percentage);
             playbackSpeed = Mathf.Min(maxPlaybackSpeed, playbackSpeed + speedGainOverProgression);
             successiveSuccessCount++;
             if (successiveSuccessCount >= successCountToRegenerateLife) {
@@ -139,8 +127,7 @@ public class GameManager : MonoBehaviour {
                 successiveSuccessCount = 0;
             }
         } else {
-            int scoreLoss = SelectedArrow.ScoreValue;
-            OnWrongInput(scoreLoss);
+            OnWrongInput();
         }
         OnArrowEnd?.Invoke(isInputCorrect);
         ResetValues();
@@ -151,8 +138,7 @@ public class GameManager : MonoBehaviour {
         doInputCheck = false;
     }
 
-    void OnWrongInput(int scoreLoss) {
-        PlayerScore = Mathf.Max(0, PlayerScore - scoreLoss);
+    void OnWrongInput() {
         successiveSuccessCount = 0;
         Lives -= 1;
 
@@ -162,8 +148,8 @@ public class GameManager : MonoBehaviour {
     }
 
     void GameOver() {
-        if (PlayerScore > Highscore) {
-            Highscore = PlayerScore;
+        if (Score.PlayerScore > Highscore) {
+            Highscore = Score.PlayerScore;
             ProgressSaver.SaveHighscore(Highscore);
         }
         enabled = false;
@@ -173,7 +159,6 @@ public class GameManager : MonoBehaviour {
     public void RestartGame() {
         enabled = true;
         Countdown.ResetTime(restartGameDelay);
-        PlayerScore = 0;
         Lives = kMaxLives;
         playbackSpeed = 1f;
         OnGameRestart?.Invoke();

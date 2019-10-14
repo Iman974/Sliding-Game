@@ -18,7 +18,7 @@ public class Arrow : MonoBehaviour {
     Animator animator;
 
     void Start() {
-        GameManager.OnArrowEnd += PlayAnimation;
+        GameManager.OnArrowEnd += PlayEndAnimation;
 
         animator = GetComponent<Animator>();
     }
@@ -30,7 +30,7 @@ public class Arrow : MonoBehaviour {
         transform.eulerAngles = Vector3.forward * DirectionUtility.DirectionToAngle(modifiedDirection);
     }
 
-    void PlayAnimation(bool isSuccess) {
+    void PlayEndAnimation(bool isSuccess) {
         animator.SetTrigger(isSuccess ? "Success" : "Fail");
         IsAnimating = true;
     }
@@ -45,6 +45,6 @@ public class Arrow : MonoBehaviour {
     }
 
     void OnDestroy() {
-        GameManager.OnArrowEnd -= PlayAnimation;
+        GameManager.OnArrowEnd -= PlayEndAnimation;
     }
 }

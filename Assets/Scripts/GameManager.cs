@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour {
         }
     }
     public static int Highscore { get; private set; }
+    public static Countdown Countdown { get; } = new Countdown();
 
     public static event System.Action<bool> OnArrowEnd;
     public static event System.Action OnGameOver;
@@ -40,7 +41,6 @@ public class GameManager : MonoBehaviour {
 
     Direction inputDirection;
     Direction desiredDirection;
-    float countdown;
     bool doInputCheck;
     float playbackSpeed = 1f;
     int successiveSuccessCount;
@@ -69,19 +69,9 @@ public class GameManager : MonoBehaviour {
             return;
         }
 
-        countdown -= Time.deltaTime * playbackSpeed;
-        if (countdown <= 0f) {
-            // Check if we're still handling input. If so, it means
-            // no input was received so the player didn't do anything
-            if (doInputCheck) {
-                int scoreLoss = (int)(SelectedArrow.ScoreValue * 1.5f);
-                OnWrongInput(scoreLoss);
-                OnArrowEnd?.Invoke(false);
-                ResetValues();
-            } else {
-                NextArrow();
-                doInputCheck = true;
-            }
+        Countdown.Update(Time.deltaTime * playbackSpeed);
+        if (Countdown.Elapsed) {
+            OnTimeElapsed();
             return;
         }
 
@@ -90,7 +80,20 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    void NextArrow() {
+    void OnTimeElapsed() {
+        // Check if we're still handling input. If so, it means
+        // no input was received so the player didn't do anything
+        if (doInputCheck) {
+            int scoreLoss = (int)(SelectedArrow.ScoreValue * 1.5f);
+            OnWrongInput(scoreLoss);
+            OnArrowEnd?.Invoke(false);
+            ResetValues();
+        } else {
+            NextArrow();
+        }
+    }
+
+    public void NextArrow() {
         // Hide the previous arrow and reset it
         if (SelectedArrow != null) {
             SelectedArrow.IsActive = false;
@@ -103,7 +106,8 @@ public class GameManager : MonoBehaviour {
         desiredDirection = DirectionUtility.GetRandomDirection();
         SelectedArrow.SetOrientation(desiredDirection);
         SelectedArrow.IsActive = true;
-        countdown = SelectedArrow.Duration;
+        Countdown.ResetTime(SelectedArrow.Duration);
+        doInputCheck = true;
     }
 
     // Algorithm found on the Unity forum:
@@ -122,7 +126,7 @@ public class GameManager : MonoBehaviour {
     }
 
     void HandleInput() {
-        float percentage = countdown / SelectedArrow.Duration;
+        float percentage = Countdown.Time / SelectedArrow.Duration;
         bool isInputCorrect = inputDirection == desiredDirection;
         if (isInputCorrect) {
             PlayerScore += (int)(SelectedArrow.ScoreValue * percentage);
@@ -143,7 +147,7 @@ public class GameManager : MonoBehaviour {
     }
 
     void ResetValues() {
-        countdown = nextDelay;
+        Countdown.ResetTime(nextDelay);
         doInputCheck = false;
     }
 
@@ -168,7 +172,7 @@ public class GameManager : MonoBehaviour {
 
     public void RestartGame() {
         enabled = true;
-        countdown = restartGameDelay;
+        Countdown.ResetTime(restartGameDelay);
         PlayerScore = 0;
         Lives = kMaxLives;
         playbackSpeed = 1f;

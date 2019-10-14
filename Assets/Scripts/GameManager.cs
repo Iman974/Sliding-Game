@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Linq;
 
 public class GameManager : MonoBehaviour {
 
@@ -23,6 +22,8 @@ public class GameManager : MonoBehaviour {
     public static int Highscore { get; private set; }
     public static Countdown Countdown { get; } = new Countdown();
 
+    public Arrow[] Arrows => arrows;
+
     public static event System.Action<bool> OnArrowEnd;
     public static event System.Action OnGameOver;
     public static event System.Action OnGameRestart;
@@ -34,7 +35,7 @@ public class GameManager : MonoBehaviour {
     Direction desiredDirection;
     bool doInputCheck;
     float playbackSpeed = 1f;
-    int successiveSuccessCount;
+    int consecutiveSuccessCount;
     static int lives = kMaxLives;
 
     void Awake() {
@@ -60,7 +61,7 @@ public class GameManager : MonoBehaviour {
         }
 
         Countdown.Update(Time.deltaTime * playbackSpeed);
-        if (Countdown.Elapsed) {
+        if (Countdown.IsElapsed) {
             OnTimeElapsed();
             return;
         }
@@ -90,41 +91,25 @@ public class GameManager : MonoBehaviour {
         }
 
         // Randomly select an arrow based randomly on the weights
-        SelectedArrow = arrows[SelectRandomWeightedIndex()];
+        SelectedArrow = arrows[RandomUtility.SelectRandomWeightedIndex(arrows)];
 
         desiredDirection = DirectionUtility.GetRandomDirection();
         SelectedArrow.SetOrientation(desiredDirection);
         SelectedArrow.IsActive = true;
-        Countdown.ResetTime(SelectedArrow.Duration);
+        Countdown.Restart(SelectedArrow.Duration);
         doInputCheck = true;
     }
 
-    // Algorithm found on the Unity forum:
-    // https://forum.unity.com/threads/random-numbers-with-a-weighted-chance.442190/
-    int SelectRandomWeightedIndex() {
-        int weightSum = arrows.Sum(a => a.Weight);
-        int p = 0;
-        int randomValue = Random.Range(0, weightSum);
-        for (int i = 0; i < arrows.Length - 1; i++) {
-            p += arrows[i].Weight;
-            if (randomValue < p) {
-                return i;
-            }
-        }
-        return arrows.Length - 1;
-    }
-
     void HandleInput() {
-        float percentage = Countdown.Time / SelectedArrow.Duration;
         bool isInputCorrect = inputDirection == desiredDirection;
         if (isInputCorrect) {
             playbackSpeed = Mathf.Min(maxPlaybackSpeed, playbackSpeed + speedGainOverProgression);
-            successiveSuccessCount++;
-            if (successiveSuccessCount >= successCountToRegenerateLife) {
+            consecutiveSuccessCount++;
+            if (consecutiveSuccessCount >= successCountToRegenerateLife) {
                 if (Lives < kMaxLives) {
                     Lives++;
                 }
-                successiveSuccessCount = 0;
+                consecutiveSuccessCount = 0;
             }
         } else {
             OnWrongInput();
@@ -134,12 +119,12 @@ public class GameManager : MonoBehaviour {
     }
 
     void ResetValues() {
-        Countdown.ResetTime(nextDelay);
+        Countdown.Restart(nextDelay);
         doInputCheck = false;
     }
 
     void OnWrongInput() {
-        successiveSuccessCount = 0;
+        consecutiveSuccessCount = 0;
         Lives -= 1;
 
         if (Lives <= 0) {
@@ -148,8 +133,8 @@ public class GameManager : MonoBehaviour {
     }
 
     void GameOver() {
-        if (Score.PlayerScore > Highscore) {
-            Highscore = Score.PlayerScore;
+        if (ScoreManager.PlayerScore > Highscore) {
+            Highscore = ScoreManager.PlayerScore;
             ProgressSaver.SaveHighscore(Highscore);
         }
         enabled = false;
@@ -158,7 +143,7 @@ public class GameManager : MonoBehaviour {
 
     public void RestartGame() {
         enabled = true;
-        Countdown.ResetTime(restartGameDelay);
+        Countdown.Restart(restartGameDelay);
         Lives = kMaxLives;
         playbackSpeed = 1f;
         OnGameRestart?.Invoke();

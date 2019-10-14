@@ -22,8 +22,8 @@ public class BackgroundParticles : MonoBehaviour {
         mainModule = particleSystem.main;
     }
 
-    void OnArrowEnd(bool isSuccess) {
-        if (isSuccess) {
+    void OnArrowEnd(bool hasScored) {
+        if (hasScored) {
             float newPlaybackSpeed = Mathf.Min(maxPlaybackSpeed,
         mainModule.simulationSpeed + speedGainOverProgression);
             mainModule.simulationSpeed = newPlaybackSpeed;

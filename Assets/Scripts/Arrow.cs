@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Arrow : MonoBehaviour {
+public class Arrow : MonoBehaviour, RandomUtility.IWeighted {
 
     [SerializeField] int weight = 1;
     [SerializeField] float duration = 1f;
@@ -10,7 +10,7 @@ public class Arrow : MonoBehaviour {
 
     public static bool IsAnimating { get; private set; }
 
-    public int Weight => weight;
+    public int Weight { get => weight; set => weight = value; }
     public float Duration => duration;
     public bool IsActive { set { gameObject.SetActive(value); } }
     public int ScoreValue => scoreValue;
@@ -32,8 +32,8 @@ public class Arrow : MonoBehaviour {
         transform.eulerAngles = Vector3.forward * DirectionUtility.DirectionToAngle(modifiedDirection);
     }
 
-    void PlayEndAnimation(bool isSuccess) {
-        animator.SetTrigger(isSuccess ? "Success" : "Fail");
+    void PlayEndAnimation(bool hasScored) {
+        animator.SetTrigger(hasScored ? "Success" : "Fail");
         IsAnimating = true;
     }
 

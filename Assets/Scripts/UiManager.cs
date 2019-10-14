@@ -15,7 +15,7 @@ public class UiManager : MonoBehaviour {
     int lifeIconIndex;
 
     void Start() {
-        Score.OnScoreUpdated += UpdateScoreText;
+        ScoreManager.OnScoreUpdated += UpdateScoreText;
         GameManager.OnLivesUpdated += UpdateLifeIcons;
         GameManager.OnGameOver += OnGameOver;
         GameManager.OnGameRestart += OnGameRestart;
@@ -26,7 +26,7 @@ public class UiManager : MonoBehaviour {
     }
 
     void UpdateScoreText(int previousScore) {
-        int currentScore = Score.PlayerScore;
+        int currentScore = ScoreManager.PlayerScore;
         scoreText.text = "Score : " + currentScore;
         if (currentScore > previousScore) {
             animator.SetTrigger("ScorePulsation");
@@ -59,11 +59,11 @@ public class UiManager : MonoBehaviour {
     }
 
     void OnGameRestart() {
-        scoreText.text = "Score: " + Score.PlayerScore;
+        scoreText.text = "Score: " + ScoreManager.PlayerScore;
     }
 
     void OnDestroy() {
-        Score.OnScoreUpdated -= UpdateScoreText;
+        ScoreManager.OnScoreUpdated -= UpdateScoreText;
         GameManager.OnGameOver -= OnGameOver;
         GameManager.OnGameRestart -= OnGameRestart;
         GameManager.OnLivesUpdated -= UpdateLifeIcons;

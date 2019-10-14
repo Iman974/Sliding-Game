@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
 
-public class Score : MonoBehaviour {
+public class ScoreManager : MonoBehaviour {
 
-    [SerializeField] AnimationCurve speedReward = AnimationCurve.Linear(0f, 0f, 1f, 1f);
+    [SerializeField] AnimationCurve speedRewardCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
 
     public static event System.Action<int> OnScoreUpdated;
 
     public static int PlayerScore { get; private set; }
 
-    const float kPassiveBehaviorScoreLossMultiplier = 0.75f;
+    const float kNoTryScoreLossMultiplier = 0.75f;
 
     Countdown countdown;
 
@@ -21,17 +21,18 @@ public class Score : MonoBehaviour {
         countdown = GameManager.Countdown;
     }
 
-    void UpdateScore(bool isSuccess) {
+    void UpdateScore(bool hasScored) {
         Arrow currentArrow = GameManager.SelectedArrow;
         int scoreValue = currentArrow.ScoreValue;
         int newScore = PlayerScore;
-        if (isSuccess) {
-            // Add a percentage of the scoreValue : the faster the player solves the arrow
-            // and the higher the reward is (too slow = no reward for speed)
-            newScore += scoreValue /*+ (scoreValue * percentage)*/;
+        if (hasScored) {
+            // The faster the player scores and the higher the reward is
+            float speedPercentage = countdown.RemainingTime / currentArrow.Duration;
+            int reward = (int)(speedRewardCurve.Evaluate(speedPercentage) * scoreValue);
+            newScore += scoreValue + reward;
         } else {
-            if (countdown.Elapsed) {
-                newScore -= (int)(scoreValue * kPassiveBehaviorScoreLossMultiplier);
+            if (countdown.IsElapsed) {
+                newScore -= (int)(scoreValue * kNoTryScoreLossMultiplier);
             } else {
                 newScore -= (int)(scoreValue * currentArrow.ScoreLossMultiplier);
             }

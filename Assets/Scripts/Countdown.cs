@@ -2,8 +2,8 @@
 
 public class Countdown {
 
-    public float Time { get; private set; }
-    public bool Elapsed { get; private set; } = true;
+    public float RemainingTime { get; private set; }
+    public bool IsElapsed { get; private set; } = true;
 
     bool doUpdate;
 
@@ -12,9 +12,9 @@ public class Countdown {
             return;
         }
 
-        Time -= tick;
-        if (Time <= 0f) {
-            Elapsed = true;
+        RemainingTime -= tick;
+        if (RemainingTime <= 0f) {
+            IsElapsed = true;
         }
     }
 
@@ -26,10 +26,10 @@ public class Countdown {
         doUpdate = false;
     }
 
-    public void ResetTime(float newTime) {
+    public void Restart(float newTime) {
         if (newTime > 0f) {
-            Time = newTime;
-            Elapsed = false;
+            RemainingTime = newTime;
+            IsElapsed = false;
             Resume();
         }
     }

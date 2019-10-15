@@ -19,9 +19,12 @@ public class Arrow : MonoBehaviour, RandomUtility.IWeighted {
     Direction orientation;
     Animator animator;
 
-    void Start() {
+    void OnEnable() {
+        IsAnimating = true;
         GameManager.OnArrowEnd += PlayEndAnimation;
+    }
 
+    void Start() {
         animator = GetComponent<Animator>();
     }
 
@@ -46,7 +49,7 @@ public class Arrow : MonoBehaviour, RandomUtility.IWeighted {
         transform.localScale = Vector3.one;
     }
 
-    void OnDestroy() {
+    void OnDisable() {
         GameManager.OnArrowEnd -= PlayEndAnimation;
     }
 }

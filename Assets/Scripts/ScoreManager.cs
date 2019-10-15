@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(GameManager))]
 public class ScoreManager : MonoBehaviour {
 
     [SerializeField] AnimationCurve speedRewardCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
@@ -18,7 +19,7 @@ public class ScoreManager : MonoBehaviour {
     }
 
     void Start() {
-        countdown = GameManager.Countdown;
+        countdown = GetComponent<Countdown>();
     }
 
     void UpdateScore(bool hasScored) {

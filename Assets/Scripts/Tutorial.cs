@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[RequireComponent(typeof(GameManager), typeof(ScoreManager))]
+[RequireComponent(typeof(GameManager))]
 public class Tutorial : MonoBehaviour {
 
     [SerializeField] int requiredConsecutiveSuccess = 8;
@@ -8,16 +8,15 @@ public class Tutorial : MonoBehaviour {
     Countdown countdown;
     ProgressStep tutorialStep;
     GameManager gameManager;
-    ScoreManager scoreManager;
     int[] arrowInitialWeights;
+    Arrow[] arrows;
 
     void Start() {
-        countdown = GameManager.Countdown;
+        countdown = GetComponent<Countdown>();
         gameManager = GetComponent<GameManager>();
-        scoreManager = GetComponent<ScoreManager>();
         UnityEngine.Assertions.Assert.IsNotNull(gameManager, "GameManager not found!");
 
-        Arrow[] arrows = gameManager.Arrows;
+        arrows = gameManager.Arrows;
         int arrowCount = arrows.Length;
         arrowInitialWeights = new int[arrows.Length];
         for (int i = 0; i < arrows.Length; i++) {
@@ -27,7 +26,7 @@ public class Tutorial : MonoBehaviour {
 
     public void StartTutorial() {
         tutorialStep = ProgressStep.First;
-        SetArrowInitialWeight(0);
+        SetOnlyArrowInitialWeight(0);
         countdown.Stop();
     }
 
@@ -35,15 +34,28 @@ public class Tutorial : MonoBehaviour {
         if (tutorialStep == ProgressStep.Fourth) {
             return;
         }
-        tutorialStep = (ProgressStep)((int)tutorialStep + 1);
-        
+        int newTutorialStepInt = (int)tutorialStep + 1;
+        tutorialStep = (ProgressStep)newTutorialStepInt;
+        SetOnlyArrowInitialWeight(newTutorialStepInt);
     }
 
-    void SetArrowInitialWeight(params int[] indexes) {
-        Arrow[] arrows = gameManager.Arrows;
-        for (int i = 0; i < indexes.Length; i++) {
-            int arrowIndex = indexes[i];
-            arrows[arrowIndex].Weight = arrowInitialWeights[arrowIndex];
+    void SetOnlyArrowInitialWeight(int index) {
+        for (int i = 0; i < arrows.Length; i++) {
+            if (i != index) {
+                arrows[i].Weight = 0;
+                continue;
+            }
+            arrows[i].Weight = arrowInitialWeights[i];
+        }
+    }
+
+    public void EndTutorial() {
+        ResetArrowsInitialWeights();
+    }
+
+    void ResetArrowsInitialWeights() {
+        for (int i = 0; i < arrows.Length; i++) {
+            arrows[i].Weight = arrowInitialWeights[i];
         }
     }
 

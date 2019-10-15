@@ -1,29 +1,30 @@
 ﻿using UnityEngine;
 
-public class Countdown {
+public class Countdown : MonoBehaviour {
 
     public float RemainingTime { get; private set; }
     public bool IsElapsed { get; private set; } = true;
+    public float PlaybackSpeed { get; set; } = 1f;
+    public bool DoUpdate { get; set; }
 
-    bool doUpdate;
-
-    public void Update(float tick) {
-        if (!doUpdate) {
+    void Update() {
+        if (!DoUpdate) {
             return;
         }
 
-        RemainingTime -= tick;
+        RemainingTime -= Time.deltaTime * PlaybackSpeed;
         if (RemainingTime <= 0f) {
             IsElapsed = true;
+            Stop();
         }
     }
 
     public void Resume() {
-        doUpdate = true;
+        DoUpdate = true;
     }
 
     public void Stop() {
-        doUpdate = false;
+        DoUpdate = false;
     }
 
     public void Restart(float newTime) {

@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(Countdown))]
 public class GameManager : MonoBehaviour {
 
     [SerializeField] Arrow[] arrows = null;
     [SerializeField] float nextDelay = 0.3f;
     [SerializeField] float speedGainOverProgression = 0.002f;
     [SerializeField] int successCountToRegenerateLife = 10;
-    [SerializeField] float restartGameDelay = 1.5f;
     [SerializeField] float maxPlaybackSpeed = 2f;
+    [SerializeField] float restartGameDelay = 1.5f;
 
     public static GameManager Instance { get; private set; }
     public static Direction CurrentDirection { get; private set; }
@@ -20,7 +21,6 @@ public class GameManager : MonoBehaviour {
         }
     }
     public static int Highscore { get; private set; }
-    public static Countdown Countdown { get; } = new Countdown();
 
     public Arrow[] Arrows => arrows;
 
@@ -33,10 +33,16 @@ public class GameManager : MonoBehaviour {
 
     Direction inputDirection;
     Direction desiredDirection;
-    bool doInputCheck;
     float playbackSpeed = 1f;
     int consecutiveSuccessCount;
     static int lives = kMaxLives;
+    Countdown countdown;
+    bool doInputCheck;
+
+    void OnEnable() {
+        countdown = GetComponent<Countdown>();
+        NextArrow();
+    }
 
     void Awake() {
         #region Singleton
@@ -52,55 +58,57 @@ public class GameManager : MonoBehaviour {
             UnityEngine.Assertions.Assert.IsNotNull(arrows[i], "Missing arrow!");
         }
         Highscore = ProgressSaver.LoadHighscore();
-        enabled = false;
+        if (enabled) {
+            Debug.LogWarning("GameManager was enabled before the start!");
+        }
     }
 
     void Update() {
-        if (Arrow.IsAnimating) {
+        if (Arrow.IsAnimating || !doInputCheck) {
             return;
         }
 
-        Countdown.Update(Time.deltaTime * playbackSpeed);
-        if (Countdown.IsElapsed) {
+        if (countdown.IsElapsed) {
             OnTimeElapsed();
             return;
         }
 
-        if (doInputCheck && InputManager.GetInput(ref inputDirection)) {
-            HandleInput();
+        if (InputManager.GetInput(ref inputDirection)) {
+            HandleReceivedInput();
         }
     }
 
     void OnTimeElapsed() {
-        // Check if we're still handling input. If so, it means
-        // no input was received so the player didn't do anything
-        if (doInputCheck) {
-            OnWrongInput();
-            OnArrowEnd?.Invoke(false);
-            ResetValues();
-        } else {
-            NextArrow();
-        }
+        doInputCheck = false;
+        OnArrowEnd?.Invoke(false);
+        OnWrongInput();
     }
 
-    public void NextArrow() {
-        // Hide the previous arrow and reset it
+    System.Collections.IEnumerator InvokeNextArrowDelayed() {
+        while (Arrow.IsAnimating) {
+            yield return null;
+        }
+        Invoke("NextArrow", nextDelay);
+    }
+
+    void NextArrow() {
+        // Hide the previous arrow and reset its transform
         if (SelectedArrow != null) {
             SelectedArrow.IsActive = false;
             SelectedArrow.ResetTransform();
         }
 
-        // Randomly select an arrow based randomly on the weights
+        // Randomly select an arrow with weighted probability
         SelectedArrow = arrows[RandomUtility.SelectRandomWeightedIndex(arrows)];
 
         desiredDirection = DirectionUtility.GetRandomDirection();
         SelectedArrow.SetOrientation(desiredDirection);
         SelectedArrow.IsActive = true;
-        Countdown.Restart(SelectedArrow.Duration);
+        countdown.Restart(SelectedArrow.Duration);
         doInputCheck = true;
     }
 
-    void HandleInput() {
+    void HandleReceivedInput() {
         bool isInputCorrect = inputDirection == desiredDirection;
         if (isInputCorrect) {
             playbackSpeed = Mathf.Min(maxPlaybackSpeed, playbackSpeed + speedGainOverProgression);
@@ -111,16 +119,12 @@ public class GameManager : MonoBehaviour {
                 }
                 consecutiveSuccessCount = 0;
             }
+            StartCoroutine(InvokeNextArrowDelayed());
         } else {
             OnWrongInput();
         }
-        OnArrowEnd?.Invoke(isInputCorrect);
-        ResetValues();
-    }
-
-    void ResetValues() {
-        Countdown.Restart(nextDelay);
         doInputCheck = false;
+        OnArrowEnd?.Invoke(isInputCorrect);
     }
 
     void OnWrongInput() {
@@ -129,6 +133,8 @@ public class GameManager : MonoBehaviour {
 
         if (Lives <= 0) {
             GameOver();
+        } else {
+            StartCoroutine(InvokeNextArrowDelayed());
         }
     }
 
@@ -142,10 +148,13 @@ public class GameManager : MonoBehaviour {
     }
 
     public void RestartGame() {
-        enabled = true;
-        Countdown.Restart(restartGameDelay);
+        Invoke("EnableThisScript", restartGameDelay);
         Lives = kMaxLives;
         playbackSpeed = 1f;
         OnGameRestart?.Invoke();
+    }
+
+    void EnableThisScript() {
+        enabled = true;
     }
 }

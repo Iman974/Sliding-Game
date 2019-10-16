@@ -32,6 +32,7 @@ public class Tutorial : MonoBehaviour {
     void Update() {
         if (Input.GetButtonDown("Cancel")) {
             // Go back to main menu and leave tutorial
+            // after confirmation (second getbuttondown)
         }
     }
 

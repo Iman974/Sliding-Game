@@ -8,7 +8,7 @@ public class UiManager : MonoBehaviour {
     [SerializeField] TMP_Text scoreText = null;
     [SerializeField] TMP_Text highscoreText = null;
     [SerializeField] RectTransform lifeIconsContainer = null;
-    [SerializeField] float restartPanelFadeInDelay = 2.25f;
+    [SerializeField] float gameOverFadeInDelay = 2.25f;
 
     Animator animator;
     Image[] lifeIconImages;
@@ -21,6 +21,7 @@ public class UiManager : MonoBehaviour {
         GameManager.OnGameRestart += OnGameRestart;
 
         animator = GetComponent<Animator>();
+        UnityEngine.Assertions.Assert.IsNotNull(animator, "Animator not found on Ui!");
         lifeIconImages = lifeIconsContainer.GetComponentsInChildren<Image>();
         UpdateHighscoreText();
     }
@@ -50,12 +51,16 @@ public class UiManager : MonoBehaviour {
     }
 
     void OnGameOver() {
-        Invoke("PlayGameOverAnimation", restartPanelFadeInDelay);
+        Invoke("PlayGameOverAnimation", gameOverFadeInDelay);
         UpdateHighscoreText();
     }
 
     void PlayGameOverAnimation() {
-        animator.SetTrigger("GameOver");
+        animator.SetTrigger("gameOver");
+    }
+
+    public void SetStatsBool(bool value) {
+        animator.SetBool("showStats", value);
     }
 
     void OnGameRestart() {

@@ -40,7 +40,9 @@ public class GameManager : MonoBehaviour {
     bool doInputCheck;
 
     void OnEnable() {
-        countdown = GetComponent<Countdown>();
+        if (countdown == null) {
+            countdown = GetComponent<Countdown>();
+        }
         NextArrow();
     }
 

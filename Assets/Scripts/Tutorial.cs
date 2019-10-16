@@ -3,16 +3,16 @@
 [RequireComponent(typeof(GameManager))]
 public class Tutorial : MonoBehaviour {
 
-    [SerializeField] int requiredConsecutiveSuccess = 8;
+    //[SerializeField] int requiredConsecutiveSuccess = 8;
 
-    Countdown countdown;
+    //Countdown countdown;
     ProgressStep tutorialStep;
     GameManager gameManager;
     int[] arrowInitialWeights;
     Arrow[] arrows;
 
     void Start() {
-        countdown = GetComponent<Countdown>();
+        //countdown = GetComponent<Countdown>();
         gameManager = GetComponent<GameManager>();
         UnityEngine.Assertions.Assert.IsNotNull(gameManager, "GameManager not found!");
 
@@ -27,7 +27,12 @@ public class Tutorial : MonoBehaviour {
     public void StartTutorial() {
         tutorialStep = ProgressStep.First;
         SetOnlyArrowInitialWeight(0);
-        countdown.Stop();
+    }
+
+    void Update() {
+        if (Input.GetButtonDown("Cancel")) {
+            // Go back to main menu and leave tutorial
+        }
     }
 
     public void NextStep() {

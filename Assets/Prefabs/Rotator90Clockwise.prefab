@@ -68,12 +68,17 @@ PrefabInstance:
     - target: {fileID: -5954641990629451639, guid: 495a8ae89bebef042ba49cc3a2668dad,
         type: 3}
       propertyPath: duration
-      value: 1.2
+      value: 1.35
       objectReference: {fileID: 0}
     - target: {fileID: -5954641990629451639, guid: 495a8ae89bebef042ba49cc3a2668dad,
         type: 3}
       propertyPath: weight
       value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: -5954641990629451639, guid: 495a8ae89bebef042ba49cc3a2668dad,
+        type: 3}
+      propertyPath: scoreLossMultiplier
+      value: 0.3333333
       objectReference: {fileID: 0}
     - target: {fileID: 212271262845071950, guid: 495a8ae89bebef042ba49cc3a2668dad,
         type: 3}

@@ -3,7 +3,7 @@
 public class Countdown : MonoBehaviour {
 
     public float RemainingTime { get; private set; }
-    public bool IsElapsed { get; private set; } = true;
+    public bool IsElapsed { get; private set; }
     public float PlaybackSpeed { get; set; } = 1f;
     public bool DoUpdate { get; set; }
 

@@ -30,9 +30,9 @@ public class UiManager : MonoBehaviour {
         int currentScore = ScoreManager.PlayerScore;
         scoreText.text = "Score : " + currentScore;
         if (currentScore > previousScore) {
-            animator.SetTrigger("ScorePulsation");
-        } else if (previousScore < currentScore) {
-            animator.SetTrigger("ScoreColor");
+            animator.SetTrigger("scoreIncrease");
+        } else if (currentScore < previousScore) {
+            animator.SetTrigger("scoreDecrease");
         }
     }
 

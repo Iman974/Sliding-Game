@@ -11,11 +11,10 @@ public class GameManager : MonoBehaviour {
     [SerializeField] float restartGameDelay = 1.5f;
 
     public static GameManager Instance { get; private set; }
-    public static Direction CurrentDirection { get; private set; }
     public static Arrow SelectedArrow { get; private set; }
     public static int Lives {
         get => lives;
-        set {
+        private set {
             lives = value;
             OnLivesUpdated?.Invoke();
         }
@@ -23,8 +22,10 @@ public class GameManager : MonoBehaviour {
     public static int Highscore { get; private set; }
 
     public Arrow[] Arrows => arrows;
+    public Direction CurrentDesiredDirection { get; private set; }
 
     public static event System.Action<bool> OnArrowEnd;
+    public static event System.Action OnNextArrow;
     public static event System.Action OnGameOver;
     public static event System.Action OnGameRestart;
     public static event System.Action OnLivesUpdated;
@@ -32,7 +33,6 @@ public class GameManager : MonoBehaviour {
     public const int kMaxLives = 3;
 
     Direction inputDirection;
-    Direction desiredDirection;
     float playbackSpeed = 1f;
     int consecutiveSuccessCount;
     static int lives = kMaxLives;
@@ -103,15 +103,17 @@ public class GameManager : MonoBehaviour {
         // Randomly select an arrow with weighted probability
         SelectedArrow = arrows[RandomUtility.SelectRandomWeightedIndex(arrows)];
 
-        desiredDirection = DirectionUtility.GetRandomDirection();
-        SelectedArrow.SetOrientation(desiredDirection);
+        CurrentDesiredDirection = DirectionUtility.GetRandomDirection();
+        SelectedArrow.SetOrientation(CurrentDesiredDirection);
         SelectedArrow.IsActive = true;
         countdown.Restart(SelectedArrow.Duration);
         doInputCheck = true;
+        OnNextArrow?.Invoke();
     }
 
     void HandleReceivedInput() {
-        bool isInputCorrect = inputDirection == desiredDirection;
+        bool isInputCorrect = inputDirection == CurrentDesiredDirection;
+        OnArrowEnd?.Invoke(isInputCorrect);
         if (isInputCorrect) {
             playbackSpeed = Mathf.Min(maxPlaybackSpeed, playbackSpeed + speedGainOverProgression);
             consecutiveSuccessCount++;
@@ -126,7 +128,6 @@ public class GameManager : MonoBehaviour {
             OnWrongInput();
         }
         doInputCheck = false;
-        OnArrowEnd?.Invoke(isInputCorrect);
     }
 
     void OnWrongInput() {

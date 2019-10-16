@@ -1,19 +1,35 @@
 ﻿using UnityEngine;
 
-[RequireComponent(typeof(GameManager))]
+[RequireComponent(typeof(GameManager), typeof(Animator))]
 public class Tutorial : MonoBehaviour {
 
     //[SerializeField] int requiredConsecutiveSuccess = 8;
+    [SerializeField] Transform arrowIndicatorsParent = null;
 
-    //Countdown countdown;
     ProgressStep tutorialStep;
     GameManager gameManager;
     int[] arrowInitialWeights;
     Arrow[] arrows;
+    GameObject currentActiveIndicator;
+    Animator animator;
 
-    void Start() {
+    enum ProgressStep {
+        First,
+        Second,
+        Third,
+        Fourth
+    }
+
+    void OnEnable() {
+        GameManager.OnArrowEnd += OnArrowEnd;
+        GameManager.OnNextArrow += OnNextArrow;
+        StartTutorial();
+    }
+
+    void Awake() {
         //countdown = GetComponent<Countdown>();
         gameManager = GetComponent<GameManager>();
+        animator = GetComponent<Animator>();
         UnityEngine.Assertions.Assert.IsNotNull(gameManager, "GameManager not found!");
 
         arrows = gameManager.Arrows;
@@ -24,9 +40,21 @@ public class Tutorial : MonoBehaviour {
         }
     }
 
-    public void StartTutorial() {
+    void StartTutorial() {
         tutorialStep = ProgressStep.First;
         SetOnlyArrowInitialWeight(0);
+        //gameManager.SetLivesCount(int.MaxValue);
+    }
+
+    void OnNextArrow() {
+        int indicatorChildIndex = (int)gameManager.CurrentDesiredDirection;
+        Transform indicatorTransform = arrowIndicatorsParent.GetChild(indicatorChildIndex);
+        currentActiveIndicator = indicatorTransform.gameObject;
+        currentActiveIndicator.SetActive(true);
+    }
+
+    void OnArrowEnd(bool hasScored) {
+        currentActiveIndicator.SetActive(false);
     }
 
     void Update() {
@@ -65,10 +93,8 @@ public class Tutorial : MonoBehaviour {
         }
     }
 
-    enum ProgressStep {
-        First,
-        Second,
-        Third,
-        Fourth
+    void OnDisable() {
+        GameManager.OnArrowEnd -= OnArrowEnd;
+        GameManager.OnNextArrow -= OnNextArrow;
     }
 }

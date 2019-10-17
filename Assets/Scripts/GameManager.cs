@@ -1,24 +1,15 @@
 ﻿using UnityEngine;
 
-[RequireComponent(typeof(Countdown))]
+[RequireComponent(typeof(Countdown), typeof(LivesManager))]
 public class GameManager : MonoBehaviour {
 
     [SerializeField] Arrow[] arrows = null;
     [SerializeField] float nextDelay = 0.3f;
     [SerializeField] float speedGainOverProgression = 0.002f;
-    [SerializeField] int successCountToRegenerateLife = 10;
     [SerializeField] float maxPlaybackSpeed = 2f;
     [SerializeField] float restartGameDelay = 1.5f;
 
-    public static GameManager Instance { get; private set; }
     public static Arrow SelectedArrow { get; private set; }
-    public static int Lives {
-        get => lives;
-        private set {
-            lives = value;
-            OnLivesUpdated?.Invoke();
-        }
-    }
     public static int Highscore { get; private set; }
 
     public Arrow[] Arrows => arrows;
@@ -28,14 +19,10 @@ public class GameManager : MonoBehaviour {
     public static event System.Action OnNextArrow;
     public static event System.Action OnGameOver;
     public static event System.Action OnGameRestart;
-    public static event System.Action OnLivesUpdated;
 
-    public const int kMaxLives = 3;
-
+    static GameManager instance;
     Direction inputDirection;
     float playbackSpeed = 1f;
-    int consecutiveSuccessCount;
-    static int lives = kMaxLives;
     Countdown countdown;
     bool doInputCheck;
 
@@ -48,9 +35,9 @@ public class GameManager : MonoBehaviour {
 
     void Awake() {
         #region Singleton
-        if (Instance == null) {
-            Instance = this;
-        } else if (Instance != this) {
+        if (instance == null) {
+            instance = this;
+        } else if (instance != this) {
             Destroy(this);
             return;
         }
@@ -96,8 +83,7 @@ public class GameManager : MonoBehaviour {
     void NextArrow() {
         // Hide the previous arrow and reset its transform
         if (SelectedArrow != null) {
-            SelectedArrow.IsActive = false;
-            SelectedArrow.ResetTransform();
+            ResetSelectedArrow();
         }
 
         // Randomly select an arrow with weighted probability
@@ -111,18 +97,16 @@ public class GameManager : MonoBehaviour {
         OnNextArrow?.Invoke();
     }
 
+    public void ResetSelectedArrow() {
+        SelectedArrow.IsActive = false;
+        SelectedArrow.ResetTransform();
+    }
+
     void HandleReceivedInput() {
         bool isInputCorrect = inputDirection == CurrentDesiredDirection;
         OnArrowEnd?.Invoke(isInputCorrect);
         if (isInputCorrect) {
             playbackSpeed = Mathf.Min(maxPlaybackSpeed, playbackSpeed + speedGainOverProgression);
-            consecutiveSuccessCount++;
-            if (consecutiveSuccessCount >= successCountToRegenerateLife) {
-                if (Lives < kMaxLives) {
-                    Lives++;
-                }
-                consecutiveSuccessCount = 0;
-            }
             StartCoroutine(InvokeNextArrowDelayed());
         } else {
             OnWrongInput();
@@ -131,10 +115,7 @@ public class GameManager : MonoBehaviour {
     }
 
     void OnWrongInput() {
-        consecutiveSuccessCount = 0;
-        Lives -= 1;
-
-        if (Lives <= 0) {
+        if (LivesManager.LivesCount <= 0) {
             GameOver();
         } else {
             StartCoroutine(InvokeNextArrowDelayed());
@@ -152,7 +133,6 @@ public class GameManager : MonoBehaviour {
 
     public void RestartGame() {
         Invoke("EnableThisScript", restartGameDelay);
-        Lives = kMaxLives;
         playbackSpeed = 1f;
         OnGameRestart?.Invoke();
     }

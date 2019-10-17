@@ -16,7 +16,7 @@ public class UiManager : MonoBehaviour {
 
     void Start() {
         ScoreManager.OnScoreUpdated += UpdateScoreText;
-        GameManager.OnLivesUpdated += UpdateLifeIcons;
+        LivesManager.OnLivesUpdated += UpdateLifeIcons;
         GameManager.OnGameOver += OnGameOver;
         GameManager.OnGameRestart += OnGameRestart;
 
@@ -41,8 +41,9 @@ public class UiManager : MonoBehaviour {
     }
 
     void UpdateLifeIcons() {
-        for (int i = 0; i < GameManager.kMaxLives; i++) {
-            if (i < GameManager.Lives) {
+        int livesCount = LivesManager.LivesCount;
+        for (int i = 0; i < LivesManager.kMaxLives; i++) {
+            if (i < livesCount) {
                 lifeIconImages[i].enabled = true;
             } else {
                 lifeIconImages[i].enabled = false;
@@ -71,6 +72,6 @@ public class UiManager : MonoBehaviour {
         ScoreManager.OnScoreUpdated -= UpdateScoreText;
         GameManager.OnGameOver -= OnGameOver;
         GameManager.OnGameRestart -= OnGameRestart;
-        GameManager.OnLivesUpdated -= UpdateLifeIcons;
+        LivesManager.OnLivesUpdated -= UpdateLifeIcons;
     }
 }

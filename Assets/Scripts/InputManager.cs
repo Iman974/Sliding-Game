@@ -16,9 +16,7 @@ public class InputManager : MonoBehaviour {
             return;
         }
         #endregion
-    }
 
-    void Start() {
         sqrSwipingSensibility = swipingSensibility * swipingSensibility;
     }
 

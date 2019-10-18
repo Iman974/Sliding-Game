@@ -1,33 +1,30 @@
 ﻿using UnityEngine;
 using TMPro;
+using UnityEngine.Events;
 
-[RequireComponent(typeof(Animator))]
 public class Tutorial : MonoBehaviour {
 
     [SerializeField] int requiredConsecutiveSuccesses = 8;
+    [SerializeField] float textFadeInDelay = 0.4f;
     [SerializeField] Transform arrowIndicatorsParent = null;
     [SerializeField] string[] instructions = null;
     [SerializeField] TMP_Text instructionText = null;
+    [SerializeField] Animator canvasAnimator = null;
+    [SerializeField] UnityEvent onTutorialEnd;
 
-    Animator canvasAnimator;
-    ProgressStep tutorialStep = ProgressStep.First;
+    const int kArrowTypeCount = 4;
+
     int[] arrowInitialWeights;
     Arrow[] arrows;
     GameObject currentActiveIndicator;
     int consecutiveSuccessCount;
-    int currentInstructionIndex;
+    int currentTutorialStep;
     ArrowManager arrowManager;
-
-    enum ProgressStep {
-        First,
-        Second,
-        Third,
-        Fourth
-    }
 
     void OnEnable() {
         InputManager.OnInputReceived += OnInputReceived;
         ArrowManager.OnNextArrow += OnNextArrow;
+        NextStep();
     }
 
     void OnDisable() {
@@ -35,8 +32,7 @@ public class Tutorial : MonoBehaviour {
         ArrowManager.OnNextArrow -= OnNextArrow;
     }
 
-    void Start() {
-        canvasAnimator = GetComponent<Animator>();
+    void Awake() {
         arrowManager = ArrowManager.Instance;
 
         // Split the instructions string accross multiple lines (separator ';')
@@ -51,6 +47,16 @@ public class Tutorial : MonoBehaviour {
         arrowInitialWeights = new int[arrows.Length];
         for (int i = 0; i < arrows.Length; i++) {
             arrowInitialWeights[i] = arrows[i].Weight;
+        }
+    }
+
+    void SetOnlyArrowInitialWeight(int index) {
+        for (int i = 0; i < arrows.Length; i++) {
+            if (i != index) {
+                arrows[i].Weight = 0;
+                continue;
+            }
+            arrows[i].Weight = arrowInitialWeights[i];
         }
     }
 
@@ -70,33 +76,25 @@ public class Tutorial : MonoBehaviour {
         }
         if (consecutiveSuccessCount >= requiredConsecutiveSuccesses) {
             consecutiveSuccessCount = 0;
-            canvasAnimator.SetTrigger("fadeInText");
+            NextStep();
+            Invoke("SetTextFadeInTrigger", textFadeInDelay);
             return;
         }
         arrowManager.InvokeNextArrowDelayed();
     }
 
-    public void NextStep() {
-        Debug.Log(tutorialStep);
-        if (tutorialStep == ProgressStep.Fourth) {
+    void NextStep() {
+        if (currentTutorialStep == kArrowTypeCount) {
             EndTutorial();
             return;
         }
-        int currentTutorialStepInt = (int)tutorialStep;
-        SetOnlyArrowInitialWeight(currentTutorialStepInt);
-        instructionText.text = instructions[currentInstructionIndex];
-        tutorialStep = (ProgressStep)(currentTutorialStepInt + 1);
-        currentInstructionIndex++;
+        SetOnlyArrowInitialWeight(currentTutorialStep);
+        instructionText.text = instructions[currentTutorialStep];
+        currentTutorialStep++;
     }
 
-    void SetOnlyArrowInitialWeight(int index) {
-        for (int i = 0; i < arrows.Length; i++) {
-            if (i != index) {
-                arrows[i].Weight = 0;
-                continue;
-            }
-            arrows[i].Weight = arrowInitialWeights[i];
-        }
+    void SetTextFadeInTrigger() {
+        canvasAnimator.SetTrigger("fadeInText");
     }
 
     void Update() {
@@ -108,8 +106,10 @@ public class Tutorial : MonoBehaviour {
 
     public void EndTutorial() {
         ResetArrowsInitialWeights();
-        canvasAnimator.SetTrigger("ending");
-        tutorialStep = ProgressStep.First;
+        //canvasAnimator.SetTrigger("ending");
+        currentTutorialStep = 0;
+        enabled = false;
+        onTutorialEnd.Invoke();
     }
 
     void ResetArrowsInitialWeights() {

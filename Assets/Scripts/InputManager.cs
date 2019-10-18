@@ -4,17 +4,18 @@ public class InputManager : MonoBehaviour {
 
     [SerializeField] float swipingSensibility = 10f;
 
+    public static InputManager Instance { get; private set; }
+
     public static event System.Action<bool> OnInputReceived;
 
-    static InputManager instance;
     static float sqrSwipingSensibility;
     static Direction inputDirection;
 
     void Awake() {
         #region Singleton
-        if (instance == null) {
-            instance = this;
-        } else if (instance != this) {
+        if (Instance == null) {
+            Instance = this;
+        } else if (Instance != this) {
             Destroy(this);
             return;
         }

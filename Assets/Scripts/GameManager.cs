@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour {
             countdown = GetComponent<Countdown>();
         }
         if (inputManager == null) {
-            inputManager = GetComponent<InputManager>();
+            inputManager = InputManager.Instance;
         }
         if (arrowManager == null) {
             arrowManager = ArrowManager.Instance;

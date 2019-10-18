@@ -2,15 +2,14 @@
 using UnityEngine.UI;
 using TMPro;
 
-[RequireComponent(typeof(Animator))]
-public class UiManager : MonoBehaviour {
+public class PlaymodeUiManager : MonoBehaviour {
 
+    [SerializeField] Animator uiAnimator;
     [SerializeField] TMP_Text scoreText = null;
     [SerializeField] TMP_Text highscoreText = null;
     [SerializeField] RectTransform lifeIconsContainer = null;
     [SerializeField] float gameOverFadeInDelay = 2.25f;
 
-    Animator animator;
     Image[] lifeIconImages;
     int lifeIconIndex;
 
@@ -20,8 +19,6 @@ public class UiManager : MonoBehaviour {
         GameManager.OnGameOver += OnGameOver;
         GameManager.OnGameRestart += OnGameRestart;
 
-        animator = GetComponent<Animator>();
-        UnityEngine.Assertions.Assert.IsNotNull(animator, "Animator not found on Ui!");
         lifeIconImages = lifeIconsContainer.GetComponentsInChildren<Image>();
         UpdateHighscoreText();
     }
@@ -30,9 +27,9 @@ public class UiManager : MonoBehaviour {
         int currentScore = ScoreManager.PlayerScore;
         scoreText.text = "Score : " + currentScore;
         if (currentScore > previousScore) {
-            animator.SetTrigger("scoreIncrease");
+            uiAnimator.SetTrigger("scoreIncrease");
         } else if (currentScore < previousScore) {
-            animator.SetTrigger("scoreDecrease");
+            uiAnimator.SetTrigger("scoreDecrease");
         }
     }
 
@@ -57,11 +54,11 @@ public class UiManager : MonoBehaviour {
     }
 
     void PlayGameOverAnimation() {
-        animator.SetTrigger("gameOver");
+        uiAnimator.SetTrigger("gameOver");
     }
 
     public void SetStatsBool(bool value) {
-        animator.SetBool("showStats", value);
+        uiAnimator.SetBool("showStats", value);
     }
 
     void OnGameRestart() {

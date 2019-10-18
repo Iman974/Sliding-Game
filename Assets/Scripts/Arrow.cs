@@ -21,7 +21,7 @@ public class Arrow : MonoBehaviour, RandomUtility.IWeighted {
 
     Direction orientation;
     Animator animator;
-    InputManager inputManager;
+    static InputManager inputManager;
 
     void OnEnable() {
         IsAnimating = true;
@@ -30,7 +30,9 @@ public class Arrow : MonoBehaviour, RandomUtility.IWeighted {
 
     void Start() {
         animator = GetComponent<Animator>();
-        inputManager = GameObject.FindWithTag("GameMaster").GetComponent<InputManager>();
+        if (inputManager == null) {
+            inputManager = InputManager.Instance;
+        }
     }
 
     public void SetOrientation(Direction direction) {

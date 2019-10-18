@@ -1,23 +1,22 @@
 ﻿using UnityEngine;
 using TMPro;
 
-[RequireComponent(typeof(GameManager), typeof(Animator))]
+[RequireComponent(typeof(Animator))]
 public class Tutorial : MonoBehaviour {
 
     [SerializeField] int requiredConsecutiveSuccesses = 8;
     [SerializeField] Transform arrowIndicatorsParent = null;
     [SerializeField] string[] instructions = null;
     [SerializeField] TMP_Text instructionText = null;
-    [SerializeField] TMP_Text endText = null;
-    [SerializeField] Animator canvasAnimator = null;
 
-    ProgressStep tutorialStep;
-    GameManager gameManager;
+    Animator canvasAnimator;
+    ProgressStep tutorialStep = ProgressStep.First;
     int[] arrowInitialWeights;
     Arrow[] arrows;
     GameObject currentActiveIndicator;
     int consecutiveSuccessCount;
     int currentInstructionIndex;
+    ArrowManager arrowManager;
 
     enum ProgressStep {
         First,
@@ -27,69 +26,67 @@ public class Tutorial : MonoBehaviour {
     }
 
     void OnEnable() {
-        GameManager.OnArrowEnd += OnArrowEnd;
-        GameManager.OnNextArrow += OnNextArrow;
-        StartTutorial();
+        InputManager.OnInputReceived += OnInputReceived;
+        ArrowManager.OnNextArrow += OnNextArrow;
     }
 
-    void Awake() {
-        gameManager = GetComponent<GameManager>();
-        UnityEngine.Assertions.Assert.IsNotNull(gameManager, "GameManager not found!");
+    void OnDisable() {
+        InputManager.OnInputReceived -= OnInputReceived;
+        ArrowManager.OnNextArrow -= OnNextArrow;
+    }
 
-        arrows = gameManager.Arrows;
-        int arrowCount = arrows.Length;
-        arrowInitialWeights = new int[arrows.Length];
-        for (int i = 0; i < arrows.Length; i++) {
-            arrowInitialWeights[i] = arrows[i].Weight;
-        }
+    void Start() {
+        canvasAnimator = GetComponent<Animator>();
+        arrowManager = ArrowManager.Instance;
 
+        // Split the instructions string accross multiple lines (separator ';')
         for (int i = 0; i < instructions.Length; i++) {
             string s = instructions[i];
             string[] lines = s.Split(';');
             instructions[i] = string.Join("\n", lines);
         }
-    }
 
-    void StartTutorial() {
-        tutorialStep = ProgressStep.First;
-        SetOnlyArrowInitialWeight(0);
+        arrows = ArrowManager.Arrows;
+        int arrowCount = arrows.Length;
+        arrowInitialWeights = new int[arrows.Length];
+        for (int i = 0; i < arrows.Length; i++) {
+            arrowInitialWeights[i] = arrows[i].Weight;
+        }
     }
 
     void OnNextArrow() {
-        if (consecutiveSuccessCount >= requiredConsecutiveSuccesses) {
-            consecutiveSuccessCount = 0;
-            NextStep();
-            return;
-        }
-
-        int indicatorChildIndex = (int)gameManager.CurrentDesiredDirection;
+        int indicatorChildIndex = (int)ArrowManager.CurrentDesiredDirection;
         Transform indicatorTransform = arrowIndicatorsParent.GetChild(indicatorChildIndex);
         currentActiveIndicator = indicatorTransform.gameObject;
         currentActiveIndicator.SetActive(true);
     }
 
-    void OnArrowEnd(bool hasScored) {
+    void OnInputReceived(bool isInputCorrect) {
         currentActiveIndicator.SetActive(false);
-        if (hasScored) {
+        if (isInputCorrect) {
             consecutiveSuccessCount++;
         } else {
             consecutiveSuccessCount = 0;
         }
+        if (consecutiveSuccessCount >= requiredConsecutiveSuccesses) {
+            consecutiveSuccessCount = 0;
+            canvasAnimator.SetTrigger("fadeInText");
+            return;
+        }
+        arrowManager.InvokeNextArrowDelayed();
     }
 
     public void NextStep() {
+        Debug.Log(tutorialStep);
         if (tutorialStep == ProgressStep.Fourth) {
             EndTutorial();
             return;
         }
-        int newTutorialStepInt = (int)tutorialStep + 1;
-        tutorialStep = (ProgressStep)newTutorialStepInt;
-        SetOnlyArrowInitialWeight(newTutorialStepInt);
+        int currentTutorialStepInt = (int)tutorialStep;
+        SetOnlyArrowInitialWeight(currentTutorialStepInt);
         instructionText.text = instructions[currentInstructionIndex];
+        tutorialStep = (ProgressStep)(currentTutorialStepInt + 1);
         currentInstructionIndex++;
-        canvasAnimator.SetTrigger("fadeInText");
-        gameManager.ResetSelectedArrow();
-        gameManager.enabled = false;
     }
 
     void SetOnlyArrowInitialWeight(int index) {
@@ -112,16 +109,12 @@ public class Tutorial : MonoBehaviour {
     public void EndTutorial() {
         ResetArrowsInitialWeights();
         canvasAnimator.SetTrigger("ending");
+        tutorialStep = ProgressStep.First;
     }
 
     void ResetArrowsInitialWeights() {
         for (int i = 0; i < arrows.Length; i++) {
             arrows[i].Weight = arrowInitialWeights[i];
         }
-    }
-
-    void OnDisable() {
-        GameManager.OnArrowEnd -= OnArrowEnd;
-        GameManager.OnNextArrow -= OnNextArrow;
     }
 }

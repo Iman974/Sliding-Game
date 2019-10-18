@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class AnimationEventRaiser : MonoBehaviour {
 
     [SerializeField] UnityEvent[] unityEvents = null;
-    [SerializeField] List<float> delays = null;
+    [SerializeField] List<float> delays = new List<float>();
     
     int eventIndex;
 

@@ -20,7 +20,7 @@ public class LivesManager : MonoBehaviour {
     int consecutiveSuccessCount;
 
     void OnEnable() {
-        GameManager.OnArrowEnd += OnArrowEnd;
+        Arrow.OnArrowEnd += OnArrowEnd;
         GameManager.OnGameRestart += OnGameRestart;
     }
 
@@ -44,7 +44,7 @@ public class LivesManager : MonoBehaviour {
     }
 
     void OnDisable() {
-        GameManager.OnArrowEnd -= OnArrowEnd;
+        Arrow.OnArrowEnd -= OnArrowEnd;
         GameManager.OnGameRestart -= OnGameRestart;
     }
 }

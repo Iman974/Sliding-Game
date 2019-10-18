@@ -14,7 +14,7 @@ public class ScoreManager : MonoBehaviour {
     Countdown countdown;
 
     void OnEnable() {
-        GameManager.OnArrowEnd += UpdateScore;
+        Arrow.OnArrowEnd += UpdateScore;
         GameManager.OnGameRestart += ResetScore;
     }
 
@@ -23,19 +23,19 @@ public class ScoreManager : MonoBehaviour {
     }
 
     void UpdateScore(bool hasScored) {
-        Arrow currentArrow = GameManager.SelectedArrow;
-        int scoreValue = currentArrow.ScoreValue;
+        Arrow selectedArrow = ArrowManager.SelectedArrow;
+        int scoreValue = selectedArrow.ScoreValue;
         int newScore = PlayerScore;
         if (hasScored) {
             // The faster the player scores and the higher the reward is
-            float speedPercentage = countdown.RemainingTime / currentArrow.Duration;
+            float speedPercentage = countdown.RemainingTime / selectedArrow.Duration;
             int reward = (int)(speedRewardCurve.Evaluate(speedPercentage) * scoreValue);
             newScore += scoreValue + reward;
         } else {
             if (countdown.IsElapsed) {
                 newScore -= (int)(scoreValue * kNoTryScoreLossMultiplier);
             } else {
-                newScore -= (int)(scoreValue * currentArrow.ScoreLossMultiplier);
+                newScore -= (int)(scoreValue * selectedArrow.ScoreLossMultiplier);
             }
         }
 
@@ -53,7 +53,7 @@ public class ScoreManager : MonoBehaviour {
     }
 
     void OnDisable() {
-        GameManager.OnArrowEnd -= UpdateScore;
+        Arrow.OnArrowEnd -= UpdateScore;
         GameManager.OnGameRestart -= ResetScore;
     }
 }

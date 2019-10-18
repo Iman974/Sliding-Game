@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(Animator))]
 public class Arrow : MonoBehaviour, RandomUtility.IWeighted {
 
     [SerializeField] int weight = 1;
@@ -10,6 +11,8 @@ public class Arrow : MonoBehaviour, RandomUtility.IWeighted {
 
     public static bool IsAnimating { get; private set; }
 
+    public static event System.Action<bool> OnArrowEnd;
+
     public int Weight { get => weight; set => weight = value; }
     public float Duration => duration;
     public bool IsActive { set { gameObject.SetActive(value); } }
@@ -18,14 +21,16 @@ public class Arrow : MonoBehaviour, RandomUtility.IWeighted {
 
     Direction orientation;
     Animator animator;
+    InputManager inputManager;
 
     void OnEnable() {
         IsAnimating = true;
-        GameManager.OnArrowEnd += PlayEndAnimation;
+        InputManager.OnInputReceived += PlayEndAnimation;
     }
 
     void Start() {
         animator = GetComponent<Animator>();
+        inputManager = GameObject.FindWithTag("GameMaster").GetComponent<InputManager>();
     }
 
     public void SetOrientation(Direction direction) {
@@ -35,13 +40,18 @@ public class Arrow : MonoBehaviour, RandomUtility.IWeighted {
         transform.eulerAngles = Vector3.forward * DirectionUtility.DirectionToAngle(modifiedDirection);
     }
 
-    void PlayEndAnimation(bool hasScored) {
+    public void PlayEndAnimation(bool hasScored) {
         animator.SetTrigger(hasScored ? "Success" : "Fail");
         IsAnimating = true;
+        OnArrowEnd?.Invoke(hasScored);
     }
 
     void OnAnimationEnd() {
         IsAnimating = false;
+    }
+
+    void OnFadeInAnimationEnd() {
+        inputManager.enabled = true;
     }
 
     public void ResetTransform() {
@@ -50,6 +60,6 @@ public class Arrow : MonoBehaviour, RandomUtility.IWeighted {
     }
 
     void OnDisable() {
-        GameManager.OnArrowEnd -= PlayEndAnimation;
+        InputManager.OnInputReceived -= PlayEndAnimation;
     }
 }

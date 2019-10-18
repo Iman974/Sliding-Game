@@ -14,7 +14,7 @@ public class BackgroundParticles : MonoBehaviour {
     ParticleSystem.MainModule mainModule;
 
     void Start() {
-        GameManager.OnArrowEnd += OnArrowEnd;
+        Arrow.OnArrowEnd += OnArrowEnd;
         GameManager.OnGameOver += OnGameOver;
         GameManager.OnGameRestart += OnGameRestart;
 
@@ -53,7 +53,7 @@ public class BackgroundParticles : MonoBehaviour {
     }
 
     void OnDestroy() {
-        GameManager.OnArrowEnd -= OnArrowEnd;
+        Arrow.OnArrowEnd -= OnArrowEnd;
         GameManager.OnGameOver -= OnGameOver;
         GameManager.OnGameRestart -= OnGameRestart;
     }

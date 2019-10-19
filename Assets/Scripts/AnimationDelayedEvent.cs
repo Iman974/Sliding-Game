@@ -2,33 +2,26 @@
 using UnityEngine.Events;
 using System.Collections.Generic;
 
-public class AnimationEventRaiser : MonoBehaviour {
+public class AnimationDelayedEvent : MonoBehaviour {
 
     [SerializeField] UnityEvent[] unityEvents = null;
     [SerializeField] List<float> delays = new List<float>();
     
     int eventIndex;
 
-    void RaiseEvent() {
-        eventIndex = 0;
-        for (int i = 0; i < unityEvents.Length; i++) {
-            float currentDelay = delays[i];
-            if (currentDelay > 0.01f) {
-                Invoke("CallEvent", currentDelay);
-                continue;
-            }
-            CallEvent();
+    void RaiseEvent(int index) {
+        float currentDelay = delays[index];
+        eventIndex = index;
+        const float kFrameUpdateTime = 0.02f;
+        if (currentDelay > kFrameUpdateTime) {
+            Invoke("CallEvent", currentDelay);
+            return;
         }
+        CallEvent();
     }
 
     void CallEvent() {
-        UnityEvent eventToCall = unityEvents[eventIndex];
-        if (eventToCall == null) {
-            Debug.LogError("Event is null!");
-            return;
-        }
-        eventToCall.Invoke();
-        eventIndex++;
+        unityEvents[eventIndex].Invoke();
     }
 
     void OnValidate() {

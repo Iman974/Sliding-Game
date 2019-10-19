@@ -6,11 +6,11 @@ public class Tutorial : MonoBehaviour {
 
     [SerializeField] int requiredConsecutiveSuccesses = 8;
     [SerializeField] float textFadeInDelay = 0.4f;
+    [SerializeField] float endingDelay = 0.5f;
     [SerializeField] Transform arrowIndicatorsParent = null;
     [SerializeField] string[] instructions = null;
     [SerializeField] TMP_Text instructionText = null;
     [SerializeField] Animator canvasAnimator = null;
-    [SerializeField] UnityEvent onTutorialEnd;
 
     const int kArrowTypeCount = 4;
 
@@ -71,45 +71,37 @@ public class Tutorial : MonoBehaviour {
         currentActiveIndicator.SetActive(false);
         if (isInputCorrect) {
             consecutiveSuccessCount++;
+            if (consecutiveSuccessCount >= requiredConsecutiveSuccesses) {
+                consecutiveSuccessCount = 0;
+                NextStep();
+            }
         } else {
             consecutiveSuccessCount = 0;
+            arrowManager.InvokeNextArrowDelayed();
         }
-        if (consecutiveSuccessCount >= requiredConsecutiveSuccesses) {
-            consecutiveSuccessCount = 0;
-            NextStep();
-            Invoke("SetTextFadeInTrigger", textFadeInDelay);
-            return;
-        }
-        arrowManager.InvokeNextArrowDelayed();
     }
 
     void NextStep() {
         if (currentTutorialStep == kArrowTypeCount) {
             EndTutorial();
+            StartCoroutine(SetAnimatorTrigger(endingDelay, "ending"));
             return;
         }
         SetOnlyArrowInitialWeight(currentTutorialStep);
         instructionText.text = instructions[currentTutorialStep];
         currentTutorialStep++;
+        StartCoroutine(SetAnimatorTrigger(textFadeInDelay, "fadeInText"));
     }
 
-    void SetTextFadeInTrigger() {
-        canvasAnimator.SetTrigger("fadeInText");
+    System.Collections.IEnumerator SetAnimatorTrigger(float delay, string triggerName) {
+        yield return new WaitForSeconds(delay);
+        canvasAnimator.SetTrigger(triggerName);
     }
 
-    void Update() {
-        if (Input.GetButtonDown("Cancel")) {
-            // Go back to main menu and leave tutorial
-            // after confirmation (second getbuttondown)
-        }
-    }
-
-    public void EndTutorial() {
+    void EndTutorial() {
         ResetArrowsInitialWeights();
-        //canvasAnimator.SetTrigger("ending");
         currentTutorialStep = 0;
         enabled = false;
-        onTutorialEnd.Invoke();
     }
 
     void ResetArrowsInitialWeights() {

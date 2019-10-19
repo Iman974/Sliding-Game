@@ -4,7 +4,7 @@ using TMPro;
 
 public class PlaymodeUiManager : MonoBehaviour {
 
-    [SerializeField] Animator uiAnimator;
+    [SerializeField] Animator uiAnimator = null;
     [SerializeField] TMP_Text scoreText = null;
     [SerializeField] TMP_Text highscoreText = null;
     [SerializeField] RectTransform lifeIconsContainer = null;

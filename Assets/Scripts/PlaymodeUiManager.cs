@@ -15,12 +15,19 @@ public class PlaymodeUiManager : MonoBehaviour {
 
     void Start() {
         ScoreManager.OnScoreUpdated += UpdateScoreText;
-        LivesManager.OnLivesUpdated += UpdateLifeIcons;
-        GameManager.OnGameOver += OnGameOver;
-        GameManager.OnGameRestart += OnGameRestart;
+        PlaymodeManager.OnLivesUpdated += UpdateLifeIcons;
+        PlaymodeManager.OnGameOver += OnGameOver;
+        PlaymodeManager.OnGameRestart += OnGameRestart;
 
         lifeIconImages = lifeIconsContainer.GetComponentsInChildren<Image>();
         UpdateHighscoreText();
+    }
+
+    void OnDestroy() {
+        ScoreManager.OnScoreUpdated -= UpdateScoreText;
+        PlaymodeManager.OnGameOver -= OnGameOver;
+        PlaymodeManager.OnGameRestart -= OnGameRestart;
+        PlaymodeManager.OnLivesUpdated -= UpdateLifeIcons;
     }
 
     void UpdateScoreText(int previousScore) {
@@ -34,12 +41,12 @@ public class PlaymodeUiManager : MonoBehaviour {
     }
 
     void UpdateHighscoreText() {
-        highscoreText.text = "Meilleur score : " + GameManager.Highscore;
+        highscoreText.text = "Meilleur score : " + PlaymodeManager.Highscore;
     }
 
     void UpdateLifeIcons() {
-        int livesCount = LivesManager.LivesCount;
-        for (int i = 0; i < LivesManager.kMaxLives; i++) {
+        int livesCount = PlaymodeManager.LivesCount;
+        for (int i = 0; i < PlaymodeManager.kMaxLives; i++) {
             if (i < livesCount) {
                 lifeIconImages[i].enabled = true;
             } else {
@@ -63,12 +70,5 @@ public class PlaymodeUiManager : MonoBehaviour {
 
     void OnGameRestart() {
         scoreText.text = "Score: " + ScoreManager.PlayerScore;
-    }
-
-    void OnDestroy() {
-        ScoreManager.OnScoreUpdated -= UpdateScoreText;
-        GameManager.OnGameOver -= OnGameOver;
-        GameManager.OnGameRestart -= OnGameRestart;
-        LivesManager.OnLivesUpdated -= UpdateLifeIcons;
     }
 }

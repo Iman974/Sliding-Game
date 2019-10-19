@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[RequireComponent(typeof(GameManager))]
+[RequireComponent(typeof(PlaymodeManager))]
 public class ScoreManager : MonoBehaviour {
 
     [SerializeField] AnimationCurve speedRewardCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
@@ -15,11 +15,11 @@ public class ScoreManager : MonoBehaviour {
 
     void OnEnable() {
         Arrow.OnArrowEnd += UpdateScore;
-        GameManager.OnGameRestart += ResetScore;
+        PlaymodeManager.OnGameRestart += ResetScore;
     }
 
     void Start() {
-        countdown = GetComponent<Countdown>();
+        countdown = PlaymodeManager.Countdown;
     }
 
     void UpdateScore(bool hasScored) {
@@ -54,6 +54,6 @@ public class ScoreManager : MonoBehaviour {
 
     void OnDisable() {
         Arrow.OnArrowEnd -= UpdateScore;
-        GameManager.OnGameRestart -= ResetScore;
+        PlaymodeManager.OnGameRestart -= ResetScore;
     }
 }

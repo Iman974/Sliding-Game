@@ -1,29 +1,34 @@
 ﻿using UnityEngine;
 
-[RequireComponent(typeof(Countdown), typeof(LivesManager))]
-public class GameManager : MonoBehaviour {
+public class PlaymodeManager : MonoBehaviour {
 
-    [SerializeField] Arrow[] arrows = null;
-    //[SerializeField] float speedGainOverProgression = 0.002f;
-    //[SerializeField] float maxPlaybackSpeed = 2f;
     [SerializeField] float restartGameDelay = 1.5f;
+    [SerializeField] int successCountToRegenerateLife = 9;
 
     public static int Highscore { get; private set; }
+    public static Countdown Countdown { get; private set; } = new Countdown();
+    public static int LivesCount {
+        get => lives;
+        private set {
+            lives = value;
+            OnLivesUpdated?.Invoke();
+        }
+    }
 
     public static event System.Action OnGameOver;
     public static event System.Action OnGameRestart;
+    public static event System.Action OnLivesUpdated;
 
-    static GameManager instance;
-    //float playbackSpeed = 1f;
-    Countdown countdown;
+    public const int kMaxLives = 3;
+
+    static int lives = kMaxLives;
+    static PlaymodeManager instance;
+    int consecutiveSuccessCount;
     bool doInputCheck;
     InputManager inputManager;
     ArrowManager arrowManager;
 
     void OnEnable() {
-        if (countdown == null) {
-            countdown = GetComponent<Countdown>();
-        }
         if (inputManager == null) {
             inputManager = InputManager.Instance;
         }
@@ -50,9 +55,6 @@ public class GameManager : MonoBehaviour {
         }
         #endregion
 
-        for (int i = 0; i < arrows.Length; i++) {
-            UnityEngine.Assertions.Assert.IsNotNull(arrows[i], "Missing arrow!");
-        }
         Highscore = ProgressSaver.LoadHighscore();
         if (enabled) {
             Debug.LogWarning("GameManager was enabled before the start!");
@@ -64,7 +66,8 @@ public class GameManager : MonoBehaviour {
             return;
         }
 
-        if (countdown.IsElapsed) {
+        Countdown.Update();
+        if (Countdown.IsElapsed) {
             OnTimeElapsed();
             return;
         }
@@ -77,22 +80,35 @@ public class GameManager : MonoBehaviour {
     }
 
     void OnNextArrow() {
-        countdown.Restart(ArrowManager.SelectedArrow.Duration);
+        Countdown.Restart(ArrowManager.SelectedArrow.Duration);
     }
 
-    public void OnInputReceived(bool isInputCorrect) {
+    void OnInputReceived(bool isInputCorrect) {
         if (isInputCorrect) {
-            //playbackSpeed = Mathf.Min(maxPlaybackSpeed, playbackSpeed + speedGainOverProgression);
+            consecutiveSuccessCount++;
+            if (consecutiveSuccessCount >= successCountToRegenerateLife) {
+                consecutiveSuccessCount = 0;
+                if (LivesCount < kMaxLives) {
+                    LivesCount++;
+                }
+            }
             arrowManager.InvokeNextArrowDelayed();
         } else {
             OnWrongInput();
+        }
+
+        if (isInputCorrect) {
+        } else {
+            consecutiveSuccessCount = 0;
+            LivesCount -= 1;
         }
     }
 
     // TODO: Rename this function since it is also called when the time is elapsed (so no input received)
     void OnWrongInput() {
-        // TODO: So is LivesManager really necessary now ? Rewind changes or make it a plain CSharp class
-        if (LivesManager.LivesCount <= 0) {
+        consecutiveSuccessCount = 0;
+        LivesCount -= 1;
+        if (LivesCount <= 0) {
             GameOver();
         } else {
             arrowManager.InvokeNextArrowDelayed();
@@ -110,7 +126,7 @@ public class GameManager : MonoBehaviour {
 
     public void RestartGame() {
         Invoke("EnableThisScript", restartGameDelay);
-        //playbackSpeed = 1f;
+        LivesCount = kMaxLives;
         OnGameRestart?.Invoke();
     }
 

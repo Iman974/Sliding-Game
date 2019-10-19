@@ -74,11 +74,13 @@ public class Tutorial : MonoBehaviour {
             if (consecutiveSuccessCount >= requiredConsecutiveSuccesses) {
                 consecutiveSuccessCount = 0;
                 NextStep();
+                return;
             }
         } else {
-            consecutiveSuccessCount = 0;
-            arrowManager.InvokeNextArrowDelayed();
+            const int kFailBackCount = 4;
+            consecutiveSuccessCount = Mathf.Max(0, consecutiveSuccessCount - kFailBackCount);
         }
+        arrowManager.InvokeNextArrowDelayed();
     }
 
     void NextStep() {

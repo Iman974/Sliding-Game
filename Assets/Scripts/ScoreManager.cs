@@ -3,8 +3,6 @@
 [RequireComponent(typeof(PlaymodeManager))]
 public class ScoreManager : MonoBehaviour {
 
-    [SerializeField] AnimationCurve speedRewardCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
-
     public static event System.Action<int> OnScoreUpdated;
 
     public static int PlayerScore { get; private set; }
@@ -29,7 +27,8 @@ public class ScoreManager : MonoBehaviour {
         if (hasScored) {
             // The faster the player scores and the higher the reward is
             float speedPercentage = countdown.RemainingTime / selectedArrow.Duration;
-            int reward = (int)(speedRewardCurve.Evaluate(speedPercentage) * scoreValue);
+            AnimationCurve rewardCurve = selectedArrow.SpeedRewardCurve;
+            int reward = (int)(rewardCurve.Evaluate(speedPercentage) * scoreValue);
             newScore += scoreValue + reward;
         } else {
             if (countdown.IsElapsed) {

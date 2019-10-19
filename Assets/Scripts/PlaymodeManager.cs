@@ -96,12 +96,6 @@ public class PlaymodeManager : MonoBehaviour {
         } else {
             OnWrongInput();
         }
-
-        if (isInputCorrect) {
-        } else {
-            consecutiveSuccessCount = 0;
-            LivesCount -= 1;
-        }
     }
 
     // TODO: Rename this function since it is also called when the time is elapsed (so no input received)

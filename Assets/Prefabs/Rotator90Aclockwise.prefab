@@ -59,31 +59,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -5954641990629451639, guid: 495a8ae89bebef042ba49cc3a2668dad,
-        type: 3}
-      propertyPath: directionToShowModifier
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -5954641990629451639, guid: 495a8ae89bebef042ba49cc3a2668dad,
-        type: 3}
-      propertyPath: scoreValue
-      value: 140
-      objectReference: {fileID: 0}
-    - target: {fileID: -5954641990629451639, guid: 495a8ae89bebef042ba49cc3a2668dad,
-        type: 3}
-      propertyPath: duration
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: -5954641990629451639, guid: 495a8ae89bebef042ba49cc3a2668dad,
-        type: 3}
-      propertyPath: weight
-      value: 25
-      objectReference: {fileID: 0}
-    - target: {fileID: -5954641990629451639, guid: 495a8ae89bebef042ba49cc3a2668dad,
-        type: 3}
-      propertyPath: scoreLossMultiplier
-      value: 0.2
-      objectReference: {fileID: 0}
     - target: {fileID: 212271262845071950, guid: 495a8ae89bebef042ba49cc3a2668dad,
         type: 3}
       propertyPath: m_Sprite
@@ -111,6 +86,36 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 22100000, guid: f280eab536224f345a27d2497230b4a8,
         type: 2}
+    - target: {fileID: -5954641990629451639, guid: 495a8ae89bebef042ba49cc3a2668dad,
+        type: 3}
+      propertyPath: directionToShowModifier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -5954641990629451639, guid: 495a8ae89bebef042ba49cc3a2668dad,
+        type: 3}
+      propertyPath: scoreValue
+      value: 140
+      objectReference: {fileID: 0}
+    - target: {fileID: -5954641990629451639, guid: 495a8ae89bebef042ba49cc3a2668dad,
+        type: 3}
+      propertyPath: duration
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -5954641990629451639, guid: 495a8ae89bebef042ba49cc3a2668dad,
+        type: 3}
+      propertyPath: weight
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: -5954641990629451639, guid: 495a8ae89bebef042ba49cc3a2668dad,
+        type: 3}
+      propertyPath: scoreLossMultiplier
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: -5954641990629451639, guid: 495a8ae89bebef042ba49cc3a2668dad,
+        type: 3}
+      propertyPath: speedRewardCurve.m_Curve.Array.data[1].value
+      value: 0.3
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1202037695026738831, guid: 495a8ae89bebef042ba49cc3a2668dad, type: 3}
     - {fileID: -917304786444434873, guid: 495a8ae89bebef042ba49cc3a2668dad, type: 3}

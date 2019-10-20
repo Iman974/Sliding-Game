@@ -13,26 +13,35 @@ public class PlaymodeUiManager : MonoBehaviour {
     Image[] lifeIconImages;
     int lifeIconIndex;
 
+    public static PlaymodeUiManager Instance { get; private set; }
+
+    void Awake() {
+        #region Singleton
+        if (Instance == null) {
+            Instance = this;
+        } else if (Instance != this) {
+            Destroy(this);
+            return;
+        }
+        #endregion
+    }
+
     void Start() {
-        ScoreManager.OnScoreUpdated += UpdateScoreText;
         PlaymodeManager.OnLivesUpdated += UpdateLifeIcons;
         PlaymodeManager.OnGameOver += OnGameOver;
-        PlaymodeManager.OnGameRestart += OnGameRestart;
 
         lifeIconImages = lifeIconsContainer.GetComponentsInChildren<Image>();
         UpdateHighscoreText();
     }
 
     void OnDestroy() {
-        ScoreManager.OnScoreUpdated -= UpdateScoreText;
         PlaymodeManager.OnGameOver -= OnGameOver;
-        PlaymodeManager.OnGameRestart -= OnGameRestart;
         PlaymodeManager.OnLivesUpdated -= UpdateLifeIcons;
     }
 
-    void UpdateScoreText(int previousScore) {
+    public void UpdateScoreTextAnimated(int previousScore) {
         int currentScore = ScoreManager.PlayerScore;
-        scoreText.text = "Score : " + currentScore;
+        UpdateScoreText();
         if (currentScore > previousScore) {
             uiAnimator.SetTrigger("scoreIncrease");
         } else if (currentScore < previousScore) {
@@ -40,8 +49,12 @@ public class PlaymodeUiManager : MonoBehaviour {
         }
     }
 
-    void UpdateHighscoreText() {
-        highscoreText.text = "Meilleur score : " + PlaymodeManager.Highscore;
+    public void UpdateScoreText() {
+        scoreText.text = "Score: " + ScoreManager.PlayerScore;
+    }
+
+    public void UpdateHighscoreText() {
+        highscoreText.text = "Meilleur score: " + ScoreManager.Highscore;
     }
 
     void UpdateLifeIcons() {
@@ -57,7 +70,6 @@ public class PlaymodeUiManager : MonoBehaviour {
 
     void OnGameOver() {
         Invoke("PlayGameOverAnimation", gameOverFadeInDelay);
-        UpdateHighscoreText();
     }
 
     void PlayGameOverAnimation() {
@@ -66,9 +78,5 @@ public class PlaymodeUiManager : MonoBehaviour {
 
     public void SetStatsBool(bool value) {
         uiAnimator.SetBool("showStats", value);
-    }
-
-    void OnGameRestart() {
-        scoreText.text = "Score: " + ScoreManager.PlayerScore;
     }
 }

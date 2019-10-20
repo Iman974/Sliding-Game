@@ -3,24 +3,50 @@
 [RequireComponent(typeof(PlaymodeManager))]
 public class ScoreManager : MonoBehaviour {
 
-    public static event System.Action<int> OnScoreUpdated;
-
     public static int PlayerScore { get; private set; }
+    public static int Highscore {
+        get => highscore;
+        set {
+            highscore = value;
+            uiManager.UpdateHighscoreText();
+        }
+    }
 
     const float kNoTryScoreLossMultiplier = 0.75f;
 
-    Countdown countdown;
+    static Countdown countdown;
+    static ScoreManager instance;
+    static int highscore;
+    static PlaymodeUiManager uiManager;
 
     void OnEnable() {
-        Arrow.OnArrowEnd += UpdateScore;
         PlaymodeManager.OnGameRestart += ResetScore;
+        PlaymodeManager.OnGameOver += OnGameOver;
+    }
+
+    void OnDisable() {
+        PlaymodeManager.OnGameRestart -= ResetScore;
+        PlaymodeManager.OnGameOver -= OnGameOver;
+    }
+
+    void Awake() {
+        #region Singleton
+        if (instance == null) {
+            instance = this;
+        } else if (instance != this) {
+            Destroy(this);
+            return;
+        }
+        #endregion
     }
 
     void Start() {
         countdown = PlaymodeManager.Countdown;
+        uiManager = PlaymodeUiManager.Instance;
+        Highscore = ProgressSaver.LoadHighscore();
     }
 
-    void UpdateScore(bool hasScored) {
+    public static void UpdateScore(bool hasScored) {
         Arrow selectedArrow = ArrowManager.SelectedArrow;
         int scoreValue = selectedArrow.ScoreValue;
         int newScore = PlayerScore;
@@ -41,18 +67,21 @@ public class ScoreManager : MonoBehaviour {
         SetPoints(newScore);
     }
 
-    void ResetScore() {
-        PlayerScore = 0;
+    void OnGameOver() {
+        if (PlayerScore > Highscore) {
+            Highscore = PlayerScore;
+            ProgressSaver.SaveHighscore(Highscore);
+        }
     }
 
-    void SetPoints(int value) {
+    public static void ResetScore() {
+        PlayerScore = 0;
+        uiManager.UpdateScoreText();
+    }
+
+    static void SetPoints(int value) {
         int previousScore = PlayerScore;
         PlayerScore = Mathf.Max(0, value);
-        OnScoreUpdated?.Invoke(previousScore);
-    }
-
-    void OnDisable() {
-        Arrow.OnArrowEnd -= UpdateScore;
-        PlaymodeManager.OnGameRestart -= ResetScore;
+        uiManager.UpdateScoreTextAnimated(previousScore);
     }
 }

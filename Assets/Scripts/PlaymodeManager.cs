@@ -5,7 +5,7 @@ public class PlaymodeManager : MonoBehaviour {
     [SerializeField] float restartGameDelay = 1.5f;
     [SerializeField] int successCountToRegenerateLife = 9;
 
-    public static int Highscore { get; private set; }
+    //public static int Highscore { get; private set; }
     public static Countdown Countdown { get; private set; } = new Countdown();
     public static int LivesCount {
         get => lives;
@@ -55,7 +55,6 @@ public class PlaymodeManager : MonoBehaviour {
         }
         #endregion
 
-        Highscore = ProgressSaver.LoadHighscore();
         if (enabled) {
             Debug.LogWarning("GameManager was enabled before the start!");
         }
@@ -76,6 +75,7 @@ public class PlaymodeManager : MonoBehaviour {
     void OnTimeElapsed() {
         inputManager.enabled = false;
         ArrowManager.SelectedArrow.PlayEndAnimation(false);
+        ScoreManager.UpdateScore(false);
         OnWrongInput();
     }
 
@@ -84,6 +84,7 @@ public class PlaymodeManager : MonoBehaviour {
     }
 
     void OnInputReceived(bool isInputCorrect) {
+        ScoreManager.UpdateScore(isInputCorrect);
         if (isInputCorrect) {
             consecutiveSuccessCount++;
             if (consecutiveSuccessCount >= successCountToRegenerateLife) {
@@ -110,16 +111,13 @@ public class PlaymodeManager : MonoBehaviour {
     }
 
     void GameOver() {
-        if (ScoreManager.PlayerScore > Highscore) {
-            Highscore = ScoreManager.PlayerScore;
-            ProgressSaver.SaveHighscore(Highscore);
-        }
         enabled = false;
         OnGameOver?.Invoke();
     }
 
     public void RestartGame() {
         Invoke("EnableThisScript", restartGameDelay);
+        ScoreManager.ResetScore();
         LivesCount = kMaxLives;
         OnGameRestart?.Invoke();
     }

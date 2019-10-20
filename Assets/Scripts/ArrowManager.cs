@@ -37,6 +37,7 @@ public class ArrowManager : MonoBehaviour {
         Invoke("NextArrow", nextArrowDelay);
     }
 
+    // Static (Invoke function as well) ?? -> Is it called from a UnityEvent in the inspector ?
     public void NextArrow() {
         // Hide the previous arrow and reset its transform
         if (SelectedArrow != null) {

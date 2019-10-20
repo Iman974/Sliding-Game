@@ -2,11 +2,9 @@
 
 public class Countdown {
 
-    public float RemainingTime { get => remainingTime; private set => remainingTime = value; }
+    public float RemainingTime { get; private set; }
     public bool IsElapsed { get; private set; }
     public float PlaybackSpeed { get; set; } = 1f;
-
-    public float remainingTime;
 
     public void Update() {
         RemainingTime -= Time.deltaTime * PlaybackSpeed;

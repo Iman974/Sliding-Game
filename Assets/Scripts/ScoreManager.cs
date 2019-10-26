@@ -79,9 +79,9 @@ public class ScoreManager : MonoBehaviour {
         uiManager.UpdateScoreText();
     }
 
-    static void SetPoints(int value) {
+    static void SetPoints(int newScore) {
         int previousScore = PlayerScore;
-        PlayerScore = Mathf.Max(0, value);
+        PlayerScore = Mathf.Max(0, newScore);
         uiManager.UpdateScoreTextAnimated(previousScore);
     }
 }

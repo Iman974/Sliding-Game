@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using TMPro;
-using UnityEngine.Events;
 
 public class Tutorial : MonoBehaviour {
 

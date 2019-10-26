@@ -6,6 +6,7 @@ public class PlaymodeUiManager : MonoBehaviour {
 
     [SerializeField] Animator uiAnimator = null;
     [SerializeField] TMP_Text scoreText = null;
+    [SerializeField] TMP_Text bonusText = null;
     [SerializeField] TMP_Text highscoreText = null;
     [SerializeField] RectTransform lifeIconsContainer = null;
     [SerializeField] float gameOverFadeInDelay = 2.25f;
@@ -44,6 +45,7 @@ public class PlaymodeUiManager : MonoBehaviour {
         UpdateScoreText();
         if (currentScore > previousScore) {
             uiAnimator.SetTrigger("scoreIncrease");
+            bonusText.text = "+" + (currentScore - previousScore);
         } else if (currentScore < previousScore) {
             uiAnimator.SetTrigger("scoreDecrease");
         }

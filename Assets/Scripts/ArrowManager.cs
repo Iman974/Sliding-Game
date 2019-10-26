@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class ArrowManager : MonoBehaviour {
 
@@ -6,12 +7,14 @@ public class ArrowManager : MonoBehaviour {
 
     public static Arrow SelectedArrow { get; private set; }
     public static Arrow[] Arrows { get; private set; }
-
     public static ArrowManager Instance { get; private set; }
-
     public static Direction DesiredDirection { get; private set; }
 
     public static event System.Action OnNextArrow;
+
+    const int kMaxDirectionRepetition = 1;
+
+    int sameDirectionCount;
 
     void Awake() {
         #region Singleton
@@ -45,10 +48,27 @@ public class ArrowManager : MonoBehaviour {
             SelectedArrow.ResetTransform();
         }
 
+        Arrow previousArrow = SelectedArrow;
         // Randomly select an arrow with weighted probability
         SelectedArrow = Arrows[RandomUtility.SelectRandomWeightedIndex(Arrows)];
 
-        DesiredDirection = DirectionUtility.GetRandomDirection();
+        if (sameDirectionCount < kMaxDirectionRepetition) {
+            Direction previousDir = DesiredDirection;
+            DesiredDirection = DirectionUtility.GetRandomDirection();
+            if (previousArrow != null && previousArrow == SelectedArrow && previousDir == DesiredDirection) {
+                sameDirectionCount++;
+            } else {
+                sameDirectionCount = 0;
+            }
+        } else if (previousArrow == SelectedArrow) {
+            List<Direction> directions = new List<Direction>(DirectionUtility.kDirections);
+            directions.Remove(DesiredDirection);
+            DesiredDirection = directions[Random.Range(0, directions.Count)];
+            sameDirectionCount = 0;
+        } else {
+            DesiredDirection = DirectionUtility.GetRandomDirection();
+            sameDirectionCount = 0;
+        }
         SelectedArrow.SetOrientation(DesiredDirection);
         SelectedArrow.IsActive = true;
         OnNextArrow?.Invoke();

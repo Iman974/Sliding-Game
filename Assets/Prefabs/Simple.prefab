@@ -152,3 +152,5 @@ MonoBehaviour:
     m_RotationOrder: 4
   scoreLossMultiplier: 1.3
   directionToShowModifier: 0
+  pulsationAmplitude: 0.5
+  pulsationSpeed: 3.95

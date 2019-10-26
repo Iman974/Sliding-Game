@@ -14,7 +14,7 @@ public class BackgroundParticles : MonoBehaviour {
     ParticleSystem.MainModule mainModule;
 
     void Start() {
-        Arrow.OnArrowEnd += OnArrowEnd;
+        InputManager.OnInputReceived += OnInputReceived;
         PlaymodeManager.OnGameOver += OnGameOver;
         PlaymodeManager.OnGameRestart += OnGameRestart;
 
@@ -22,10 +22,16 @@ public class BackgroundParticles : MonoBehaviour {
         mainModule = particleSystem.main;
     }
 
-    void OnArrowEnd(bool hasScored) {
+    void OnDestroy() {
+        InputManager.OnInputReceived -= OnInputReceived;
+        PlaymodeManager.OnGameOver -= OnGameOver;
+        PlaymodeManager.OnGameRestart -= OnGameRestart;
+    }
+
+    void OnInputReceived(bool hasScored) {
         if (hasScored) {
             float newPlaybackSpeed = Mathf.Min(maxPlaybackSpeed,
-        mainModule.simulationSpeed + speedGainOverProgression);
+                mainModule.simulationSpeed + speedGainOverProgression);
             mainModule.simulationSpeed = newPlaybackSpeed;
         }
     }
@@ -50,11 +56,5 @@ public class BackgroundParticles : MonoBehaviour {
             yield return null;
         }
         mainModule.simulationSpeed = 1f;
-    }
-
-    void OnDestroy() {
-        Arrow.OnArrowEnd -= OnArrowEnd;
-        PlaymodeManager.OnGameOver -= OnGameOver;
-        PlaymodeManager.OnGameRestart -= OnGameRestart;
     }
 }

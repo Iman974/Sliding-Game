@@ -12,8 +12,6 @@ public class Arrow : MonoBehaviour, RandomUtility.IWeighted {
 
     public static bool IsAnimating { get; private set; }
 
-    public static event System.Action<bool> OnArrowEnd;
-
     public int Weight { get => weight; set => weight = value; }
     public float Duration => duration;
     public bool IsActive { set { gameObject.SetActive(value); } }
@@ -38,16 +36,15 @@ public class Arrow : MonoBehaviour, RandomUtility.IWeighted {
     }
 
     public void SetOrientation(Direction direction) {
-        Direction modifiedDirection = (Direction)(((int)direction + directionToShowModifier) %
+        Direction directionToShow = (Direction)(((int)direction + directionToShowModifier) %
             DirectionUtility.kDirectionCount);
 
-        transform.eulerAngles = Vector3.forward * DirectionUtility.DirectionToAngle(modifiedDirection);
+        transform.eulerAngles = Vector3.forward * DirectionUtility.DirectionToAngle(directionToShow);
     }
 
     public void PlayEndAnimation(bool hasScored) {
         animator.SetTrigger(hasScored ? "Success" : "Fail");
         IsAnimating = true;
-        OnArrowEnd?.Invoke(hasScored);
     }
 
     void OnAnimationEnd() {
@@ -56,6 +53,7 @@ public class Arrow : MonoBehaviour, RandomUtility.IWeighted {
 
     void OnFadeInAnimationEnd() {
         inputManager.enabled = true;
+        IsAnimating = false;
     }
 
     public void ResetTransform() {

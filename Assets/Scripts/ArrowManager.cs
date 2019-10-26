@@ -9,7 +9,7 @@ public class ArrowManager : MonoBehaviour {
 
     public static ArrowManager Instance { get; private set; }
 
-    public static Direction CurrentDesiredDirection { get; private set; }
+    public static Direction DesiredDirection { get; private set; }
 
     public static event System.Action OnNextArrow;
 
@@ -48,8 +48,8 @@ public class ArrowManager : MonoBehaviour {
         // Randomly select an arrow with weighted probability
         SelectedArrow = Arrows[RandomUtility.SelectRandomWeightedIndex(Arrows)];
 
-        CurrentDesiredDirection = DirectionUtility.GetRandomDirection();
-        SelectedArrow.SetOrientation(CurrentDesiredDirection);
+        DesiredDirection = DirectionUtility.GetRandomDirection();
+        SelectedArrow.SetOrientation(DesiredDirection);
         SelectedArrow.IsActive = true;
         OnNextArrow?.Invoke();
     }

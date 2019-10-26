@@ -61,7 +61,7 @@ public class Tutorial : MonoBehaviour {
     }
 
     void OnNextArrow() {
-        int indicatorChildIndex = (int)ArrowManager.CurrentDesiredDirection;
+        int indicatorChildIndex = (int)ArrowManager.DesiredDirection;
         Transform indicatorTransform = arrowIndicatorsParent.GetChild(indicatorChildIndex);
         currentActiveIndicator = indicatorTransform.gameObject;
         currentActiveIndicator.SetActive(true);

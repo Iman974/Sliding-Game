@@ -26,7 +26,7 @@ public class InputManager : MonoBehaviour {
 
     void Update() {
         if (GetInput()) {
-            OnInputReceived?.Invoke(inputDirection == ArrowManager.CurrentDesiredDirection);
+            OnInputReceived?.Invoke(inputDirection == ArrowManager.DesiredDirection);
             enabled = false;
         }
     }

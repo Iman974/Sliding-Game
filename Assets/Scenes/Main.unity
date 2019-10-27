@@ -1250,7 +1250,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1638697693
   m_SortingLayer: -1
-  m_SortingOrder: -10
+  m_SortingOrder: 0
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -7177,7 +7177,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredConsecutiveSuccesses: 8
-  textFadeInDelay: 0.5
+  textFadeInDelay: 0.7
   endingDelay: 0.86
   arrowIndicatorsParent: {fileID: 1429664887}
   instructions:
@@ -9132,7 +9132,7 @@ Camera:
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 0
-  m_AllowMSAA: 1
+  m_AllowMSAA: 0
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
